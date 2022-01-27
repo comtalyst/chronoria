@@ -1,11 +1,17 @@
 using Chronoria_WebAPI.Models;
+using Chronoria_WebAPI.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-// Databases
+// Database Repositories
+builder.Services.AddScoped<IPendingCapsuleRepository, PendingCapsuleRepository>();
+builder.Services.AddScoped<IActiveCapsuleRepository, ActiveCapsuleRepository>();
+builder.Services.AddScoped<IArchivedCapsuleRepository, ArchivedCapsuleRepository>();
+
+// Databases Contexts
 builder.Services.AddDbContext<PendingContext>(o => o.UseNpgsql("TODO"));
 builder.Services.AddDbContext<ActiveContext>(o => o.UseNpgsql("TODO"));
 builder.Services.AddDbContext<ArchivedContext>(o => o.UseNpgsql("TODO"));
