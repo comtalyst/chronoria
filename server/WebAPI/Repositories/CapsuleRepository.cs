@@ -3,27 +3,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Chronoria_WebAPI.Repositories
 {
-    public abstract class BaseCapsuleRepository : IBaseCapsuleRepository
+    public abstract class CapsuleRepository<DbContextType> : ICapsuleRepository<DbContextType> where DbContextType : BaseContext
     {
-        protected readonly BaseContext _context;
+        protected readonly DbContextType _context;
 
-        public BaseCapsuleRepository(BaseContext context)
+        public CapsuleRepository(DbContextType context)
         {
             _context = context;
         }
 
-        public async Task<Capsule> Create(Capsule capsule)
+        public async Task<Capsule> Create(Capsule entry)
         {
-            _context.Capsules.Add(capsule);
+            _context.Capsules.Add(entry);
             await _context.SaveChangesAsync();
 
-            return capsule;
+            return entry;
         }
 
         public async Task Delete(int id)
         {
-            var capsule = await _context.Capsules.FindAsync(id);
-            _context.Capsules.Remove(capsule);
+            var entry = await _context.Capsules.FindAsync(id);
+            _context.Capsules.Remove(entry);
             await _context.SaveChangesAsync();
         }
 
@@ -37,9 +37,9 @@ namespace Chronoria_WebAPI.Repositories
             return await _context.Capsules.FindAsync(id);
         }
 
-        public async Task Update(Capsule capsule)
+        public async Task Update(Capsule entry)
         {
-            _context.Entry(capsule).State = EntityState.Modified;
+            _context.Entry(entry).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
     }

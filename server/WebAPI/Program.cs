@@ -7,9 +7,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 // Database Repositories
-builder.Services.AddScoped<IPendingCapsuleRepository, PendingCapsuleRepository>();
-builder.Services.AddScoped<IActiveCapsuleRepository, ActiveCapsuleRepository>();
-builder.Services.AddScoped<IArchivedCapsuleRepository, ArchivedCapsuleRepository>();
+builder.Services.AddScoped<ICapsuleRepository<PendingContext>, CapsuleRepository<PendingContext>>();
+builder.Services.AddScoped<ICapsuleRepository<ActiveContext>, CapsuleRepository<ActiveContext>>();
+builder.Services.AddScoped<ICapsuleRepository<ArchivedContext>, CapsuleRepository<ArchivedContext>>();
+
+builder.Services.AddScoped<IFileContentRepository<PendingContext>, FileContentRepository<PendingContext>>();
+builder.Services.AddScoped<IFileContentRepository<ActiveContext>, FileContentRepository<ActiveContext>>();
+builder.Services.AddScoped<IFileContentRepository<ArchivedContext>, FileContentRepository<ArchivedContext>>();
+
+builder.Services.AddScoped<ITextContentRepository<PendingContext>, TextContentRepository<PendingContext>>();
+builder.Services.AddScoped<ITextContentRepository<ActiveContext>, TextContentRepository<ActiveContext>>();
+builder.Services.AddScoped<ITextContentRepository<ArchivedContext>, TextContentRepository<ArchivedContext>>();
 
 // Databases Contexts
 builder.Services.AddDbContext<PendingContext>(o => o.UseNpgsql("TODO"));
