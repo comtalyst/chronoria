@@ -42,6 +42,16 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MainPolicy", builder =>
+    {
+        builder.WithOrigins("*").WithMethods("POST", "GET", "PUT", "DELETE");
+    });
+});
+app.UseCors("MainPolicy");
+
 app.MapControllers();
 
 app.Run();
