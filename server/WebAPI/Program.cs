@@ -1,10 +1,14 @@
 using Chronoria_WebAPI.Models;
+using Chronoria_WebAPI.Services;
 using Chronoria_WebAPI.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+// Services
+builder.Services.AddSingleton<IIdService, IdService>();
 
 // Database Repositories
 builder.Services.AddScoped<ICapsuleRepository<PendingContext>, CapsuleRepository<PendingContext>>();
