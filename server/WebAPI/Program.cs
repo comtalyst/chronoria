@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Services
 builder.Services.AddSingleton<IIdService, IdService>();
+builder.Services.AddSingleton<ISubmissionService, SubmissionService>();
 
 // Database Repositories
 builder.Services.AddScoped<ICapsuleRepository<PendingContext>, CapsuleRepository<PendingContext>>();

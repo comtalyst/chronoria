@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Chronoria_WebAPI.Models;
+using Chronoria_WebAPI.Services;
 
 namespace Chronoria_WebAPI.Controllers
 {
@@ -8,6 +8,8 @@ namespace Chronoria_WebAPI.Controllers
     [ApiController]
     public class SubmissionController : ControllerBase
     {
+        ISubmissionService submissionService;
+
         [Route("file/")]
         [HttpPost]
         public async Task<IActionResult> PostFile(
@@ -24,28 +26,24 @@ namespace Chronoria_WebAPI.Controllers
                 Models.File file
             )
         {
-            // TODO: Check blacklist
-
-            // TODO: Reroute the file to blob storage
             try
             {
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", file.FileName);
-                using (Stream stream = new FileStream(path, FileMode.Create))
-                {
-                    file.FormFile.CopyTo(stream);
-                }
+                submissionService.SubmitFile(
+                    senderEmail,
+                    senderName,
+                    recipientEmail,
+                    recipientName,
+                    sendTime,
+                    createTime,
+                    textLocation,
+                    text,
+                    file
+                );
             }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-
-            // TODO: Generate UUID
-
-            // TODO: Put into DB
-
-            // TODO: Confirmation email
-
             return StatusCode(StatusCodes.Status200OK);
         }
 
@@ -62,14 +60,22 @@ namespace Chronoria_WebAPI.Controllers
                 string text
             )
         {
-            // TODO: Check blacklist
-
-            // TODO: Generate UUID
-
-            // TODO: Put into DB
-
-            // TODO: Confirmation email
-
+            try
+            {
+                submissionService.SubmitText(
+                    senderEmail,
+                    senderName,
+                    recipientEmail,
+                    recipientName,
+                    sendTime,
+                    createTime,
+                    text
+                );
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
             return StatusCode(StatusCodes.Status200OK);
         }
     }
