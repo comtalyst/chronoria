@@ -17,7 +17,6 @@ namespace Chronoria_WebAPI.Services
             string recipientEmail, 
             string recipientName, 
             long sendTime, 
-            long createTime, 
             int textLocation, 
             string text, 
             Models.File file
@@ -51,7 +50,7 @@ namespace Chronoria_WebAPI.Services
                 recipientName, 
                 1, 
                 TimeUtils.EpochMsToDateTime(sendTime),
-                TimeUtils.EpochMsToDateTime(createTime), 
+                TimeUtils.now(), 
                 0
             );  // TODO: enums
             pendingCapsuleRepo.Create(capsule);
@@ -65,7 +64,6 @@ namespace Chronoria_WebAPI.Services
             string recipientEmail, 
             string recipientName, 
             long sendTime, 
-            long createTime, 
             string text
         )
         {
@@ -89,7 +87,7 @@ namespace Chronoria_WebAPI.Services
                 recipientName,
                 1,
                 TimeUtils.EpochMsToDateTime(sendTime),
-                TimeUtils.EpochMsToDateTime(createTime),
+                TimeUtils.now(),
                 0
             );  // TODO: enums
             pendingCapsuleRepo.Create(capsule);

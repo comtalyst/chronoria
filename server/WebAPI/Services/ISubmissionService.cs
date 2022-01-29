@@ -8,7 +8,6 @@
             string recipientEmail,
             string recipientName,
             long sendTime,
-            long createTime,
             int textLocation,
             string text,
             Models.File file
@@ -20,7 +19,6 @@
             string recipientEmail,
             string recipientName,
             long sendTime,
-            long createTime,
             string text
         );
     }

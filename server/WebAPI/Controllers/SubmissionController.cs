@@ -19,7 +19,6 @@ namespace Chronoria_WebAPI.Controllers
                 string recipientEmail,
                 string recipientName,
                 long sendTime,
-                long createTime,
                 int textLocation,
                 string text,
             [FromForm] 
@@ -34,7 +33,6 @@ namespace Chronoria_WebAPI.Controllers
                     recipientEmail,
                     recipientName,
                     sendTime,
-                    createTime,
                     textLocation,
                     text,
                     file
@@ -56,7 +54,6 @@ namespace Chronoria_WebAPI.Controllers
                 string recipientEmail,
                 string recipientName,
                 long sendTime,
-                long createTime,
                 string text
             )
         {
@@ -68,7 +65,6 @@ namespace Chronoria_WebAPI.Controllers
                     recipientEmail,
                     recipientName,
                     sendTime,
-                    createTime,
                     text
                 );
             }
