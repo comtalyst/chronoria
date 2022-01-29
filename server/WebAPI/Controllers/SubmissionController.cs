@@ -25,6 +25,8 @@ namespace Chronoria_WebAPI.Controllers
                 Models.File file
             )
         {
+            // TODO: validate all parameters (for security proposes)
+
             try
             {
                 submissionService.SubmitFile(
