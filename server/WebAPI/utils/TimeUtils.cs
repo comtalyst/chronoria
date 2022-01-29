@@ -10,5 +10,9 @@
         {
             return DateTimeOffset.FromUnixTimeMilliseconds(ms).DateTime;
         }
+        public static DateTime now()
+        {
+            return DateTime.Now;
+        }
     }
 }
