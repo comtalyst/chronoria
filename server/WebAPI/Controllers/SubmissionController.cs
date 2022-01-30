@@ -25,7 +25,7 @@ namespace Chronoria_WebAPI.Controllers
                 Models.File file
             )
         {
-            // TODO: validate all parameters (for security proposes)
+            // TODO: validate all parameters (for security proposes)--maybe create a validator service and utilize it here
 
             try
             {
