@@ -29,6 +29,4 @@ namespace Chronoria_WebAPI.Repositories.Blob
             throw new NotImplementedException();
         }
     }
-    {
-    }
 }
