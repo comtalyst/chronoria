@@ -24,19 +24,19 @@ namespace Chronoria_WebAPI.Services
         {
             // TODO: Check blacklist
 
+            // Generate UUID
+            string id = idService.generate();
+
             // TODO: Reroute the file to blob storage and retrieve a file ID
             string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", file.FileName);
             using (Stream stream = new FileStream(path, FileMode.Create))
             {
                 file.FormFile.CopyTo(stream);
             }
-            string fileId = "";
+            string fileId = id + "-0";
 
             // TODO: Reroute the text to blob storage and retrieve a text file ID
-            string textFileId = "";
-
-            // Generate UUID
-            string id = idService.generate();
+            string textFileId = id + "-body-0";
 
             // Put into DB
             FileContent fileContent = new FileContent(id, fileId, file.FileName, textLocation, textFileId);
