@@ -1,6 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 
-namespace Chronoria_WebAPI.Repositories.Blob
+namespace Chronoria_WebAPI.Repositories
 {
     public interface IGeneralBlobRepository<BlobServiceClientType, ModelType> where BlobServiceClientType : BlobServiceClient where ModelType : class
     {

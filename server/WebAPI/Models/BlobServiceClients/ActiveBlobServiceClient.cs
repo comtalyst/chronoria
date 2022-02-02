@@ -1,6 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 
-namespace Chronoria_WebAPI.Models.BlobServiceClients
+namespace Chronoria_WebAPI.Models
 {
     public class ActiveBlobServiceClient : BlobServiceClient
     {

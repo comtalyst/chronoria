@@ -3,7 +3,7 @@ using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
 using Chronoria_WebAPI.Models;
 
-namespace Chronoria_WebAPI.Repositories.Blob
+namespace Chronoria_WebAPI.Repositories
 {
     public class FileBlobRepository<BlobServiceClientType> : IFileBlobRepository<BlobServiceClientType> where BlobServiceClientType : BlobServiceClient
     {

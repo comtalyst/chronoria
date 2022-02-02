@@ -1,8 +1,6 @@
 using Chronoria_WebAPI.Models;
-using Chronoria_WebAPI.Models.BlobServiceClients;
 using Chronoria_WebAPI.Services;
 using Chronoria_WebAPI.Repositories;
-using Chronoria_WebAPI.Repositories.Blob;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
