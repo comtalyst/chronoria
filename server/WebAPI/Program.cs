@@ -5,8 +5,6 @@ using Chronoria_WebAPI.Repositories;
 using Chronoria_WebAPI.Repositories.Blob;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
 
 var configBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
 IConfiguration Configuration = configBuilder.Build();
