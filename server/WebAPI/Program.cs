@@ -1,8 +1,12 @@
 using Chronoria_WebAPI.Models;
+using Chronoria_WebAPI.Models.BlobServiceClients;
 using Chronoria_WebAPI.Services;
 using Chronoria_WebAPI.Repositories;
+using Chronoria_WebAPI.Repositories.Blob;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 
 var configBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
 IConfiguration Configuration = configBuilder.Build();
@@ -29,9 +33,21 @@ builder.Services.AddScoped<ITextContentRepository<ActiveContext>, TextContentRep
 builder.Services.AddScoped<ITextContentRepository<ArchivedContext>, TextContentRepository<ArchivedContext>>();
 
 // Databases Contexts
-builder.Services.AddDbContext<PendingContext>(o => o.UseNpgsql(Configuration["Db:Connection:Pending"]));
-builder.Services.AddDbContext<ActiveContext>(o => o.UseNpgsql(Configuration["Db:Connection:Active"]));
-builder.Services.AddDbContext<ArchivedContext>(o => o.UseNpgsql(Configuration["Db:Connection:Archived"]));
+builder.Services.AddDbContext<PendingContext>(o => o.UseNpgsql(Configuration["Db:Connections:Pending"]));
+builder.Services.AddDbContext<ActiveContext>(o => o.UseNpgsql(Configuration["Db:Connections:Active"]));
+builder.Services.AddDbContext<ArchivedContext>(o => o.UseNpgsql(Configuration["Db:Connections:Archived"]));
+
+// Azure Blob Storage
+builder.Services.AddScoped<IFileBlobRepository<ActiveBlobServiceClient>, FileBlobRepository<ActiveBlobServiceClient>>(
+    sp => new FileBlobRepository<ActiveBlobServiceClient>(
+        sp.GetRequiredService<ActiveBlobServiceClient>(), 
+        Configuration["Db:Containers:Active:File"]
+    )
+);
+
+builder.Services.AddSingleton<ActiveBlobServiceClient>(new ActiveBlobServiceClient(Configuration["Blob:Connections:Active"]));
+
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

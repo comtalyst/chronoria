@@ -10,7 +10,7 @@
             long sendTime,
             int textLocation,
             string text,
-            Models.File file
+            Models.UploadedFile file
         );
 
         public void SubmitText(

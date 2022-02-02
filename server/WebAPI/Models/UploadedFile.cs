@@ -2,7 +2,7 @@
 
 namespace Chronoria_WebAPI.Models
 {
-    public class File
+    public class UploadedFile
     {
         public string FileName { get; set; }
         public IFormFile FormFile { get; set; }

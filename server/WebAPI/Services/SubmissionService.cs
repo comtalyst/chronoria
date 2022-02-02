@@ -19,7 +19,7 @@ namespace Chronoria_WebAPI.Services
             long sendTime, 
             int textLocation, 
             string text, 
-            Models.File file
+            UploadedFile file
         )
         {
             // TODO: Check blacklist
