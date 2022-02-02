@@ -11,7 +11,9 @@ namespace Chronoria_WebAPI.Services
         IFileContentRepository<PendingContext> pendingFileContentRepo;
         ITextContentRepository<PendingContext> pendingTextContentRepo;
 
-        public void SubmitFile(
+        IFileBlobRepository<PendingBlobServiceClient> pendingFileBlobRepo;
+
+        public async Task SubmitFile(
             string senderEmail, 
             string senderName, 
             string recipientEmail, 
@@ -33,14 +35,18 @@ namespace Chronoria_WebAPI.Services
             {
                 file.FormFile.CopyTo(stream);
             }
-            string fileId = id + "-0";
+            string fileId = id + "-0";      // new file name for blob storage
+
+            BlobFile blobFile = new BlobFile(fileId, file.FormFile);
+            await pendingFileBlobRepo.Create(blobFile);
+
 
             // TODO: Reroute the text to blob storage and retrieve a text file ID
             string textFileId = id + "-body-0";
 
             // Put into DB
             FileContent fileContent = new FileContent(id, fileId, file.FileName, textLocation, textFileId);
-            pendingFileContentRepo.Create(fileContent);
+            await pendingFileContentRepo.Create(fileContent);
 
             Capsule capsule = new Capsule(
                 id, 
@@ -53,12 +59,12 @@ namespace Chronoria_WebAPI.Services
                 TimeUtils.now(), 
                 0
             );  // TODO: enums
-            pendingCapsuleRepo.Create(capsule);
+            await pendingCapsuleRepo.Create(capsule);
 
             // TODO: Confirmation email
         }
 
-        public void SubmitText(
+        public async Task SubmitText(
             string senderEmail, 
             string senderName, 
             string recipientEmail, 

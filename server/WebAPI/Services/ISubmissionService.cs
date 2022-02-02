@@ -2,7 +2,7 @@
 {
     public interface ISubmissionService
     {
-        public void SubmitFile(
+        public Task SubmitFile(
             string senderEmail,
             string senderName,
             string recipientEmail,
@@ -13,7 +13,7 @@
             Models.UploadedFile file
         );
 
-        public void SubmitText(
+        public Task SubmitText(
             string senderEmail,
             string senderName,
             string recipientEmail,

@@ -29,7 +29,7 @@ namespace Chronoria_WebAPI.Controllers
 
             try
             {
-                submissionService.SubmitFile(
+                await submissionService.SubmitFile(
                     senderEmail,
                     senderName,
                     recipientEmail,
@@ -61,7 +61,7 @@ namespace Chronoria_WebAPI.Controllers
         {
             try
             {
-                submissionService.SubmitText(
+                await submissionService.SubmitText(
                     senderEmail,
                     senderName,
                     recipientEmail,

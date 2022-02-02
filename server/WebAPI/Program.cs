@@ -34,14 +34,22 @@ builder.Services.AddDbContext<ActiveContext>(o => o.UseNpgsql(Configuration["Db:
 builder.Services.AddDbContext<ArchivedContext>(o => o.UseNpgsql(Configuration["Db:Connections:Archived"]));
 
 // Azure Blob Storage
+builder.Services.AddSingleton<PendingBlobServiceClient>(new PendingBlobServiceClient(Configuration["Blob:Connections:Pending"]));
+builder.Services.AddSingleton<ActiveBlobServiceClient>(new ActiveBlobServiceClient(Configuration["Blob:Connections:Active"]));
+
 builder.Services.AddScoped<IFileBlobRepository<ActiveBlobServiceClient>, FileBlobRepository<ActiveBlobServiceClient>>(
     sp => new FileBlobRepository<ActiveBlobServiceClient>(
-        sp.GetRequiredService<ActiveBlobServiceClient>(), 
+        sp.GetRequiredService<ActiveBlobServiceClient>(),
         Configuration["Db:Containers:Active:File"]
+    )
+); 
+builder.Services.AddScoped<IFileBlobRepository<PendingBlobServiceClient>, FileBlobRepository<PendingBlobServiceClient>>(
+    sp => new FileBlobRepository<PendingBlobServiceClient>(
+        sp.GetRequiredService<PendingBlobServiceClient>(),
+        Configuration["Db:Containers:Pending:File"]
     )
 );
 
-builder.Services.AddSingleton<ActiveBlobServiceClient>(new ActiveBlobServiceClient(Configuration["Blob:Connections:Active"]));
 
 
 
