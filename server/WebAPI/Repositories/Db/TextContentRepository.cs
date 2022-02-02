@@ -20,7 +20,7 @@ namespace Chronoria_WebAPI.Repositories
             return entry;
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(string id)
         {
             var entry = await _context.TextContents.FindAsync(id);
             _context.TextContents.Remove(entry);
@@ -32,7 +32,7 @@ namespace Chronoria_WebAPI.Repositories
             return _context.TextContents.ToList();
         }
 
-        public async Task<TextContent> Get(int id)
+        public async Task<TextContent> Get(string id)
         {
             return await _context.TextContents.FindAsync(id);
         }
