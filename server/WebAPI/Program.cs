@@ -2,6 +2,10 @@ using Chronoria_WebAPI.Models;
 using Chronoria_WebAPI.Services;
 using Chronoria_WebAPI.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
+var configBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
+IConfiguration Configuration = configBuilder.Build();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,9 +29,9 @@ builder.Services.AddScoped<ITextContentRepository<ActiveContext>, TextContentRep
 builder.Services.AddScoped<ITextContentRepository<ArchivedContext>, TextContentRepository<ArchivedContext>>();
 
 // Databases Contexts
-builder.Services.AddDbContext<PendingContext>(o => o.UseNpgsql("TODO"));
-builder.Services.AddDbContext<ActiveContext>(o => o.UseNpgsql("TODO"));
-builder.Services.AddDbContext<ArchivedContext>(o => o.UseNpgsql("TODO"));
+builder.Services.AddDbContext<PendingContext>(o => o.UseNpgsql(Configuration["Db:Connection:Pending"]));
+builder.Services.AddDbContext<ActiveContext>(o => o.UseNpgsql(Configuration["Db:Connection:Active"]));
+builder.Services.AddDbContext<ArchivedContext>(o => o.UseNpgsql(Configuration["Db:Connection:Archived"]));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
