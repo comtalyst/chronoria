@@ -12,6 +12,7 @@ namespace Chronoria_WebAPI.Services
         ITextContentRepository<PendingContext> pendingTextContentRepo;
 
         IFileBlobRepository<PendingBlobServiceClient> pendingFileBlobRepo;
+        ITextBlobRepository<PendingBlobServiceClient> pendingTextBlobRepo;
 
         public async Task SubmitFile(
             string senderEmail, 
@@ -41,8 +42,10 @@ namespace Chronoria_WebAPI.Services
             await pendingFileBlobRepo.Create(blobFile);
 
 
-            // TODO: Reroute the text to blob storage and retrieve a text file ID
+            // Reroute the text to blob storage and retrieve a text file ID
             string textFileId = id + "-body-0";
+            BlobText blobText = new BlobText(textFileId, text);
+            await pendingTextBlobRepo.Create(blobText);
 
             // Put into DB
             FileContent fileContent = new FileContent(id, fileId, file.FileName, textLocation, textFileId);
