@@ -16,6 +16,8 @@ builder.Services.AddSingleton<IIdService, IdService>();
 builder.Services.AddSingleton<ISubmissionService, SubmissionService>();
 
 // Database Repositories
+builder.Services.AddScoped<IBlocklistRepository, BlocklistRepository>();
+
 builder.Services.AddScoped<ICapsuleRepository<PendingContext>, CapsuleRepository<PendingContext>>();
 builder.Services.AddScoped<ICapsuleRepository<ActiveContext>, CapsuleRepository<ActiveContext>>();
 builder.Services.AddScoped<ICapsuleRepository<ArchivedContext>, CapsuleRepository<ArchivedContext>>();
@@ -29,6 +31,7 @@ builder.Services.AddScoped<ITextContentRepository<ActiveContext>, TextContentRep
 builder.Services.AddScoped<ITextContentRepository<ArchivedContext>, TextContentRepository<ArchivedContext>>();
 
 // Databases Contexts
+builder.Services.AddDbContext<MetaContext>(o => o.UseNpgsql(Configuration["Db:Connections:Meta"]));
 builder.Services.AddDbContext<PendingContext>(o => o.UseNpgsql(Configuration["Db:Connections:Pending"]));
 builder.Services.AddDbContext<ActiveContext>(o => o.UseNpgsql(Configuration["Db:Connections:Active"]));
 builder.Services.AddDbContext<ArchivedContext>(o => o.UseNpgsql(Configuration["Db:Connections:Archived"]));
