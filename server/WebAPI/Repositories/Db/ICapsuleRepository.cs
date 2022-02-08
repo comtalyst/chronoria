@@ -2,5 +2,5 @@
 
 namespace Chronoria_WebAPI.Repositories
 {
-    public interface ICapsuleRepository<DbContextType> : IGeneralRepository<DbContextType, Capsule> where DbContextType : BaseContext { }
+    public interface ICapsuleRepository<DbContextType> : IGeneralRepository<Capsule> where DbContextType : BaseContext { }
 }

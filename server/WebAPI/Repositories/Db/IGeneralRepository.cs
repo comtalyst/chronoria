@@ -2,7 +2,7 @@
 
 namespace Chronoria_WebAPI.Repositories
 {
-    public interface IGeneralRepository<DbContextType, ModelType> where DbContextType : BaseContext where ModelType : class
+    public interface IGeneralRepository<ModelType> where ModelType : class
     {
         Task<IEnumerable<ModelType>> Get();
         Task<ModelType> Get(string id);

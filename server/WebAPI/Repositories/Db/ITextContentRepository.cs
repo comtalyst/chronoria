@@ -2,5 +2,5 @@
 
 namespace Chronoria_WebAPI.Repositories
 {
-    public interface ITextContentRepository<DbContextType> : IGeneralRepository<DbContextType, TextContent> where DbContextType : BaseContext {}
+    public interface ITextContentRepository<DbContextType> : IGeneralRepository<TextContent> where DbContextType : BaseContext {}
 }
