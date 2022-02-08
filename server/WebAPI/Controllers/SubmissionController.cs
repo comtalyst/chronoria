@@ -9,6 +9,7 @@ namespace Chronoria_WebAPI.Controllers
     public class SubmissionController : ControllerBase
     {
         ISubmissionService submissionService;
+        IBlocklistService blocklistService;
 
         [Route("file/")]
         [HttpPost]
@@ -29,6 +30,12 @@ namespace Chronoria_WebAPI.Controllers
 
             try
             {
+                // Check blocklist
+                if (await blocklistService.BlockExists(senderEmail))
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden);
+                }
+
                 await submissionService.SubmitFile(
                     senderEmail,
                     senderName,
@@ -61,6 +68,12 @@ namespace Chronoria_WebAPI.Controllers
         {
             try
             {
+                // Check blocklist
+                if (await blocklistService.BlockExists(senderEmail))
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden);
+                }
+
                 await submissionService.SubmitText(
                     senderEmail,
                     senderName,

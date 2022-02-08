@@ -7,6 +7,7 @@ namespace Chronoria_WebAPI.Services
     public class SubmissionService : ISubmissionService
     {
         private IIdService idService;
+
         private ICapsuleRepository<PendingContext> pendingCapsuleRepo;
         private IFileContentRepository<PendingContext> pendingFileContentRepo;
         private ITextContentRepository<PendingContext> pendingTextContentRepo;
@@ -42,8 +43,6 @@ namespace Chronoria_WebAPI.Services
             UploadedFile file
         )
         {
-            // TODO: Check blacklist
-
             // Generate UUID
             string id = idService.generate();
 
@@ -93,8 +92,6 @@ namespace Chronoria_WebAPI.Services
             string text
         )
         {
-            // TODO: Check blacklist
-
             // Generate UUID
             string id = idService.generate();
 
