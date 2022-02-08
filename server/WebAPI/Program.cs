@@ -43,25 +43,25 @@ builder.Services.AddSingleton<ActiveBlobServiceClient>(new ActiveBlobServiceClie
 builder.Services.AddScoped<IFileBlobRepository<ActiveBlobServiceClient>, FileBlobRepository<ActiveBlobServiceClient>>(
     sp => new FileBlobRepository<ActiveBlobServiceClient>(
         sp.GetRequiredService<ActiveBlobServiceClient>(),
-        Configuration["Db:Containers:Active:File"]
+        Configuration["Blob:Containers:Active:File"]
     )
 );
 builder.Services.AddScoped<IFileBlobRepository<PendingBlobServiceClient>, FileBlobRepository<PendingBlobServiceClient>>(
     sp => new FileBlobRepository<PendingBlobServiceClient>(
         sp.GetRequiredService<PendingBlobServiceClient>(),
-        Configuration["Db:Containers:Pending:File"]
+        Configuration["Blob:Containers:Pending:File"]
     )
 );
 builder.Services.AddScoped<ITextBlobRepository<ActiveBlobServiceClient>, TextBlobRepository<ActiveBlobServiceClient>>(
     sp => new TextBlobRepository<ActiveBlobServiceClient>(
         sp.GetRequiredService<ActiveBlobServiceClient>(),
-        Configuration["Db:Containers:Active:Text"]
+        Configuration["Blob:Containers:Active:Text"]
     )
 );
 builder.Services.AddScoped<ITextBlobRepository<PendingBlobServiceClient>, TextBlobRepository<PendingBlobServiceClient>>(
     sp => new TextBlobRepository<PendingBlobServiceClient>(
         sp.GetRequiredService<PendingBlobServiceClient>(),
-        Configuration["Db:Containers:Pending:Text"]
+        Configuration["Blob:Containers:Pending:Text"]
     )
 );
 
