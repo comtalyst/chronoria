@@ -29,7 +29,7 @@ namespace Chronoria_WebAPI.Services
             // Generate UUID
             string id = idService.generate();
 
-            // TODO: Reroute the file to blob storage and retrieve a file ID
+            // Reroute the file to blob storage and retrieve a file ID
             string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", file.FileName);
             using (Stream stream = new FileStream(path, FileMode.Create))
             {
