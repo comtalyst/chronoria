@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Services
 builder.Services.AddSingleton<IIdService, IdService>();
 builder.Services.AddSingleton<ISubmissionService, SubmissionService>();
+builder.Services.AddSingleton<IBlocklistService, BlocklistService>();
 
 // Database Repositories
 builder.Services.AddScoped<IBlocklistRepository, BlocklistRepository>();
