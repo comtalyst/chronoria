@@ -7,10 +7,6 @@ namespace Chronoria_WebAPI.Repositories
 {
     public class FileBlobRepository<BlobServiceClientType> : BlobRepositoryHelpers<BlobServiceClientType>, IFileBlobRepository<BlobServiceClientType> where BlobServiceClientType : BlobServiceClient
     {
-        protected readonly BlobServiceClientType _client;
-        protected readonly string _containerName;
-        protected readonly BlobContainerClient blobContainerClient;
-
         public FileBlobRepository(BlobServiceClientType client, string containerName) : base(client, containerName) { }
 
         public async Task<BlobFile> Create(BlobFile entry)
