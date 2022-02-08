@@ -85,7 +85,7 @@ namespace Chronoria_WebAPI.Services
             string id = idService.generate();
 
             // Put into DB
-            TextContent textContent = new TextContent(id, textFileId);
+            TextContent textContent = new TextContent(id, textFileId);          // not the actual content, just the table name that stores blob text file name
             pendingTextContentRepo.Create(textContent);
 
             Capsule capsule = new Capsule(
