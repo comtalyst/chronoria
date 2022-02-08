@@ -6,13 +6,30 @@ namespace Chronoria_WebAPI.Services
 {
     public class SubmissionService : ISubmissionService
     {
-        IIdService idService;
-        ICapsuleRepository<PendingContext> pendingCapsuleRepo;
-        IFileContentRepository<PendingContext> pendingFileContentRepo;
-        ITextContentRepository<PendingContext> pendingTextContentRepo;
+        private IIdService idService;
+        private ICapsuleRepository<PendingContext> pendingCapsuleRepo;
+        private IFileContentRepository<PendingContext> pendingFileContentRepo;
+        private ITextContentRepository<PendingContext> pendingTextContentRepo;
 
-        IFileBlobRepository<PendingBlobServiceClient> pendingFileBlobRepo;
-        ITextBlobRepository<PendingBlobServiceClient> pendingTextBlobRepo;
+        private IFileBlobRepository<PendingBlobServiceClient> pendingFileBlobRepo;
+        private ITextBlobRepository<PendingBlobServiceClient> pendingTextBlobRepo;
+
+        public SubmissionService(
+            IIdService idService,
+            ICapsuleRepository<PendingContext> pendingCapsuleRepo,
+            IFileContentRepository<PendingContext> pendingFileContentRepo,
+            ITextContentRepository<PendingContext> pendingTextContentRepo,
+            IFileBlobRepository<PendingBlobServiceClient> pendingFileBlobRepo,
+            ITextBlobRepository<PendingBlobServiceClient> pendingTextBlobRepo)
+        {
+            this.idService = idService;
+            this.pendingCapsuleRepo = pendingCapsuleRepo;
+            this.pendingFileContentRepo = pendingFileContentRepo;
+            this.pendingTextContentRepo = pendingTextContentRepo;
+            this.pendingTextBlobRepo = pendingTextBlobRepo;
+            this.pendingFileBlobRepo = pendingFileBlobRepo;
+            this.pendingTextBlobRepo = pendingTextBlobRepo;
+        }
 
         public async Task SubmitFile(
             string senderEmail, 
