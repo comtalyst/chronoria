@@ -95,15 +95,17 @@ namespace Chronoria_WebAPI.Services
         {
             // TODO: Check blacklist
 
-            // TODO: Reroute the text to blob storage and retrieve a text file ID
-            string textFileId = "";
-
             // Generate UUID
             string id = idService.generate();
 
+            // Reroute the text to blob storage and retrieve a text file ID
+            string textFileId = id + "-body-0";
+            BlobText blobText = new BlobText(textFileId, text);
+            await pendingTextBlobRepo.Create(blobText);
+
             // Put into DB
             TextContent textContent = new TextContent(id, textFileId);          // not the actual content, just the table name that stores blob text file name
-            pendingTextContentRepo.Create(textContent);
+            await pendingTextContentRepo.Create(textContent);
 
             Capsule capsule = new Capsule(
                 id,
@@ -116,7 +118,7 @@ namespace Chronoria_WebAPI.Services
                 TimeUtils.now(),
                 0
             );  // TODO: enums
-            pendingCapsuleRepo.Create(capsule);
+            await pendingCapsuleRepo.Create(capsule);
 
             // TODO: Confirmation email
         }
