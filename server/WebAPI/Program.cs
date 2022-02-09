@@ -1,6 +1,7 @@
 using Chronoria_WebAPI.Models;
 using Chronoria_WebAPI.Services;
 using Chronoria_WebAPI.Repositories;
+using Chronoria_WebAPI.Producers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -15,6 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<IIdService, IdService>();
 builder.Services.AddSingleton<ISubmissionService, SubmissionService>();
 builder.Services.AddSingleton<IBlocklistService, BlocklistService>();
+
+// Azure Service Bus Producers
+builder.Services.AddSingleton<IConfEmailProducer>(new ConfEmailProducer(Configuration["ServiceBus:Connections:Prime"]));
 
 // Database Repositories
 builder.Services.AddScoped<IBlocklistRepository, BlocklistRepository>();
