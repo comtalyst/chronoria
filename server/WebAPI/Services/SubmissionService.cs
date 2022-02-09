@@ -37,8 +37,8 @@ namespace Chronoria_WebAPI.Services
             string senderName, 
             string recipientEmail, 
             string recipientName, 
-            long sendTime, 
-            int textLocation, 
+            long sendTime,
+            string textLocation, 
             string text, 
             UploadedFile file
         )
@@ -64,7 +64,7 @@ namespace Chronoria_WebAPI.Services
             await pendingTextBlobRepo.Create(blobText);
 
             // Put into DB
-            FileContent fileContent = new FileContent(id, fileId, file.FileName, textLocation, textFileId);
+            FileContent fileContent = new FileContent(id, fileId, file.FileName, (TextLocation)Enum.Parse(typeof(TextLocation), textLocation), textFileId);
             await pendingFileContentRepo.Create(fileContent);
 
             Capsule capsule = new Capsule(
@@ -73,11 +73,11 @@ namespace Chronoria_WebAPI.Services
                 senderName, 
                 recipientEmail, 
                 recipientName, 
-                1, 
+                (ContentType)Enum.Parse(typeof(ContentType), "File"), 
                 TimeUtils.EpochMsToDateTime(sendTime),
-                TimeUtils.now(), 
-                0
-            );  // TODO: enums
+                TimeUtils.now(),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+            );
             await pendingCapsuleRepo.Create(capsule);
 
             // TODO: Confirmation email
@@ -110,11 +110,11 @@ namespace Chronoria_WebAPI.Services
                 senderName,
                 recipientEmail,
                 recipientName,
-                1,
+                (ContentType)Enum.Parse(typeof(ContentType), "Text"),
                 TimeUtils.EpochMsToDateTime(sendTime),
                 TimeUtils.now(),
-                0
-            );  // TODO: enums
+                (Status)Enum.Parse(typeof(Status), "Pending")
+            );
             await pendingCapsuleRepo.Create(capsule);
 
             // TODO: Confirmation email

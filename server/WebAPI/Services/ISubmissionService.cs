@@ -8,7 +8,7 @@
             string recipientEmail,
             string recipientName,
             long sendTime,
-            int textLocation,
+            string textLocation,
             string text,
             Models.UploadedFile file
         );

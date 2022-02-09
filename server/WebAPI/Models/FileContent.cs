@@ -1,18 +1,23 @@
 ﻿namespace Chronoria_WebAPI.Models
 {
+    public enum TextLocation
+    {
+        Before,
+        After
+    }
     public class FileContent
     {
         public string Id { get; set; }
         public string FileId { get; set; }
         public string FileName { get; set; }
-        public int TextLocation { get; set; }
+        public TextLocation TextLocation { get; set; }
         public string TextFileId { get; set; }
 
         public FileContent(
             string Id,
             string FileId,
             string FileName,
-            int TextLocation,
+            TextLocation TextLocation,
             string TextFileId
         )
         {

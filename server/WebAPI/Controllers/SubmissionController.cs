@@ -20,7 +20,7 @@ namespace Chronoria_WebAPI.Controllers
                 string recipientEmail,
                 string recipientName,
                 long sendTime,
-                int textLocation,
+                string textLocation,
                 string text,
             [FromForm] 
                 Models.UploadedFile file

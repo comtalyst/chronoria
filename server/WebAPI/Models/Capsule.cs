@@ -1,5 +1,16 @@
 ﻿namespace Chronoria_WebAPI.Models
 {
+    public enum ContentType
+    {
+        File,
+        Text
+    }
+    public enum Status
+    {
+        Pending,
+        Active,
+        Archived
+    }
     public class Capsule
     {
         public string Id { get; set; }
@@ -7,10 +18,10 @@
         public string SenderName { get; set; }
         public string RecipientEmail { get; set; }
         public string RecipientName { get; set; }
-        public int ContentType { get; set; }
+        public ContentType ContentType { get; set; }
         public DateTime SendTime { get; set; }
         public DateTime CreateTime { get; set; }
-        public int Status { get; set; }
+        public Status Status { get; set; }
 
         public Capsule(
             string Id, 
@@ -18,10 +29,10 @@
             string SenderName, 
             string RecipientEmail,
             string RecipientName,
-            int ContentType,
+            ContentType ContentType,
             DateTime SendTime,
             DateTime CreateTime,
-            int status
+            Status status
         )
         {
             this.Id = Id;
