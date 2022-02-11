@@ -1,5 +1,6 @@
 ﻿using Chronoria_WebAPI.Repositories;
 using Chronoria_WebAPI.Models;
+using Chronoria_WebAPI.Producers;
 using Chronoria_WebAPI.utils;
 
 namespace Chronoria_WebAPI.Services
@@ -15,13 +16,16 @@ namespace Chronoria_WebAPI.Services
         private IFileBlobRepository<PendingBlobServiceClient> pendingFileBlobRepo;
         private ITextBlobRepository<PendingBlobServiceClient> pendingTextBlobRepo;
 
+        private IConfEmailProducer confEmailProducer;
+
         public SubmissionService(
             IIdService idService,
             ICapsuleRepository<PendingContext> pendingCapsuleRepo,
             IFileContentRepository<PendingContext> pendingFileContentRepo,
             ITextContentRepository<PendingContext> pendingTextContentRepo,
             IFileBlobRepository<PendingBlobServiceClient> pendingFileBlobRepo,
-            ITextBlobRepository<PendingBlobServiceClient> pendingTextBlobRepo)
+            ITextBlobRepository<PendingBlobServiceClient> pendingTextBlobRepo,
+            IConfEmailProducer confEmailProducer)
         {
             this.idService = idService;
             this.pendingCapsuleRepo = pendingCapsuleRepo;
@@ -30,6 +34,7 @@ namespace Chronoria_WebAPI.Services
             this.pendingTextBlobRepo = pendingTextBlobRepo;
             this.pendingFileBlobRepo = pendingFileBlobRepo;
             this.pendingTextBlobRepo = pendingTextBlobRepo;
+            this.confEmailProducer = confEmailProducer;
         }
 
         public async Task SubmitFile(
@@ -80,7 +85,8 @@ namespace Chronoria_WebAPI.Services
             );
             await pendingCapsuleRepo.Create(capsule);
 
-            // TODO: Confirmation email
+            // Confirmation email
+            await confEmailProducer.Produce(new ConfEmailMessage(senderEmail, id));
         }
 
         public async Task SubmitText(
@@ -117,7 +123,8 @@ namespace Chronoria_WebAPI.Services
             );
             await pendingCapsuleRepo.Create(capsule);
 
-            // TODO: Confirmation email
+            // Confirmation email
+            await confEmailProducer.Produce(new ConfEmailMessage(senderEmail, id));
         }
     }
 }
