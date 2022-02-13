@@ -1,4 +1,6 @@
-﻿namespace Chronoria_WebAPI.Models
+﻿using Newtonsoft.Json;
+
+namespace Chronoria_WebAPI.Models
 {
     public class ConfEmailMessage : IMessage
     {
@@ -12,8 +14,16 @@
         }
         public string Jsonify()
         {
-            // TODO
-            throw new NotImplementedException();
+            var obj = new
+            {
+                _meta = new {
+                    MessageClass = "ConfEmailMessage",
+                    Sender = "Chronoria_WebAPI"
+                },
+                Email = Email,
+                Ref = Ref
+            };
+            return JsonConvert.SerializeObject(obj);
         }
     }
 }
