@@ -18,7 +18,7 @@ namespace Chronoria_WebAPI.Models
             {
                 _meta = new {
                     MessageClass = "ConfEmailMessage",
-                    Sender = "Chronoria_WebAPI"
+                    Sender = "Chronoria-WebAPI"
                 },
                 Email = Email,
                 Ref = Ref
