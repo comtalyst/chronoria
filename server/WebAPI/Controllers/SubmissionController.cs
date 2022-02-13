@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Chronoria_WebAPI.Services;
+using Chronoria_WebAPI.Models;
 
 namespace Chronoria_WebAPI.Controllers
 {
@@ -23,7 +24,7 @@ namespace Chronoria_WebAPI.Controllers
                 string textLocation,
                 string text,
             [FromForm] 
-                Models.UploadedFile file
+                UploadedFile file
             )
         {
             // TODO: validate all parameters (for security proposes)--maybe create a validator service and utilize it here
