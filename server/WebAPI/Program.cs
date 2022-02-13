@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<IIdService, IdService>();
 builder.Services.AddSingleton<ISubmissionService, SubmissionService>();
 builder.Services.AddSingleton<IBlocklistService, BlocklistService>();
+builder.Services.AddSingleton<IRequestValidationService>(new RequestValidationService(Configuration.GetSection("Constraints")));
 
 // Azure Service Bus Producers
 builder.Services.AddSingleton<IConfEmailProducer>(new ConfEmailProducer(Configuration["ServiceBus:Connections:Prime"]));
