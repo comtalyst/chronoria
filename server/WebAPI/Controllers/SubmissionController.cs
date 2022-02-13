@@ -11,6 +11,7 @@ namespace Chronoria_WebAPI.Controllers
     {
         ISubmissionService submissionService;
         IBlocklistService blocklistService;
+        IRequestValidationService requestValidationService;
 
         [Route("file/")]
         [HttpPost]
@@ -27,7 +28,22 @@ namespace Chronoria_WebAPI.Controllers
                 UploadedFile file
             )
         {
-            // TODO: validate all parameters (for security proposes)--maybe create a validator service and utilize it here
+            // validate all parameters (for security proposes)
+            try
+            {
+                requestValidationService.ValidateEmail(senderEmail);
+                requestValidationService.ValidateEmail(recipientEmail);
+                requestValidationService.ValidateName(senderName);
+                requestValidationService.ValidateName(recipientName);
+                requestValidationService.ValidateFutureTime(sendTime);
+                requestValidationService.ValidateTextLoc(textLocation);
+                requestValidationService.ValidateText(text);
+                requestValidationService.ValidateFile(file);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
 
             try
             {
@@ -67,6 +83,21 @@ namespace Chronoria_WebAPI.Controllers
                 string text
             )
         {
+            // validate all parameters (for security proposes)
+            try
+            {
+                requestValidationService.ValidateEmail(senderEmail);
+                requestValidationService.ValidateEmail(recipientEmail);
+                requestValidationService.ValidateName(senderName);
+                requestValidationService.ValidateName(recipientName);
+                requestValidationService.ValidateFutureTime(sendTime);
+                requestValidationService.ValidateText(text);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
             try
             {
                 // Check blocklist
