@@ -1,7 +1,7 @@
 ﻿using Xunit;
 using Chronoria_WebAPI.Services;
 
-namespace Tests.Services
+namespace Chronoria_WebAPI.Tests.Services
 {
     public class IdServiceTest
     {
