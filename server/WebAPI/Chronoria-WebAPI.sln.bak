@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chronoria-WebAPI", "Chronoria-WebAPI.csproj", "{94AFF1F9-D80E-44E0-AA6B-DF8AF0846DEC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chronoria-WebAPI.Tests", "..\WebAPI.tests\Chronoria-WebAPI.Tests.csproj", "{254432F0-34F6-4691-A636-E6A83EB4E040}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chronoria-WebAPI.Tests", "..\WebAPI.Tests\Chronoria-WebAPI.Tests.csproj", "{254432F0-34F6-4691-A636-E6A83EB4E040}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
