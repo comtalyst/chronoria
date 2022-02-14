@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Chronoria_WebAPI.Repositories
 {
-    public abstract class CapsuleRepository<DbContextType> : ICapsuleRepository<DbContextType> where DbContextType : BaseContext
+    public class CapsuleRepository<DbContextType> : ICapsuleRepository<DbContextType> where DbContextType : BaseContext
     {
         protected readonly DbContextType _context;
 
