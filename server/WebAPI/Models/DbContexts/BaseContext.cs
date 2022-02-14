@@ -4,7 +4,9 @@ namespace Chronoria_WebAPI.Models
 {
     public abstract class BaseContext : DbContext
     {
-        public BaseContext(DbContextOptions options) : base(options) { }
+        public BaseContext(DbContextOptions options) : base(options) {
+            Database.EnsureCreated();
+        }
 
         // Each DbSet will map to a table in the database
         public DbSet<Capsule> Capsules { get; set; }

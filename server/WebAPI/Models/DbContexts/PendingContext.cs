@@ -4,9 +4,6 @@ namespace Chronoria_WebAPI.Models
 {
     public class PendingContext : BaseContext
     {
-        public PendingContext(DbContextOptions<PendingContext> options) : base(options)
-        {
-            Database.EnsureCreated();
-        }
+        public PendingContext(DbContextOptions<PendingContext> options) : base(options) { }
     }
 }
