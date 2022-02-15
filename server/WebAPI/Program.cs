@@ -13,10 +13,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 // Services
-builder.Services.AddSingleton<IIdService, IdService>();
-builder.Services.AddSingleton<ISubmissionService, SubmissionService>();
-builder.Services.AddSingleton<IBlocklistService, BlocklistService>();
-builder.Services.AddSingleton<IRequestValidationService>(new RequestValidationService(Configuration.GetSection("Constraints")));
+builder.Services.AddScoped<IIdService, IdService>();
+builder.Services.AddScoped<ISubmissionService, SubmissionService>();
+builder.Services.AddScoped<IBlocklistService, BlocklistService>();
+builder.Services.AddScoped<IRequestValidationService, RequestValidationService>(
+    sp => new RequestValidationService(Configuration.GetSection("Constraints"))
+    );
 
 // Azure Service Bus Producers
 builder.Services.AddSingleton<IConfEmailProducer>(new ConfEmailProducer(Configuration["ServiceBus:Connections:Prime"]));
@@ -79,6 +81,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MainPolicy", builder =>
+    {
+        builder.WithOrigins("*").WithMethods("POST", "GET", "PUT", "DELETE");
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -92,14 +103,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-// CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("MainPolicy", builder =>
-    {
-        builder.WithOrigins("*").WithMethods("POST", "GET", "PUT", "DELETE");
-    });
-});
 app.UseCors("MainPolicy");
 
 app.MapControllers();
