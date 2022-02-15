@@ -2,7 +2,7 @@
 
 namespace Chronoria_WebAPI.Models
 {
-    public abstract class BaseContext : DbContext
+    public class BaseContext : DbContext
     {
         public BaseContext(DbContextOptions options) : base(options) {
             Database.EnsureCreated();
