@@ -5,7 +5,7 @@ using Chronoria_WebAPI.Producers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-var configBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
+var configBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddUserSecrets<Program>();
 IConfiguration Configuration = configBuilder.Build();
 
 var builder = WebApplication.CreateBuilder(args);

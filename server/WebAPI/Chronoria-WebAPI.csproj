@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Chronoria_WebAPI</RootNamespace>
+    <UserSecretsId>27b9dc2d-8f6f-4b46-839f-dbc19124a4ed</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
