@@ -13,21 +13,30 @@ namespace Chronoria_WebAPI.Controllers
         IBlocklistService blocklistService;
         IRequestValidationService requestValidationService;
 
+        public class PostFileModel
+        {
+            public string senderEmail { get; set; }
+            public string senderName { get; set; }
+            public string recipientEmail { get; set; }
+            public string recipientName { get; set; }
+            public long sendTime { get; set; }
+            public string textLocation { get; set; }
+            public string text { get; set; }
+        }
         [Route("file/")]
         [HttpPost]
         public async Task<IActionResult> PostFile(
-            [FromBody] 
-                string senderEmail,
-                string senderName,
-                string recipientEmail,
-                string recipientName,
-                long sendTime,
-                string textLocation,
-                string text,
-            [FromForm] 
-                UploadedFile file
+            [FromBody] PostFileModel postFileModel,
+            [FromForm] UploadedFile file
             )
         {
+            var senderEmail = postFileModel.senderEmail;
+            var senderName = postFileModel.senderName;
+            var recipientEmail = postFileModel.recipientEmail;
+            var recipientName = postFileModel.recipientName;
+            var sendTime = postFileModel.sendTime;
+            var textLocation = postFileModel.textLocation;
+            var text = postFileModel.text;
             // validate all parameters (for security proposes)
             try
             {
@@ -71,18 +80,27 @@ namespace Chronoria_WebAPI.Controllers
             return StatusCode(StatusCodes.Status200OK);
         }
 
+        public class PostTextModel
+        {
+            public string senderEmail { get; set; }
+            public string senderName { get; set; }
+            public string recipientEmail { get; set; }
+            public string recipientName { get; set; }
+            public long sendTime { get; set; }
+            public string text { get; set; }
+        }
         [Route("text/")]
         [HttpPost]
         public async Task<IActionResult> PostText(
-            [FromBody]
-                string senderEmail,
-                string senderName,
-                string recipientEmail,
-                string recipientName,
-                long sendTime,
-                string text
+            [FromBody] PostTextModel postTextModel
             )
         {
+            var senderEmail = postTextModel.senderEmail;
+            var recipientEmail = postTextModel.recipientEmail;
+            var senderName = postTextModel.senderName;
+            var recipientName = postTextModel.recipientName;
+            var sendTime = postTextModel.sendTime;
+            var text = postTextModel.text;
             // validate all parameters (for security proposes)
             try
             {
