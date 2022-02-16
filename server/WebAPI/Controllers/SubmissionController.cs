@@ -13,6 +13,17 @@ namespace Chronoria_WebAPI.Controllers
         IBlocklistService blocklistService;
         IRequestValidationService requestValidationService;
 
+        public SubmissionController(
+            ISubmissionService submissionService,
+            IBlocklistService blocklistService,
+            IRequestValidationService requestValidationService
+            )
+        {
+            this.submissionService = submissionService;
+            this.blocklistService = blocklistService;
+            this.requestValidationService = requestValidationService;
+        }
+
         public class PostFileModel
         {
             public string senderEmail { get; set; }
