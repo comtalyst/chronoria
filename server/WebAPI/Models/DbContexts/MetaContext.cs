@@ -4,7 +4,7 @@ namespace Chronoria_WebAPI.Models
 {
     public class MetaContext : DbContext
     {
-        public MetaContext(DbContextOptions options) : base(options) { }
+        public MetaContext(DbContextOptions<MetaContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<BlocklistEntry>().HasKey(entry => entry.Email);
