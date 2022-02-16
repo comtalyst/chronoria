@@ -55,7 +55,7 @@ namespace Chronoria_WebAPI.Controllers
                 requestValidationService.ValidateEmail(recipientEmail);
                 requestValidationService.ValidateName(senderName);
                 requestValidationService.ValidateName(recipientName);
-                requestValidationService.ValidateFutureTime(sendTime);
+                //requestValidationService.ValidateFutureTime(sendTime);
                 requestValidationService.ValidateTextLoc(textLocation);
                 requestValidationService.ValidateText(text);
                 requestValidationService.ValidateFile(file);
@@ -119,7 +119,7 @@ namespace Chronoria_WebAPI.Controllers
                 requestValidationService.ValidateEmail(recipientEmail);
                 requestValidationService.ValidateName(senderName);
                 requestValidationService.ValidateName(recipientName);
-                requestValidationService.ValidateFutureTime(sendTime);
+                //requestValidationService.ValidateFutureTime(sendTime);
                 requestValidationService.ValidateText(text);
             }
             catch (Exception)
