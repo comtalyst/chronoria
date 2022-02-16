@@ -62,7 +62,7 @@ namespace Chronoria_WebAPI.Controllers
             }
             catch (Exception)
             {
-                return BadRequest();
+                return BadRequest("Ilegal Arguments Provided");
             }
 
             try
@@ -124,7 +124,7 @@ namespace Chronoria_WebAPI.Controllers
             }
             catch (Exception)
             {
-                return BadRequest();
+                return BadRequest("Ilegal Arguments Provided");
             }
 
             try
