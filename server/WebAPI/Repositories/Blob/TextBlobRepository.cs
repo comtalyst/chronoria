@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using Chronoria_WebAPI.Models;
+using System.Text;
 
 namespace Chronoria_WebAPI.Repositories
 {
@@ -10,7 +11,7 @@ namespace Chronoria_WebAPI.Repositories
         public async Task<BlobText> Create(BlobText entry)
         {
             BlobClient blobClient = GetClient(entry.BlobFileName);
-            await blobClient.UploadAsync(entry.content);
+            await blobClient.UploadAsync(new MemoryStream(Encoding.UTF8.GetBytes(entry.content)));
             return entry;
         }
 
