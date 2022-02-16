@@ -14,7 +14,7 @@ namespace Chronoria_WebAPI.Repositories
         {
             _client = client;
             _containerName = containerName;
-            blobContainerClient = _client.CreateBlobContainer(containerName);
+            blobContainerClient = _client.GetBlobContainerClient(containerName);
         }
 
         protected BlobClient GetClient(string blobFileName)
