@@ -41,13 +41,13 @@ namespace Chronoria_WebAPI.Controllers
             [FromForm] UploadedFile file
             )
         {
-            var senderEmail = postFileModel.senderEmail;
-            var senderName = postFileModel.senderName;
-            var recipientEmail = postFileModel.recipientEmail;
-            var recipientName = postFileModel.recipientName;
+            var senderEmail = postFileModel.senderEmail.Trim();
+            var senderName = postFileModel.senderName.Trim();
+            var recipientEmail = postFileModel.recipientEmail.Trim();
+            var recipientName = postFileModel.recipientName.Trim();
             var sendTime = postFileModel.sendTime;
-            var textLocation = postFileModel.textLocation;
-            var text = postFileModel.text;
+            var textLocation = postFileModel.textLocation.Trim();
+            var text = postFileModel.text.Trim();
             // validate all parameters (for security proposes)
             try
             {
@@ -106,12 +106,12 @@ namespace Chronoria_WebAPI.Controllers
             [FromBody] PostTextModel postTextModel
             )
         {
-            var senderEmail = postTextModel.senderEmail;
-            var recipientEmail = postTextModel.recipientEmail;
-            var senderName = postTextModel.senderName;
-            var recipientName = postTextModel.recipientName;
+            var senderEmail = postTextModel.senderEmail.Trim();
+            var recipientEmail = postTextModel.recipientEmail.Trim();
+            var senderName = postTextModel.senderName.Trim();
+            var recipientName = postTextModel.recipientName.Trim();
             var sendTime = postTextModel.sendTime;
-            var text = postTextModel.text;
+            var text = postTextModel.text.Trim();
             // validate all parameters (for security proposes)
             try
             {
