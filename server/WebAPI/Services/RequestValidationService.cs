@@ -12,6 +12,10 @@ namespace Chronoria_WebAPI.Services
         }
         public void ValidateEmail(string email)
         {
+            if(email.Length > constraints.GetValue<int>("EmailCh"))
+            {
+                throw new ArgumentException();
+            }
             if (email.EndsWith('.'))
             {
                 throw new ArgumentException();
