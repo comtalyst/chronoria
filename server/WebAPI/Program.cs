@@ -3,14 +3,31 @@ using Chronoria_WebAPI.Services;
 using Chronoria_WebAPI.Repositories;
 using Chronoria_WebAPI.Producers;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using Azure.Security.KeyVault.Secrets;
+using Azure.Identity;
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
 
-var configBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json").AddUserSecrets<Program>();
+// Initialize builder/config
+var builder = WebApplication.CreateBuilder(args);
+var configBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
+if (builder.Environment.IsDevelopment())
+{
+    configBuilder = configBuilder.AddUserSecrets<Program>();
+}
 IConfiguration Configuration = configBuilder.Build();
 
-var builder = WebApplication.CreateBuilder(args);
+// Add more config
+if (builder.Environment.IsProduction())
+{
+    builder.Configuration.AddAzureKeyVault(
+        new SecretClient(
+            new Uri($"https://{Configuration["Vault:KeyVaultName"]}.vault.azure.net/"),
+            new DefaultAzureCredential()
+            ),
+        new KeyVaultSecretManager()
+        );
+}
 
-// Add services to the container.
 
 // Services
 builder.Services.AddScoped<IIdService, IdService>();
