@@ -21,7 +21,7 @@ namespace Chronoria_WebAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Confirm(string id)
+        public async Task<IActionResult> Confirm(string id)
         {
             id = id.Trim();
             if (!idService.validate(id))
@@ -30,7 +30,7 @@ namespace Chronoria_WebAPI.Controllers
             }
             try
             {
-                confirmationService.Confirm(id);
+                await confirmationService.Confirm(id);
             }
             catch (ArgumentException ex)
             {
