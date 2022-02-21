@@ -7,5 +7,7 @@ namespace Chronoria_WebAPI.Repositories
         Task<ModelType> Get(string blobFileName);
         Task<ModelType> Create(ModelType entry);
         Task Delete(string blobFileName);
+        Uri GetTransferUri(string blobFileName);
+        Task ReceiveTransfer(string blobFileName, Uri uri);
     }
 }
