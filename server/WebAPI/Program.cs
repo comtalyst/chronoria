@@ -7,7 +7,7 @@ using Azure.Security.KeyVault.Secrets;
 using Azure.Identity;
 using Azure.Extensions.AspNetCore.Configuration.Secrets;
 
-// Initialize builder/config
+// Initialize builder/primary config
 var builder = WebApplication.CreateBuilder(args);
 var configBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
 if (builder.Environment.IsDevelopment())
@@ -16,10 +16,10 @@ if (builder.Environment.IsDevelopment())
 }
 IConfiguration Configuration = configBuilder.Build();
 
-// Add more config
+// Add secondary config
 if (builder.Environment.IsProduction())
 {
-    builder.Configuration.AddAzureKeyVault(
+    configBuilder = configBuilder.AddAzureKeyVault(
         new SecretClient(
             new Uri($"https://{Configuration["Vault:KeyVaultName"]}.vault.azure.net/"),
             new DefaultAzureCredential()
@@ -27,6 +27,7 @@ if (builder.Environment.IsProduction())
         new KeyVaultSecretManager()
         );
 }
+Configuration = configBuilder.Build();
 
 
 // Services
