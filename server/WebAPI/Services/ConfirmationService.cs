@@ -52,13 +52,13 @@ namespace Chronoria_WebAPI.Services
             // Get from pending DB
             var capsule = await pendingCapsuleRepo.Get(id);
             if(capsule == null)
-                throw new ArgumentException("ID Not Found / Just Expired");         // TODO: some protocol with the frontend
+                throw new ArgumentException("CapsuleNotFound;Expired");         // TODO: some protocol with the frontend
             
             if (capsule.ContentType == ContentType.Text)
             {
                 var content = await pendingTextContentRepo.Get(id);
                 if (content == null)
-                    throw new ArgumentException("Just Expired");
+                    throw new ArgumentException("ContentNotFound;JustExpired");
 
                 // Remove from pending DB                                            // neglectible
                 neglectibleTasks.Add(pendingCapsuleRepo.Delete(id));
@@ -67,7 +67,7 @@ namespace Chronoria_WebAPI.Services
                 // Transfer blob files                                               // time consuming; might move all after this to consumer
                 var uri = pendingTextBlobRepo.GetTransferUri(content.TextFileId);
                 if (uri == null)
-                    throw new ArgumentException("File Not Found / Just Expired");
+                    throw new ArgumentException("TextNotFound;JustExpired");
 
                 try
                 {
@@ -75,7 +75,7 @@ namespace Chronoria_WebAPI.Services
                 }
                 catch (Exception)                                                    // could fail if it expires right when transferring
                 {
-                    throw new ArgumentException("Just Expired");
+                    throw new ArgumentException("JustExpired");
                 }
 
                 // Add to active DB                                                  // should not expect any failure/expire now
@@ -86,14 +86,45 @@ namespace Chronoria_WebAPI.Services
             }
             else if (capsule.ContentType == ContentType.File)
             {
-                // TODO
+                var content = await pendingFileContentRepo.Get(id);
+                if (content == null)
+                    throw new ArgumentException("ContentNotFound;JustExpired");
+
+                // Remove from pending DB
+                neglectibleTasks.Add(pendingCapsuleRepo.Delete(id));
+                neglectibleTasks.Add(pendingFileContentRepo.Delete(id));
+
+                // Transfer blob files
+                var uriText = pendingTextBlobRepo.GetTransferUri(content.TextFileId);
+                if (uriText == null)
+                    throw new ArgumentException("TextNotFound;JustExpired");
+                var uriFile = pendingFileBlobRepo.GetTransferUri(content.FileId);
+                if (uriFile == null)
+                    throw new ArgumentException("FileNotFound;JustExpired");
+
+                // we could run them concorrently
+                var textTransferTask = activeTextBlobRepo.ReceiveTransfer(content.TextFileId, uriText);
+                var fileTransferTask = activeFileBlobRepo.ReceiveTransfer(content.FileId, uriFile);
+                try
+                {
+                    await textTransferTask;
+                    await fileTransferTask;
+                }
+                catch (Exception)
+                {
+                    throw new ArgumentException("JustExpired");
+                }
+
+                // Add to active DB
+                await pendingFileContentRepo.Create(content);
+                await activeCapsuleRepo.Create(capsule);
+
+                // TODO: send receipt email
             }
             else
             {
                 throw new NotImplementedException("Unknown Capsule Type");
             }
-
-            throw new NotImplementedException();
         }
     }
 }
