@@ -78,10 +78,10 @@ namespace Chronoria_WebAPI.Services
                 senderName, 
                 recipientEmail, 
                 recipientName, 
-                (ContentType)Enum.Parse(typeof(ContentType), "File"), 
+                ContentType.File, 
                 TimeUtils.EpochMsToDateTime(sendTime),
                 TimeUtils.now(),
-                (Status)Enum.Parse(typeof(Status), "Pending")
+                Status.Pending
             );
             await pendingCapsuleRepo.Create(capsule);
 
@@ -116,10 +116,10 @@ namespace Chronoria_WebAPI.Services
                 senderName,
                 recipientEmail,
                 recipientName,
-                (ContentType)Enum.Parse(typeof(ContentType), "Text"),
+                ContentType.Text,
                 TimeUtils.EpochMsToDateTime(sendTime),
                 TimeUtils.now(),
-                (Status)Enum.Parse(typeof(Status), "Pending")
+                Status.Pending
             );
             await pendingCapsuleRepo.Create(capsule);
 
