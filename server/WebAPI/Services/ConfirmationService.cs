@@ -79,8 +79,10 @@ namespace Chronoria_WebAPI.Services
                 }
 
                 // Add to active DB                                                  // should not expect any failure/expire now
+                var newCapsule = new Capsule(capsule);
+                newCapsule.Status = Status.Active;
                 await activeTextContentRepo.Create(content);       // must be ready for send schedule
-                await activeCapsuleRepo.Create(capsule);            // will trigger the send schedule; most things must be ready before this
+                await activeCapsuleRepo.Create(newCapsule);            // will trigger the send schedule; most things must be ready before this
 
                 // TODO: send receipt email
             }
@@ -116,8 +118,10 @@ namespace Chronoria_WebAPI.Services
                 }
 
                 // Add to active DB
+                var newCapsule = new Capsule(capsule);
+                newCapsule.Status = Status.Active;
                 await activeFileContentRepo.Create(content);
-                await activeCapsuleRepo.Create(capsule);
+                await activeCapsuleRepo.Create(newCapsule);
 
                 // TODO: send receipt email
             }
