@@ -1,5 +1,7 @@
 ﻿using Chronoria_WebAPI.Models;
 using Chronoria_WebAPI.Repositories;
+using Chronoria_WebAPI.Producers;
+using Chronoria_WebAPI.utils;
 
 namespace Chronoria_WebAPI.Services
 {
@@ -19,6 +21,8 @@ namespace Chronoria_WebAPI.Services
         private IFileBlobRepository<ActiveBlobServiceClient> activeFileBlobRepo;
         private ITextBlobRepository<ActiveBlobServiceClient> activeTextBlobRepo;
 
+        private IActiveReceiptEmailProducer activeReceiptEmailProducer;
+
         public ConfirmationService(
             ICapsuleRepository<PendingContext> pendingCapsuleRepo,
             IFileContentRepository<PendingContext> pendingFileContentRepo,
@@ -29,7 +33,8 @@ namespace Chronoria_WebAPI.Services
             IFileContentRepository<ActiveContext> activeFileContentRepo,
             ITextContentRepository<ActiveContext> activeTextContentRepo,
             IFileBlobRepository<ActiveBlobServiceClient> activeFileBlobRepo,
-            ITextBlobRepository<ActiveBlobServiceClient> activeTextBlobRepo)
+            ITextBlobRepository<ActiveBlobServiceClient> activeTextBlobRepo,
+            IActiveReceiptEmailProducer activeReceiptEmailProducer)
         {
             this.pendingCapsuleRepo = pendingCapsuleRepo;
             this.pendingFileContentRepo = pendingFileContentRepo;
@@ -44,6 +49,8 @@ namespace Chronoria_WebAPI.Services
             this.activeTextBlobRepo = activeTextBlobRepo;
             this.activeFileBlobRepo = activeFileBlobRepo;
             this.activeTextBlobRepo = activeTextBlobRepo;
+
+            this.activeReceiptEmailProducer = activeReceiptEmailProducer;
         }
         public async Task Confirm(string id)
         {
@@ -123,7 +130,12 @@ namespace Chronoria_WebAPI.Services
                 await activeFileContentRepo.Create(content);
                 await activeCapsuleRepo.Create(newCapsule);
 
-                // TODO: send receipt email
+                // Send receipt email
+                await activeReceiptEmailProducer.Produce(new ActiveReceiptEmailMessage(newCapsule.SenderEmail, id, 
+                    newCapsule.RecipientName, 
+                    newCapsule.RecipientEmail, 
+                    TimeUtils.DateTimeToEpochMs(newCapsule.SendTime)
+                    ));
             }
             else
             {
