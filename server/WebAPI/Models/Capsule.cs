@@ -23,6 +23,18 @@
         public DateTime CreateTime { get; set; }
         public Status Status { get; set; }
 
+        public Capsule(Capsule capsule)
+        {
+            this.Id = capsule.Id;
+            this.SenderEmail = capsule.SenderEmail;
+            this.SenderName = capsule.SenderName;
+            this.RecipientEmail = capsule.RecipientEmail;
+            this.RecipientName = capsule.RecipientName;
+            this.ContentType = capsule.ContentType;
+            this.SendTime = capsule.SendTime;
+            this.CreateTime = capsule.CreateTime;
+            this.Status = capsule.Status;
+        }
         public Capsule(
             string Id, 
             string SenderEmail, 
