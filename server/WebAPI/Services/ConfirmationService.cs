@@ -79,7 +79,7 @@ namespace Chronoria_WebAPI.Services
                 }
 
                 // Add to active DB                                                  // should not expect any failure/expire now
-                await pendingTextContentRepo.Create(content);       // must be ready for send schedule
+                await activeTextContentRepo.Create(content);       // must be ready for send schedule
                 await activeCapsuleRepo.Create(capsule);            // will trigger the send schedule; most things must be ready before this
 
                 // TODO: send receipt email
@@ -116,7 +116,7 @@ namespace Chronoria_WebAPI.Services
                 }
 
                 // Add to active DB
-                await pendingFileContentRepo.Create(content);
+                await activeFileContentRepo.Create(content);
                 await activeCapsuleRepo.Create(capsule);
 
                 // TODO: send receipt email
