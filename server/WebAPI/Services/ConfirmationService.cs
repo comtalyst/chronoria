@@ -84,6 +84,7 @@ namespace Chronoria_WebAPI.Services
                 {
                     throw new ArgumentException("JustExpired");
                 }
+                await pendingTextBlobRepo.Delete(content.TextFileId);
 
                 // Add to active DB                                                  // should not expect any failure/expire now
                 var newCapsule = new Capsule(capsule);
@@ -123,6 +124,8 @@ namespace Chronoria_WebAPI.Services
                 {
                     throw new ArgumentException("JustExpired");
                 }
+                await pendingTextBlobRepo.Delete(content.TextFileId);
+                await pendingFileBlobRepo.Delete(content.FileId);
 
                 // Add to active DB
                 var newCapsule = new Capsule(capsule);
