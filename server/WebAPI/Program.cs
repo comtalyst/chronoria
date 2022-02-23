@@ -33,6 +33,7 @@ Configuration = configBuilder.Build();
 // Services
 builder.Services.AddScoped<IIdService, IdService>();
 builder.Services.AddScoped<ISubmissionService, SubmissionService>();
+builder.Services.AddScoped<IConfirmationService, ConfirmationService>();
 builder.Services.AddScoped<IBlocklistService, BlocklistService>();
 builder.Services.AddScoped<IRequestValidationService, RequestValidationService>(
     sp => new RequestValidationService(Configuration.GetSection("Constraints"))
@@ -40,6 +41,7 @@ builder.Services.AddScoped<IRequestValidationService, RequestValidationService>(
 
 // Azure Service Bus Producers
 builder.Services.AddSingleton<IConfEmailProducer>(new ConfEmailProducer(Configuration["ServiceBus:Connections:Prime"]));
+builder.Services.AddSingleton<IActiveReceiptEmailProducer>(new ActiveReceiptEmailProducer(Configuration["ServiceBus:Connections:Prime"]));
 
 // Database Repositories
 builder.Services.AddScoped<IBlocklistRepository, BlocklistRepository>();
