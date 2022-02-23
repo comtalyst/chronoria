@@ -40,8 +40,10 @@ builder.Services.AddScoped<IRequestValidationService, RequestValidationService>(
     );
 
 // Azure Service Bus Producers
-builder.Services.AddSingleton<IConfEmailProducer>(new ConfEmailProducer(Configuration["ServiceBus:Connections:Prime"]));
-builder.Services.AddSingleton<IActiveReceiptEmailProducer>(new ActiveReceiptEmailProducer(Configuration["ServiceBus:Connections:Prime"]));
+builder.Services.AddScoped<IConfEmailProducer, ConfEmailProducer>(
+    sp => new ConfEmailProducer(Configuration["ServiceBus:Connections:Prime"]));
+builder.Services.AddScoped<IActiveReceiptEmailProducer, ActiveReceiptEmailProducer>(
+    sp => new ActiveReceiptEmailProducer(Configuration["ServiceBus:Connections:Prime"]));
 
 // Database Repositories
 builder.Services.AddScoped<IBlocklistRepository, BlocklistRepository>();
