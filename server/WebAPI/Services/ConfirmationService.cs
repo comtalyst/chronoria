@@ -54,7 +54,7 @@ namespace Chronoria_WebAPI.Services
         }
         public async Task Confirm(string id)
         {
-            var neglectibleTasks = new List<Task>();
+            //var neglectibleTasks = new List<Task>();                          // Concurrency not supported for EF Core
 
             // Get from pending DB
             var capsule = await pendingCapsuleRepo.Get(id);
@@ -68,8 +68,8 @@ namespace Chronoria_WebAPI.Services
                     throw new ArgumentException("ContentNotFound;JustExpired");
 
                 // Remove from pending DB                                            // neglectible
-                neglectibleTasks.Add(pendingCapsuleRepo.Delete(id));
-                neglectibleTasks.Add(pendingTextContentRepo.Delete(id));
+                await pendingCapsuleRepo.Delete(id);
+                await pendingTextContentRepo.Delete(id);
 
                 // Transfer blob files                                               // time consuming; might move all after this to consumer
                 var uri = pendingTextBlobRepo.GetTransferUri(content.TextFileId);
@@ -100,8 +100,8 @@ namespace Chronoria_WebAPI.Services
                     throw new ArgumentException("ContentNotFound;JustExpired");
 
                 // Remove from pending DB
-                neglectibleTasks.Add(pendingCapsuleRepo.Delete(id));
-                neglectibleTasks.Add(pendingFileContentRepo.Delete(id));
+                await pendingCapsuleRepo.Delete(id);
+                await pendingFileContentRepo.Delete(id);
 
                 // Transfer blob files
                 var uriText = pendingTextBlobRepo.GetTransferUri(content.TextFileId);
@@ -141,6 +141,12 @@ namespace Chronoria_WebAPI.Services
             {
                 throw new NotImplementedException("Unknown Capsule Type");
             }
+            /*
+            while (neglectibleTasks.Any())
+            {
+                await neglectibleTasks[neglectibleTasks.Count - 1];
+                neglectibleTasks.RemoveAt(neglectibleTasks.Count - 1);
+            }*/
         }
     }
 }
