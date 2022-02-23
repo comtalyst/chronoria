@@ -15,11 +15,6 @@ namespace Chronoria_WebAPI.Repositories
             return entry;
         }
 
-        public async Task Delete(string blobFileName)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<BlobText> Get(string blobFileName)
         {
             throw new NotImplementedException();

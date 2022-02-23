@@ -45,5 +45,11 @@ namespace Chronoria_WebAPI.Repositories
                 await Task.Delay(500);          // TODO
             }
         }
+
+        public async Task Delete(string blobFileName)
+        {
+            BlobClient blobClient = GetClient(blobFileName);
+            await blobClient.DeleteIfExistsAsync();
+        }
     }
 }
