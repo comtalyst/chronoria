@@ -9,7 +9,8 @@
     {
         Pending,
         Active,
-        Archived
+        Sent,
+        Canceled
     }
     public class Capsule
     {
