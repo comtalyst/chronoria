@@ -27,23 +27,13 @@ namespace Chronoria_WebAPI.Controllers
             try
             {
                 id = id.Trim();
-                try
-                {
-                    requestValidationService.ValidateId(id);
-                }
-                catch (RejectException ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                requestValidationService.ValidateId(id);
+                await confirmationService.Confirm(id);
 
-                try
-                {
-                    await confirmationService.Confirm(id);
-                }
-                catch (RejectException ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+            }
+            catch (RejectException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {

@@ -43,6 +43,7 @@ namespace Chronoria_WebAPI.Controllers
         {
             try
             {
+                // Clean parameters
                 var senderEmail = postFileModel.senderEmail.Trim();
                 var senderName = postFileModel.senderName.Trim();
                 var recipientEmail = postFileModel.recipientEmail.Trim();
@@ -51,47 +52,37 @@ namespace Chronoria_WebAPI.Controllers
                 var textLocation = postFileModel.textLocation.Trim();
                 var text = postFileModel.text.Trim();
 
-                // validate all parameters (for security proposes)
-                try
+                // Validate all parameters (for security proposes)
+                requestValidationService.ValidateEmail(senderEmail);
+                requestValidationService.ValidateEmail(recipientEmail);
+                requestValidationService.ValidateName(senderName);
+                requestValidationService.ValidateName(recipientName);
+                //requestValidationService.ValidateFutureTime(sendTime);
+                requestValidationService.ValidateTextLoc(textLocation);
+                requestValidationService.ValidateText(text);
+                requestValidationService.ValidateFile(file);
+
+                // Check blocklist
+                if (await blocklistService.BlockExists(senderEmail))
                 {
-                    requestValidationService.ValidateEmail(senderEmail);
-                    requestValidationService.ValidateEmail(recipientEmail);
-                    requestValidationService.ValidateName(senderName);
-                    requestValidationService.ValidateName(recipientName);
-                    //requestValidationService.ValidateFutureTime(sendTime);
-                    requestValidationService.ValidateTextLoc(textLocation);
-                    requestValidationService.ValidateText(text);
-                    requestValidationService.ValidateFile(file);
-                }
-                catch (RejectException ex)
-                {
-                    return BadRequest(ex.Message);
+                    return StatusCode(StatusCodes.Status403Forbidden);
                 }
 
-                try
-                {
-                    // Check blocklist
-                    if (await blocklistService.BlockExists(senderEmail))
-                    {
-                        return StatusCode(StatusCodes.Status403Forbidden);
-                    }
-
-                    // utilize service
-                    await submissionService.SubmitFile(
-                        senderEmail,
-                        senderName,
-                        recipientEmail,
-                        recipientName,
-                        sendTime,
-                        textLocation,
-                        text,
-                        file
-                    );
-                }
-                catch (RejectException ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                // Utilize service
+                await submissionService.SubmitFile(
+                    senderEmail,
+                    senderName,
+                    recipientEmail,
+                    recipientName,
+                    sendTime,
+                    textLocation,
+                    text,
+                    file
+                );
+            }
+            catch (RejectException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
@@ -118,6 +109,7 @@ namespace Chronoria_WebAPI.Controllers
         {
             try
             {
+                // Clean parameters
                 var senderEmail = postTextModel.senderEmail.Trim();
                 var senderName = postTextModel.senderName.Trim();
                 var recipientEmail = postTextModel.recipientEmail.Trim();
@@ -125,43 +117,33 @@ namespace Chronoria_WebAPI.Controllers
                 var sendTime = postTextModel.sendTime;
                 var text = postTextModel.text.Trim();
 
-                // validate all parameters (for security proposes)
-                try
+                // Validate all parameters (for security proposes)
+                requestValidationService.ValidateEmail(senderEmail);
+                requestValidationService.ValidateEmail(recipientEmail);
+                requestValidationService.ValidateName(senderName);
+                requestValidationService.ValidateName(recipientName);
+                //requestValidationService.ValidateFutureTime(sendTime);
+                requestValidationService.ValidateText(text);
+
+                // Check blocklist
+                if (await blocklistService.BlockExists(senderEmail))
                 {
-                    requestValidationService.ValidateEmail(senderEmail);
-                    requestValidationService.ValidateEmail(recipientEmail);
-                    requestValidationService.ValidateName(senderName);
-                    requestValidationService.ValidateName(recipientName);
-                    //requestValidationService.ValidateFutureTime(sendTime);
-                    requestValidationService.ValidateText(text);
-                }
-                catch (RejectException ex)
-                {
-                    return BadRequest(ex.Message);
+                    return StatusCode(StatusCodes.Status403Forbidden);
                 }
 
-                try
-                {
-                    // Check blocklist
-                    if (await blocklistService.BlockExists(senderEmail))
-                    {
-                        return StatusCode(StatusCodes.Status403Forbidden);
-                    }
-
-                    // utilize service
-                    await submissionService.SubmitText(
-                        senderEmail,
-                        senderName,
-                        recipientEmail,
-                        recipientName,
-                        sendTime,
-                        text
-                    );
-                }
-                catch (RejectException ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                // Utilize service
+                await submissionService.SubmitText(
+                    senderEmail,
+                    senderName,
+                    recipientEmail,
+                    recipientName,
+                    sendTime,
+                    text
+                );
+            }
+            catch (RejectException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {

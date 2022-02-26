@@ -32,33 +32,16 @@ namespace Chronoria_WebAPI.Controllers
             {
                 id = id.Trim();
                 receipientEmail = receipientEmail.Trim();
-                try
-                {
-                    requestValidationService.ValidateId(id);
-                    requestValidationService.ValidateEmail(receipientEmail);
-                }
-                catch (RejectException ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                requestValidationService.ValidateId(id);
+                requestValidationService.ValidateEmail(receipientEmail);
 
-                try
-                {
-                    await idMatchingService.ValidateMatch(id, receipientEmail, IIdMatchingService.DbName.Active);
-                }
-                catch (RejectException ex)
-                {
-                    return BadRequest(ex);
-                }
+                await idMatchingService.ValidateMatch(id, receipientEmail, IIdMatchingService.DbName.Active);
 
-                try
-                {
-                    await cancelationService.Cancel(id);
-                }
-                catch (RejectException ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                await cancelationService.Cancel(id);
+            }
+            catch (RejectException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
