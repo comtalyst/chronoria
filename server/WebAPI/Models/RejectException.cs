@@ -10,11 +10,11 @@
         public const string InvalidFile = "INVALID_FILE";
         public const string InvalidId = "INVALID_ID";
 
-        public const string ConfirmCapsuleNotFound = "CONFIRMATION_CAPSULE_NA";
-        public const string ConfirmContentNotFound = "CONFIRMATION_CONTENT_NA";
-        public const string ConfirmTextBlobNotFound = "CONFIRMATION_TEXTBLOB_NA";
-        public const string ConfirmFileBlobNotFound = "CONFIRMATION_FILEBLOB_NA";
-        public const string ConfirmTransferFailed = "CONFIRMATION_TRANSFER_FAILED";
+        public const string CapsuleNotFound = "CAPSULE_NA";
+        public const string ContentNotFound = "CONTENT_NA";
+        public const string TextBlobNotFound = "TEXTBLOB_NA";
+        public const string FileBlobNotFound = "FILEBLOB_NA";
+        public const string TransferFailed = "TRANSFER_FAILED";
 
         public const string BlockedSenderEmail = "BLOCKED_SENDER_EMAIL";
 
