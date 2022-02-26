@@ -11,12 +11,12 @@ namespace Chronoria_WebAPI.Controllers
     {
         ICancelationService cancelationService;
         IRequestValidationService requestValidationService;
-        IIdMatchingService idMatchingService;
+        IIdMatchingService<ActiveContext> idMatchingService;
 
         public CancelationController(
             ICancelationService cancelationService,
             IRequestValidationService requestValidationService,
-            IIdMatchingService idMatchingService
+            IIdMatchingService<ActiveContext> idMatchingService
             )
         {
             this.cancelationService = cancelationService;
@@ -34,7 +34,7 @@ namespace Chronoria_WebAPI.Controllers
                 requestValidationService.ValidateId(id);
                 requestValidationService.ValidateEmail(receipientEmail);
 
-                if(!await idMatchingService.MatchReceipientEmail(id, receipientEmail, IIdMatchingService.DbName.Active))
+                if(!await idMatchingService.MatchReceipientEmail(id, receipientEmail))
                 {
                     throw new RejectException(RejectException.VerificationFailed);
                 }

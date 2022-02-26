@@ -1,13 +1,9 @@
-﻿namespace Chronoria_WebAPI.Services
+﻿using Chronoria_WebAPI.Models;
+
+namespace Chronoria_WebAPI.Services
 {
-    public interface IIdMatchingService
+    public interface IIdMatchingService<DbContextType> where DbContextType : BaseContext
     {
-        public enum DbName
-        {
-            Pending,
-            Active,
-            Archived
-        }
-        public Task<bool> MatchReceipientEmail(string id, string receipientEmail, DbName dbName);
+        public Task<bool> MatchReceipientEmail(string id, string receipientEmail);
     }
 }

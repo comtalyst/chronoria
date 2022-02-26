@@ -36,7 +36,7 @@ builder.Services.AddScoped<ISubmissionService, SubmissionService>();
 builder.Services.AddScoped<IConfirmationService, ConfirmationService>();
 builder.Services.AddScoped<IBlocklistService, BlocklistService>();
 builder.Services.AddScoped<ICancelationService, CancelationService>();
-builder.Services.AddScoped<IIdMatchingService, IdMatchingService>();
+builder.Services.AddScoped<IIdMatchingService<ActiveContext>, IdMatchingService<ActiveContext>>();
 builder.Services.AddScoped<IRequestValidationService, RequestValidationService>(
     sp => new RequestValidationService(Configuration.GetSection("Constraints"))
     );
