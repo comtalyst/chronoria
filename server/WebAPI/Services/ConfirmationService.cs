@@ -59,13 +59,13 @@ namespace Chronoria_WebAPI.Services
             // Get from pending DB
             var capsule = await pendingCapsuleRepo.Get(id);
             if(capsule == null)
-                throw new RejectException(RejectException.CapsuleNotFound);         // TODO: some protocol with the frontend
+                throw new RejectException(RejectException.CapsuleNotFoundOrExpired);         // TODO: some protocol with the frontend
             
             if (capsule.ContentType == ContentType.Text)
             {
                 var content = await pendingTextContentRepo.Get(id);
                 if (content == null)
-                    throw new RejectException(RejectException.ContentNotFound);
+                    throw new RejectException(RejectException.ContentNotFoundOrExpired);
 
                 // Remove from pending DB                                            // neglectible
                 await pendingCapsuleRepo.Delete(id);
@@ -74,7 +74,7 @@ namespace Chronoria_WebAPI.Services
                 // Transfer blob files                                               // time consuming; might move all after this to consumer
                 var uri = pendingTextBlobRepo.GetTransferUri(content.TextFileId);
                 if (uri == null)
-                    throw new RejectException(RejectException.TextBlobNotFound);
+                    throw new RejectException(RejectException.TextBlobNotFoundOrExpired);
 
                 try
                 {
@@ -82,7 +82,7 @@ namespace Chronoria_WebAPI.Services
                 }
                 catch (Exception)                                                    // could fail if it expires right when transferring
                 {
-                    throw new RejectException(RejectException.TransferFailed);
+                    throw new RejectException(RejectException.TransferFailedOrExpired);
                 }
                 await pendingTextBlobRepo.Delete(content.TextFileId);
 
@@ -103,7 +103,7 @@ namespace Chronoria_WebAPI.Services
             {
                 var content = await pendingFileContentRepo.Get(id);
                 if (content == null)
-                    throw new RejectException(RejectException.ContentNotFound);
+                    throw new RejectException(RejectException.ContentNotFoundOrExpired);
 
                 // Remove from pending DB
                 await pendingCapsuleRepo.Delete(id);
@@ -112,10 +112,10 @@ namespace Chronoria_WebAPI.Services
                 // Transfer blob files
                 var uriText = pendingTextBlobRepo.GetTransferUri(content.TextFileId);
                 if (uriText == null)
-                    throw new RejectException(RejectException.TextBlobNotFound);
+                    throw new RejectException(RejectException.TextBlobNotFoundOrExpired);
                 var uriFile = pendingFileBlobRepo.GetTransferUri(content.FileId);
                 if (uriFile == null)
-                    throw new RejectException(RejectException.FileBlobNotFound);
+                    throw new RejectException(RejectException.FileBlobNotFoundOrExpired);
 
                 // we could run them concorrently
                 var textTransferTask = activeTextBlobRepo.ReceiveTransfer(content.TextFileId, uriText);
@@ -127,7 +127,7 @@ namespace Chronoria_WebAPI.Services
                 }
                 catch (Exception)
                 {
-                    throw new RejectException(RejectException.TransferFailed);
+                    throw new RejectException(RejectException.TransferFailedOrExpired);
                 }
                 await pendingTextBlobRepo.Delete(content.TextFileId);
                 await pendingFileBlobRepo.Delete(content.FileId);

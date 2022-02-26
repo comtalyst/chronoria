@@ -10,11 +10,11 @@
         public const string InvalidFile = "INVALID_FILE";
         public const string InvalidId = "INVALID_ID";
 
-        public const string CapsuleNotFound = "CAPSULE_NA";
-        public const string ContentNotFound = "CONTENT_NA";
-        public const string TextBlobNotFound = "TEXTBLOB_NA";
-        public const string FileBlobNotFound = "FILEBLOB_NA";
-        public const string TransferFailed = "TRANSFER_FAILED";
+        public const string CapsuleNotFoundOrExpired = "CAPSULE_NA_OR_EXPIRED";
+        public const string ContentNotFoundOrExpired = "CONTENT_NA_OR_EXPIRED";
+        public const string TextBlobNotFoundOrExpired = "TEXTBLOB_NA_OR_EXPIRED";
+        public const string FileBlobNotFoundOrExpired = "FILEBLOB_NA_OR_EXPIRED";
+        public const string TransferFailedOrExpired = "TRANSFER_FAILED_OR_EXPIRED";
 
         public const string BlockedSenderEmail = "BLOCKED_SENDER_EMAIL";
 
