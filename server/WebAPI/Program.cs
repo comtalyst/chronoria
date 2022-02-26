@@ -87,6 +87,12 @@ builder.Services.AddScoped<IFileBlobRepository<PendingBlobServiceClient>, FileBl
         Configuration["Blob:Containers:Pending:File"]
     )
 );
+builder.Services.AddScoped<IFileBlobRepository<ArchivedBlobServiceClient>, FileBlobRepository<ArchivedBlobServiceClient>>(
+    sp => new FileBlobRepository<ArchivedBlobServiceClient>(
+        sp.GetRequiredService<ArchivedBlobServiceClient>(),
+        Configuration["Blob:Containers:Archived:File"]
+    )
+);
 builder.Services.AddScoped<ITextBlobRepository<ActiveBlobServiceClient>, TextBlobRepository<ActiveBlobServiceClient>>(
     sp => new TextBlobRepository<ActiveBlobServiceClient>(
         sp.GetRequiredService<ActiveBlobServiceClient>(),
@@ -99,7 +105,12 @@ builder.Services.AddScoped<ITextBlobRepository<PendingBlobServiceClient>, TextBl
         Configuration["Blob:Containers:Pending:Text"]
     )
 );
-
+builder.Services.AddScoped<ITextBlobRepository<ArchivedBlobServiceClient>, TextBlobRepository<ArchivedBlobServiceClient>>(
+    sp => new TextBlobRepository<ArchivedBlobServiceClient>(
+        sp.GetRequiredService<ArchivedBlobServiceClient>(),
+        Configuration["Blob:Containers:Archived:Text"]
+    )
+);
 
 
 
