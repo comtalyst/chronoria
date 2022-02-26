@@ -16,6 +16,12 @@
         public const string FileBlobNotFoundOrExpired = "FILEBLOB_NA_OR_EXPIRED";
         public const string TransferFailedOrExpired = "TRANSFER_FAILED_OR_EXPIRED";
 
+        public const string CapsuleNotFoundOrReleased = "CAPSULE_NA_OR_RELEASED";
+        public const string ContentNotFoundOrReleased = "CONTENT_NA_OR_RELEASED";
+        public const string TextBlobNotFoundOrReleased = "TEXTBLOB_NA_OR_RELEASED";
+        public const string FileBlobNotFoundOrReleased = "FILEBLOB_NA_OR_RELEASED";
+        public const string TransferFailedOrReleased = "TRANSFER_FAILED_OR_RELEASED";
+
         public const string BlockedSenderEmail = "BLOCKED_SENDER_EMAIL";
 
         public const string VerificationFailed = "VERIFICATION_FAILED";

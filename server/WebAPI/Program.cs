@@ -46,6 +46,8 @@ builder.Services.AddScoped<IConfEmailProducer, ConfEmailProducer>(
     sp => new ConfEmailProducer(Configuration["ServiceBus:Connections:Prime"]));
 builder.Services.AddScoped<IActiveReceiptEmailProducer, ActiveReceiptEmailProducer>(
     sp => new ActiveReceiptEmailProducer(Configuration["ServiceBus:Connections:Prime"]));
+builder.Services.AddScoped<ICanceledReceiptEmailProducer, CanceledReceiptEmailProducer>(
+    sp => new CanceledReceiptEmailProducer(Configuration["ServiceBus:Connections:Prime"]));
 
 // Database Repositories
 builder.Services.AddScoped<IBlocklistRepository, BlocklistRepository>();
@@ -71,6 +73,7 @@ builder.Services.AddDbContext<ArchivedContext>(o => o.UseNpgsql(Configuration["D
 // Azure Blob Storage
 builder.Services.AddSingleton<PendingBlobServiceClient>(new PendingBlobServiceClient(Configuration["Blob:Connections:Pending"]));
 builder.Services.AddSingleton<ActiveBlobServiceClient>(new ActiveBlobServiceClient(Configuration["Blob:Connections:Active"]));
+builder.Services.AddSingleton<ArchivedBlobServiceClient>(new ArchivedBlobServiceClient(Configuration["Blob:Connections:Archived"]));
 
 builder.Services.AddScoped<IFileBlobRepository<ActiveBlobServiceClient>, FileBlobRepository<ActiveBlobServiceClient>>(
     sp => new FileBlobRepository<ActiveBlobServiceClient>(
