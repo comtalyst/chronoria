@@ -42,4 +42,5 @@ namespace Chronoria_WebAPI.Controllers
             }
             return StatusCode(StatusCodes.Status200OK);
         }
+    }
 }
