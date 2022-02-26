@@ -59,7 +59,7 @@ namespace Chronoria_WebAPI.Services
             // Get from pending DB
             var capsule = await pendingCapsuleRepo.Get(id);
             if(capsule == null)
-                throw new RejectException(RejectException.CapsuleNotFoundOrExpired);         // TODO: some protocol with the frontend
+                throw new RejectException(RejectException.CapsuleNotFoundOrExpired);
             
             if (capsule.ContentType == ContentType.Text)
             {
