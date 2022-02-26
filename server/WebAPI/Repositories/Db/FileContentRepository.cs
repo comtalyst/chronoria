@@ -23,6 +23,21 @@ namespace Chronoria_WebAPI.Repositories
         public async Task Delete(string id)
         {
             var entry = await _context.FileContents.FindAsync(id);
+            if (entry == null)
+            {
+                return;
+            }
+            _context.FileContents.Remove(entry);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task FindAndDelete(string id)
+        {
+            var entry = await _context.FileContents.FindAsync(id);
+            if (entry == null)
+            {
+                throw new NullReferenceException();
+            }
             _context.FileContents.Remove(entry);
             await _context.SaveChangesAsync();
         }

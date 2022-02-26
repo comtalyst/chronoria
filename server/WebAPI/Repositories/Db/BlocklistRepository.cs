@@ -19,9 +19,24 @@ namespace Chronoria_WebAPI.Repositories
             return entry;
         }
 
-        public async Task Delete(string id)     // email
+        public async Task Delete(string id)
         {
             var entry = await _context.BlocklistEntries.FindAsync(id);
+            if (entry == null)
+            {
+                return;
+            }
+            _context.BlocklistEntries.Remove(entry);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task FindAndDelete(string id)
+        {
+            var entry = await _context.BlocklistEntries.FindAsync(id);
+            if (entry == null)
+            {
+                throw new NullReferenceException();
+            }
             _context.BlocklistEntries.Remove(entry);
             await _context.SaveChangesAsync();
         }

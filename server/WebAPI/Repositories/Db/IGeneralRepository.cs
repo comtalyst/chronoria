@@ -9,5 +9,6 @@ namespace Chronoria_WebAPI.Repositories
         Task<ModelType> Create(ModelType entry);
         Task Update(ModelType entry);
         Task Delete(string id);
+        Task FindAndDelete(string id);
     }
 }
