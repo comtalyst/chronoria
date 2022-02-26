@@ -16,8 +16,9 @@
         public const string ConfirmFileBlobNotFound = "CONFIRMATION_FILEBLOX_NA";
         public const string ConfirmTransferFailed = "CONFIRMATION_TRANSFER_FAILED";
 
-
         public const string BlockedSenderEmail = "BLOCKED_SENDER_EMAIL";
+
+        public const string VerificationFailed = "VERIFICATION_FAILED";
         public RejectException(string message) : base(message) { }
     }
 }

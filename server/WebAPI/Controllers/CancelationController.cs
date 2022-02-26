@@ -27,7 +27,6 @@ namespace Chronoria_WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> Cancel(string id, string receipientEmail)
         {
-
             try
             {
                 id = id.Trim();
@@ -35,7 +34,10 @@ namespace Chronoria_WebAPI.Controllers
                 requestValidationService.ValidateId(id);
                 requestValidationService.ValidateEmail(receipientEmail);
 
-                await idMatchingService.ValidateMatch(id, receipientEmail, IIdMatchingService.DbName.Active);
+                if(!await idMatchingService.MatchReceipientEmail(id, receipientEmail, IIdMatchingService.DbName.Active))
+                {
+                    throw new RejectException(RejectException.VerificationFailed);
+                }
 
                 await cancelationService.Cancel(id);
             }
