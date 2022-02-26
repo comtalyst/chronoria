@@ -14,11 +14,11 @@ namespace Chronoria_WebAPI.Services
         {
             if(email.Length > constraints.GetValue<int>("EmailCh"))
             {
-                throw new ArgumentException();
+                throw new ArgumentException(IRequestValidationService.InvalidEmail);
             }
             if (email.EndsWith('.'))
             {
-                throw new ArgumentException();
+                throw new ArgumentException(IRequestValidationService.InvalidEmail);
             }
             try
             {
@@ -26,7 +26,7 @@ namespace Chronoria_WebAPI.Services
             }
             catch
             {
-                throw new ArgumentException();
+                throw new ArgumentException(IRequestValidationService.InvalidEmail);
             }
         }
 
@@ -35,7 +35,7 @@ namespace Chronoria_WebAPI.Services
             long size = file.FormFile.Length;
             if(size > constraints.GetValue<long>("FileBytes"))
             {
-                throw new ArgumentException();
+                throw new ArgumentException(IRequestValidationService.InvalidFile);
             }
         }
 
@@ -45,7 +45,7 @@ namespace Chronoria_WebAPI.Services
             DateTime dateTime = TimeUtils.EpochMsToDateTime(time);
             if(curTime > dateTime)
             {
-                throw new ArgumentException();
+                throw new ArgumentException(IRequestValidationService.InvalidFutureTime);
             }
         }
 
@@ -54,7 +54,7 @@ namespace Chronoria_WebAPI.Services
             // watch for SQL injection?
             if (name.Length > constraints.GetValue<int>("NameCh"))
             {
-                throw new ArgumentException();
+                throw new ArgumentException(IRequestValidationService.InvalidName);
             }
         }
 
@@ -62,7 +62,7 @@ namespace Chronoria_WebAPI.Services
         {
             if (text.Length > constraints.GetValue<int>("TextCh"))
             {
-                throw new ArgumentException();
+                throw new ArgumentException(IRequestValidationService.InvalidText);
             }
         }
 
@@ -70,7 +70,19 @@ namespace Chronoria_WebAPI.Services
         {
             if (!Enum.TryParse(typeof(TextLocation), textLoc, out _)) 
             {
-                throw new ArgumentException();
+                throw new ArgumentException(IRequestValidationService.InvalidTextLoc);
+            }
+        }
+
+        public void ValidateId(string id)
+        {
+            try
+            {
+                Guid guid = Guid.Parse(id);
+            }
+            catch (Exception)
+            {
+                throw new ArgumentException(IRequestValidationService.InvalidId);
             }
         }
     }

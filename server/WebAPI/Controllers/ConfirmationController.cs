@@ -8,15 +8,15 @@ namespace Chronoria_WebAPI.Controllers
     [ApiController]
     public class ConfirmationController : ControllerBase
     {
-        IIdService idService;
+        IRequestValidationService requestValidationService;
         IConfirmationService confirmationService;
 
         public ConfirmationController(
-            IIdService idService,
+            IRequestValidationService requestValidationService,
             IConfirmationService confirmationService
             )
         {
-            this.idService = idService;
+            this.requestValidationService = requestValidationService;
             this.confirmationService = confirmationService;
         }
 
@@ -24,9 +24,13 @@ namespace Chronoria_WebAPI.Controllers
         public async Task<IActionResult> Confirm(string id)
         {
             id = id.Trim();
-            if (!idService.validate(id))
+            try
             {
-                return BadRequest("Invalid ID format");
+                requestValidationService.ValidateId(id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
             try
             {

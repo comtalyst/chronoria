@@ -60,9 +60,9 @@ namespace Chronoria_WebAPI.Controllers
                 requestValidationService.ValidateText(text);
                 requestValidationService.ValidateFile(file);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest("Ilegal Arguments Provided");
+                return BadRequest(ex.Message);
             }
 
             try
@@ -122,9 +122,9 @@ namespace Chronoria_WebAPI.Controllers
                 //requestValidationService.ValidateFutureTime(sendTime);
                 requestValidationService.ValidateText(text);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest("Ilegal Arguments Provided");
+                return BadRequest(ex.Message);
             }
 
             try
