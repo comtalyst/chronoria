@@ -92,7 +92,12 @@ namespace Chronoria_WebAPI.Services
                 await activeTextContentRepo.Create(content);       // must be ready for send schedule
                 await activeCapsuleRepo.Create(newCapsule);            // will trigger the send schedule; most things must be ready before this
 
-                // TODO: send receipt email
+                // Send receipt email
+                await activeReceiptEmailProducer.Produce(new ActiveReceiptEmailMessage(newCapsule.SenderEmail, id,
+                    newCapsule.RecipientName,
+                    newCapsule.RecipientEmail,
+                    TimeUtils.DateTimeToEpochMs(newCapsule.SendTime)
+                    ));
             }
             else if (capsule.ContentType == ContentType.File)
             {
