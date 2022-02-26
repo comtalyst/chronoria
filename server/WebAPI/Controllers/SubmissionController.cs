@@ -128,7 +128,7 @@ namespace Chronoria_WebAPI.Controllers
                 // Check blocklist
                 if (await blocklistService.BlockExists(senderEmail))
                 {
-                    return StatusCode(StatusCodes.Status403Forbidden);
+                    throw new RejectException(RejectException.BlockedSenderEmail);
                 }
 
                 // Utilize service
