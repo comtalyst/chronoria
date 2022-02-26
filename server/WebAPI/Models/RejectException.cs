@@ -10,11 +10,11 @@
         public const string InvalidFile = "INVALID_FILE";
         public const string InvalidId = "INVALID_ID";
 
-        public const string ConfirmCapsuleNotFound = "";
-        public const string ConfirmContentNotFound = "";
-        public const string ConfirmTextBlobNotFound = "";
-        public const string ConfirmFileBlobNotFound = "";
-        public const string ConfirmTransferFailed = "";
+        public const string ConfirmCapsuleNotFound = "CONFIRMATION_CAPSULE_NA";
+        public const string ConfirmContentNotFound = "CONFIRMATION_CONTENT_NA";
+        public const string ConfirmTextBlobNotFound = "CONFIRMATION_TEXTBLOB_NA";
+        public const string ConfirmFileBlobNotFound = "CONFIRMATION_FILEBLOX_NA";
+        public const string ConfirmTransferFailed = "CONFIRMATION_TRANSFER_FAILED";
         public RejectException(string message) : base(message) { }
     }
 }
