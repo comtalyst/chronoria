@@ -11,9 +11,18 @@ namespace Chronoria_WebAPI.Services
         {
             this.capsuleRepository = capsuleRepository;
         }
-        public Task<bool> MatchReceipientEmail(string id, string receipientEmail)
+        public async Task<bool> MatchReceipientEmail(string id, string receipientEmail)
         {
-            throw new NotImplementedException();
+            var capsule = await capsuleRepository.Get(id);
+            if(capsule == null)
+            {
+                return false;
+            }
+            if(capsule.RecipientEmail != receipientEmail)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
