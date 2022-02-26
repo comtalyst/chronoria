@@ -2,5 +2,6 @@
 {
     public class RejectException : Exception
     {
+        public RejectException(string message) : base(message) { }
     }
 }
