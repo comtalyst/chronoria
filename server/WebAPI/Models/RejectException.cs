@@ -13,7 +13,7 @@
         public const string ConfirmCapsuleNotFound = "CONFIRMATION_CAPSULE_NA";
         public const string ConfirmContentNotFound = "CONFIRMATION_CONTENT_NA";
         public const string ConfirmTextBlobNotFound = "CONFIRMATION_TEXTBLOB_NA";
-        public const string ConfirmFileBlobNotFound = "CONFIRMATION_FILEBLOX_NA";
+        public const string ConfirmFileBlobNotFound = "CONFIRMATION_FILEBLOB_NA";
         public const string ConfirmTransferFailed = "CONFIRMATION_TRANSFER_FAILED";
 
         public const string BlockedSenderEmail = "BLOCKED_SENDER_EMAIL";
