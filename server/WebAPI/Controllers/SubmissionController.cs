@@ -41,51 +41,61 @@ namespace Chronoria_WebAPI.Controllers
             [FromForm] UploadedFile file
             )
         {
-            var senderEmail = postFileModel.senderEmail.Trim();
-            var senderName = postFileModel.senderName.Trim();
-            var recipientEmail = postFileModel.recipientEmail.Trim();
-            var recipientName = postFileModel.recipientName.Trim();
-            var sendTime = postFileModel.sendTime;
-            var textLocation = postFileModel.textLocation.Trim();
-            var text = postFileModel.text.Trim();
-            // validate all parameters (for security proposes)
             try
             {
-                requestValidationService.ValidateEmail(senderEmail);
-                requestValidationService.ValidateEmail(recipientEmail);
-                requestValidationService.ValidateName(senderName);
-                requestValidationService.ValidateName(recipientName);
-                //requestValidationService.ValidateFutureTime(sendTime);
-                requestValidationService.ValidateTextLoc(textLocation);
-                requestValidationService.ValidateText(text);
-                requestValidationService.ValidateFile(file);
+                var senderEmail = postFileModel.senderEmail.Trim();
+                var senderName = postFileModel.senderName.Trim();
+                var recipientEmail = postFileModel.recipientEmail.Trim();
+                var recipientName = postFileModel.recipientName.Trim();
+                var sendTime = postFileModel.sendTime;
+                var textLocation = postFileModel.textLocation.Trim();
+                var text = postFileModel.text.Trim();
+
+                // validate all parameters (for security proposes)
+                try
+                {
+                    requestValidationService.ValidateEmail(senderEmail);
+                    requestValidationService.ValidateEmail(recipientEmail);
+                    requestValidationService.ValidateName(senderName);
+                    requestValidationService.ValidateName(recipientName);
+                    //requestValidationService.ValidateFutureTime(sendTime);
+                    requestValidationService.ValidateTextLoc(textLocation);
+                    requestValidationService.ValidateText(text);
+                    requestValidationService.ValidateFile(file);
+                }
+                catch (RejectException ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+
+                try
+                {
+                    // Check blocklist
+                    if (await blocklistService.BlockExists(senderEmail))
+                    {
+                        return StatusCode(StatusCodes.Status403Forbidden);
+                    }
+
+                    // utilize service
+                    await submissionService.SubmitFile(
+                        senderEmail,
+                        senderName,
+                        recipientEmail,
+                        recipientName,
+                        sendTime,
+                        textLocation,
+                        text,
+                        file
+                    );
+                }
+                catch (RejectException ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
-            }
-
-            try
-            {
-                // Check blocklist
-                if (await blocklistService.BlockExists(senderEmail))
-                {
-                    return StatusCode(StatusCodes.Status403Forbidden);
-                }
-
-                await submissionService.SubmitFile(
-                    senderEmail,
-                    senderName,
-                    recipientEmail,
-                    recipientName,
-                    sendTime,
-                    textLocation,
-                    text,
-                    file
-                );
-            }
-            catch (Exception)
-            {
+                // TODO: log ex
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
             return StatusCode(StatusCodes.Status200OK);
@@ -106,46 +116,56 @@ namespace Chronoria_WebAPI.Controllers
             [FromBody] PostTextModel postTextModel
             )
         {
-            var senderEmail = postTextModel.senderEmail.Trim();
-            var recipientEmail = postTextModel.recipientEmail.Trim();
-            var senderName = postTextModel.senderName.Trim();
-            var recipientName = postTextModel.recipientName.Trim();
-            var sendTime = postTextModel.sendTime;
-            var text = postTextModel.text.Trim();
-            // validate all parameters (for security proposes)
             try
             {
-                requestValidationService.ValidateEmail(senderEmail);
-                requestValidationService.ValidateEmail(recipientEmail);
-                requestValidationService.ValidateName(senderName);
-                requestValidationService.ValidateName(recipientName);
-                //requestValidationService.ValidateFutureTime(sendTime);
-                requestValidationService.ValidateText(text);
+                var senderEmail = postTextModel.senderEmail.Trim();
+                var senderName = postTextModel.senderName.Trim();
+                var recipientEmail = postTextModel.recipientEmail.Trim();
+                var recipientName = postTextModel.recipientName.Trim();
+                var sendTime = postTextModel.sendTime;
+                var text = postTextModel.text.Trim();
+
+                // validate all parameters (for security proposes)
+                try
+                {
+                    requestValidationService.ValidateEmail(senderEmail);
+                    requestValidationService.ValidateEmail(recipientEmail);
+                    requestValidationService.ValidateName(senderName);
+                    requestValidationService.ValidateName(recipientName);
+                    //requestValidationService.ValidateFutureTime(sendTime);
+                    requestValidationService.ValidateText(text);
+                }
+                catch (RejectException ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+
+                try
+                {
+                    // Check blocklist
+                    if (await blocklistService.BlockExists(senderEmail))
+                    {
+                        return StatusCode(StatusCodes.Status403Forbidden);
+                    }
+
+                    // utilize service
+                    await submissionService.SubmitText(
+                        senderEmail,
+                        senderName,
+                        recipientEmail,
+                        recipientName,
+                        sendTime,
+                        text
+                    );
+                }
+                catch (RejectException ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
-            }
-
-            try
-            {
-                // Check blocklist
-                if (await blocklistService.BlockExists(senderEmail))
-                {
-                    return StatusCode(StatusCodes.Status403Forbidden);
-                }
-
-                await submissionService.SubmitText(
-                    senderEmail,
-                    senderName,
-                    recipientEmail,
-                    recipientName,
-                    sendTime,
-                    text
-                );
-            }
-            catch (Exception)
-            {
+                // TODO: log ex
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
             return StatusCode(StatusCodes.Status200OK);

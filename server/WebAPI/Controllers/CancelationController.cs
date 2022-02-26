@@ -5,31 +5,37 @@ using Chronoria_WebAPI.Models;
 
 namespace Chronoria_WebAPI.Controllers
 {
-    [Route("api/confirm")]
+    [Route("api/cancel")]
     [ApiController]
-    public class ConfirmationController : ControllerBase
+    public class CancelationController : ControllerBase
     {
+        ICancelationService cancelationService;
         IRequestValidationService requestValidationService;
-        IConfirmationService confirmationService;
+        IIdMatchingService idMatchingService;
 
-        public ConfirmationController(
+        public CancelationController(
+            ICancelationService cancelationService,
             IRequestValidationService requestValidationService,
-            IConfirmationService confirmationService
+            IIdMatchingService idMatchingService
             )
         {
+            this.cancelationService = cancelationService;
             this.requestValidationService = requestValidationService;
-            this.confirmationService = confirmationService;
+            this.idMatchingService = idMatchingService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Confirm(string id)
+        public async Task<IActionResult> Cancel(string id, string receipientEmail)
         {
+
             try
             {
                 id = id.Trim();
+                receipientEmail = receipientEmail.Trim();
                 try
                 {
                     requestValidationService.ValidateId(id);
+                    requestValidationService.ValidateEmail(receipientEmail);
                 }
                 catch (RejectException ex)
                 {
@@ -38,7 +44,16 @@ namespace Chronoria_WebAPI.Controllers
 
                 try
                 {
-                    await confirmationService.Confirm(id);
+                    await idMatchingService.ValidateMatch(id, receipientEmail, IIdMatchingService.DbName.Active);
+                }
+                catch (RejectException ex)
+                {
+                    return BadRequest(ex);
+                }
+
+                try
+                {
+                    await cancelationService.Cancel(id);
                 }
                 catch (RejectException ex)
                 {
@@ -52,4 +67,5 @@ namespace Chronoria_WebAPI.Controllers
             }
             return StatusCode(StatusCodes.Status200OK);
         }
+    }
 }
