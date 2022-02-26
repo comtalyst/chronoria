@@ -9,6 +9,12 @@
         public const string InvalidTextLoc = "INVALID_TEXT_LOC";
         public const string InvalidFile = "INVALID_FILE";
         public const string InvalidId = "INVALID_ID";
+
+        public const string ConfirmCapsuleNotFound = "";
+        public const string ConfirmContentNotFound = "";
+        public const string ConfirmTextBlobNotFound = "";
+        public const string ConfirmFileBlobNotFound = "";
+        public const string ConfirmTransferFailed = "";
         public RejectException(string message) : base(message) { }
     }
 }
