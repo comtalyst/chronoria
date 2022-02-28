@@ -31,17 +31,6 @@ namespace Chronoria_WebAPI.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task FindAndDelete(string id)
-        {
-            var entry = await _context.TextContents.FindAsync(id);
-            if (entry == null)
-            {
-                throw new NullReferenceException();
-            }
-            _context.TextContents.Remove(entry);
-            await _context.SaveChangesAsync();
-        }
-
         public async Task<IEnumerable<TextContent>> Get()
         {
             return _context.TextContents.ToList();
