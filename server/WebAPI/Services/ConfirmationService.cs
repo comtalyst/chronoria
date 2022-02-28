@@ -22,7 +22,6 @@ namespace Chronoria_WebAPI.Services
         private ITextBlobRepository<ActiveBlobServiceClient> activeTextBlobRepo;
 
         private IActiveReceiptEmailProducer activeReceiptEmailProducer;
-
         public ConfirmationService(
             ICapsuleRepository<PendingContext> pendingCapsuleRepo,
             IFileContentRepository<PendingContext> pendingFileContentRepo,
@@ -54,42 +53,40 @@ namespace Chronoria_WebAPI.Services
         }
         public async Task Confirm(string id)
         {
-            //var neglectibleTasks = new List<Task>();                          // Concurrency not supported for EF Core
-
-            // Get from pending DB
-            var capsule = await pendingCapsuleRepo.Get(id);
+            // Acquire the capsule
+            var capsule = await pendingCapsuleRepo.Retrieve(id);
             if(capsule == null)
                 throw new RejectException(RejectException.CapsuleNotFoundOrExpired);
             
             if (capsule.ContentType == ContentType.Text)
             {
-                var content = await pendingTextContentRepo.Get(id);
+                // Get and Delete TextContent
+                var content = await pendingTextContentRepo.Retrieve(id);
                 if (content == null)
-                    throw new RejectException(RejectException.ContentNotFoundOrExpired);
-
-                // Remove from pending DB                                            // neglectible
-                await pendingCapsuleRepo.Delete(id);
-                await pendingTextContentRepo.Delete(id);
+                    throw new NullReferenceException("TextContent is missing");
 
                 // Transfer blob files                                               // time consuming; might move all after this to consumer
                 var uri = pendingTextBlobRepo.GetTransferUri(content.TextFileId);
                 if (uri == null)
-                    throw new RejectException(RejectException.TextBlobNotFoundOrExpired);
+                    throw new NullReferenceException("TextBlob is missing");
+                await activeTextBlobRepo.ReceiveTransfer(content.TextFileId, uri);   // like Gets, must done to guarantee no failure
 
+                // Delete blob file
                 try
                 {
-                    await activeTextBlobRepo.ReceiveTransfer(content.TextFileId, uri);   // like Gets, must done to guarantee no expire/failure
+                    await pendingTextBlobRepo.Delete(content.TextFileId);
                 }
-                catch (Exception)                                                    // could fail if it expires right when transferring
+                catch (Exception)
                 {
-                    throw new RejectException(RejectException.TransferFailedOrExpired);
+                    // Not a big deal, we can continue
+                    // TODO: log
                 }
-                await pendingTextBlobRepo.Delete(content.TextFileId);
 
-                // Add to active DB                                                  // should not expect any failure/expire now
+                // Add to active DB
                 var newCapsule = new Capsule(capsule);
                 newCapsule.Status = Status.Active;
-                await activeTextContentRepo.Create(content);       // must be ready for send schedule
+                // Warning: if these fail (e.g., DB connection just goes down) then data will be lost as they were deleted before
+                await activeTextContentRepo.Create(content);            // must be ready for send schedule
                 await activeCapsuleRepo.Create(newCapsule);            // will trigger the send schedule; most things must be ready before this
 
                 // Send receipt email
@@ -101,36 +98,42 @@ namespace Chronoria_WebAPI.Services
             }
             else if (capsule.ContentType == ContentType.File)
             {
-                var content = await pendingFileContentRepo.Get(id);
+                // Get and Delete TextContent
+                var content = await pendingFileContentRepo.Retrieve(id);
                 if (content == null)
-                    throw new RejectException(RejectException.ContentNotFoundOrExpired);
-
-                // Remove from pending DB
-                await pendingCapsuleRepo.Delete(id);
-                await pendingFileContentRepo.Delete(id);
+                    throw new NullReferenceException("FileContent is missing");
 
                 // Transfer blob files
                 var uriText = pendingTextBlobRepo.GetTransferUri(content.TextFileId);
                 if (uriText == null)
-                    throw new RejectException(RejectException.TextBlobNotFoundOrExpired);
+                    throw new NullReferenceException("TextBlob is missing");
                 var uriFile = pendingFileBlobRepo.GetTransferUri(content.FileId);
                 if (uriFile == null)
-                    throw new RejectException(RejectException.FileBlobNotFoundOrExpired);
+                    throw new NullReferenceException("FileBlob is missing");
 
                 // we could run them concorrently
                 var textTransferTask = activeTextBlobRepo.ReceiveTransfer(content.TextFileId, uriText);
                 var fileTransferTask = activeFileBlobRepo.ReceiveTransfer(content.FileId, uriFile);
+                await textTransferTask;
+                await fileTransferTask;
+                // Delete blob file
                 try
                 {
-                    await textTransferTask;
-                    await fileTransferTask;
+                    await pendingTextBlobRepo.Delete(content.TextFileId);
                 }
                 catch (Exception)
                 {
-                    throw new RejectException(RejectException.TransferFailedOrExpired);
+                    // Not a big deal, we can continue
+                    // TODO: log
                 }
-                await pendingTextBlobRepo.Delete(content.TextFileId);
-                await pendingFileBlobRepo.Delete(content.FileId);
+                try
+                {
+                    await pendingFileBlobRepo.Delete(content.FileId);
+                }
+                catch (Exception)
+                {
+                    // TODO: log
+                }
 
                 // Add to active DB
                 var newCapsule = new Capsule(capsule);
@@ -149,12 +152,6 @@ namespace Chronoria_WebAPI.Services
             {
                 throw new NotImplementedException("Unknown Capsule Type");
             }
-            /*
-            while (neglectibleTasks.Any())
-            {
-                await neglectibleTasks[neglectibleTasks.Count - 1];
-                neglectibleTasks.RemoveAt(neglectibleTasks.Count - 1);
-            }*/
         }
     }
 }

@@ -53,35 +53,34 @@ namespace Chronoria_WebAPI.Services
         }
         public async Task Cancel(string id)
         {
-            // Get from active DB
-            var capsule = await activeCapsuleRepo.Get(id);
+            // Acquire the capsule
+            var capsule = await activeCapsuleRepo.Retrieve(id);
             if (capsule == null)
                 throw new RejectException(RejectException.CapsuleNotFoundOrReleased);
-
+            // actually, it is confirmed cancel by this line; others are neglectible
             if (capsule.ContentType == ContentType.Text)
             {
-                var content = await activeTextContentRepo.Get(id);
+                // Get and Delete TextContent
+                var content = await activeTextContentRepo.Retrieve(id);
                 if (content == null)
-                    throw new RejectException(RejectException.ContentNotFoundOrReleased);
-
-                // Remove from active DB
-                await activeCapsuleRepo.Delete(id);
-                await activeTextContentRepo.Delete(id);
+                    throw new NullReferenceException("TextContent is missing");
 
                 // Transfer blob files
                 var uri = activeTextBlobRepo.GetTransferUri(content.TextFileId);
                 if (uri == null)
-                    throw new RejectException(RejectException.TextBlobNotFoundOrReleased);
+                    throw new NullReferenceException("TextBlob is missing");
+                await archivedTextBlobRepo.ReceiveTransfer(content.TextFileId, uri);
 
+                // Delete blob file
                 try
                 {
-                    await archivedTextBlobRepo.ReceiveTransfer(content.TextFileId, uri);
+                    await activeTextBlobRepo.Delete(content.TextFileId);
                 }
                 catch (Exception)
                 {
-                    throw new RejectException(RejectException.TransferFailedOrReleased);
+                    // Not a big deal, we can continue
+                    // TODO: log
                 }
-                await activeTextBlobRepo.Delete(content.TextFileId);
 
                 // Add to archived DB
                 var newCapsule = new Capsule(capsule);
@@ -98,36 +97,42 @@ namespace Chronoria_WebAPI.Services
             }
             else if (capsule.ContentType == ContentType.File)
             {
-                var content = await activeFileContentRepo.Get(id);
+                // Get and Delete TextContent
+                var content = await activeFileContentRepo.Retrieve(id);
                 if (content == null)
-                    throw new RejectException(RejectException.ContentNotFoundOrReleased);
-
-                // Remove from active DB
-                await activeCapsuleRepo.Delete(id);
-                await activeFileContentRepo.Delete(id);
+                    throw new NullReferenceException("FileContent is missing");
 
                 // Transfer blob files
                 var uriText = activeTextBlobRepo.GetTransferUri(content.TextFileId);
                 if (uriText == null)
-                    throw new RejectException(RejectException.TextBlobNotFoundOrReleased);
+                    throw new NullReferenceException("TextBlob is missing");
                 var uriFile = activeFileBlobRepo.GetTransferUri(content.FileId);
                 if (uriFile == null)
-                    throw new RejectException(RejectException.FileBlobNotFoundOrReleased);
+                    throw new NullReferenceException("FileBlob is missing");
 
                 // we could run them concorrently
                 var textTransferTask = archivedTextBlobRepo.ReceiveTransfer(content.TextFileId, uriText);
                 var fileTransferTask = archivedFileBlobRepo.ReceiveTransfer(content.FileId, uriFile);
+                await textTransferTask;
+                await fileTransferTask;
+                // Delete blob file
                 try
                 {
-                    await textTransferTask;
-                    await fileTransferTask;
+                    await activeTextBlobRepo.Delete(content.TextFileId);
                 }
                 catch (Exception)
                 {
-                    throw new RejectException(RejectException.TransferFailedOrReleased);
+                    // Not a big deal, we can continue
+                    // TODO: log
                 }
-                await activeTextBlobRepo.Delete(content.TextFileId);
-                await activeFileBlobRepo.Delete(content.FileId);
+                try
+                {
+                    await activeFileBlobRepo.Delete(content.FileId);
+                }
+                catch (Exception)
+                {
+                    // TODO: log
+                }
 
                 // Add to archived DB
                 var newCapsule = new Capsule(capsule);
