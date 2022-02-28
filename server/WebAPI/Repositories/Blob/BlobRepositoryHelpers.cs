@@ -22,7 +22,7 @@ namespace Chronoria_WebAPI.Repositories
             return blobContainerClient.GetBlobClient(blobFileName);
         }
 
-        public Uri GetTransferUri(string blobFileName)
+        public Uri? GetTransferUri(string blobFileName)
         {
             try
             {
