@@ -24,10 +24,17 @@ namespace Chronoria_WebAPI.Repositories
 
         public Uri GetTransferUri(string blobFileName)
         {
-            DateTimeOffset expiredOn = DateTimeOffset.UtcNow.AddMinutes(60);            // TODO
-            BlobClient blobClient = GetClient(blobFileName);
-            Uri uri = blobClient.GenerateSasUri(BlobSasPermissions.Read, expiredOn);
-            return uri;
+            try
+            {
+                DateTimeOffset expiredOn = DateTimeOffset.UtcNow.AddMinutes(60);            // TODO
+                BlobClient blobClient = GetClient(blobFileName);
+                Uri uri = blobClient.GenerateSasUri(BlobSasPermissions.Read, expiredOn);
+                return uri;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public async Task ReceiveTransfer(string blobFileName, Uri uri)
