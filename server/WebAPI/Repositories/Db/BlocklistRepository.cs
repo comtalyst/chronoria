@@ -21,13 +21,38 @@ namespace Chronoria_WebAPI.Repositories
 
         public async Task Delete(string id)
         {
-            var entry = await _context.BlocklistEntries.FindAsync(id);
-            if (entry == null)
+            try
+            {
+                var entry = await _context.BlocklistEntries.FindAsync(id);
+                if (entry == null)
+                {
+                    return;
+                }
+                _context.BlocklistEntries.Remove(entry);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
             {
                 return;
             }
-            _context.BlocklistEntries.Remove(entry);
-            await _context.SaveChangesAsync();
+        }
+        public async Task<BlocklistEntry> Retrieve(string id)
+        {
+            try
+            {
+                var entry = await _context.BlocklistEntries.FindAsync(id);
+                if (entry == null)
+                {
+                    return null;
+                }
+                _context.BlocklistEntries.Remove(entry);
+                await _context.SaveChangesAsync();
+                return entry;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public async Task<IEnumerable<BlocklistEntry>> Get()

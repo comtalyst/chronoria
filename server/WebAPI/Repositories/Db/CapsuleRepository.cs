@@ -22,13 +22,40 @@ namespace Chronoria_WebAPI.Repositories
 
         public async Task Delete(string id)
         {
-            var entry = await _context.Capsules.FindAsync(id);
-            if(entry == null)
+            try
             {
+                var entry = await _context.Capsules.FindAsync(id);
+                if (entry == null)
+                {
+                    return;
+                }
+                _context.Capsules.Remove(entry);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // TODO: log ex
                 return;
             }
-            _context.Capsules.Remove(entry);
-            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Capsule> Retrieve(string id)
+        {
+            try
+            {
+                var entry = await _context.Capsules.FindAsync(id);
+                if (entry == null)
+                {
+                    return null;
+                }
+                _context.Capsules.Remove(entry);
+                await _context.SaveChangesAsync();
+                return entry;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public async Task<IEnumerable<Capsule>> Get()
