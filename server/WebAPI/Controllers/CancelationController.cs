@@ -47,7 +47,7 @@ namespace Chronoria_WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: log ex
+                Console.Error.WriteLine(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
             return StatusCode(StatusCodes.Status200OK);

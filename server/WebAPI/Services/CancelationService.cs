@@ -76,10 +76,10 @@ namespace Chronoria_WebAPI.Services
                 {
                     await activeTextBlobRepo.Delete(content.TextFileId);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     // Not a big deal, we can continue
-                    // TODO: log
+                    Console.Error.WriteLine(ex);
                 }
 
                 // Add to archived DB
@@ -120,18 +120,18 @@ namespace Chronoria_WebAPI.Services
                 {
                     await activeTextBlobRepo.Delete(content.TextFileId);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     // Not a big deal, we can continue
-                    // TODO: log
+                    Console.Error.WriteLine(ex);
                 }
                 try
                 {
                     await activeFileBlobRepo.Delete(content.FileId);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    // TODO: log
+                    Console.Error.WriteLine(ex);
                 }
 
                 // Add to archived DB
