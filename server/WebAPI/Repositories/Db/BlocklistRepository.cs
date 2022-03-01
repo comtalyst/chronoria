@@ -31,8 +31,9 @@ namespace Chronoria_WebAPI.Repositories
                 _context.BlocklistEntries.Remove(entry);
                 await _context.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch (DbUpdateConcurrencyException ex)
             {
+                Console.WriteLine(ex.Message);
                 return;
             }
         }
@@ -49,8 +50,9 @@ namespace Chronoria_WebAPI.Repositories
                 await _context.SaveChangesAsync();
                 return entry;
             }
-            catch (Exception ex)
+            catch (DbUpdateConcurrencyException ex)
             {
+                Console.WriteLine(ex.Message);
                 return null;
             }
         }
