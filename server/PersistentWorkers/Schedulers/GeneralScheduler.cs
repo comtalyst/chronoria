@@ -1,4 +1,6 @@
-﻿namespace Chronoria_PersistentWorkers.Schedulers
+﻿using Chronoria_PersistentWorkers.utils;
+
+namespace Chronoria_PersistentWorkers.Schedulers
 {
     public abstract class GeneralScheduler : IScheduler
     {
@@ -21,7 +23,7 @@
             while (run)
             {
                 // Trigger using the time interval for parameters
-                long curTime = 0;    // TODO
+                long curTime = TimeUtils.DateTimeToEpochMs(TimeUtils.now());
                 await Trigger(lastTime + 1, curTime);
 
                 // Update lastTime to current time
@@ -32,7 +34,7 @@
                 long nextTime = await NextTime(curTime);
                 long fetchTime = await FetchTime();
                 long sleepTime;
-                curTime = 0;    // TODO
+                curTime = TimeUtils.DateTimeToEpochMs(TimeUtils.now());
                 if (nextTime - curTime > fetchTime)
                 {
                     sleepTime = fetchTime;
