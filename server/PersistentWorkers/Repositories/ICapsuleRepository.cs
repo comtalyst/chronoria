@@ -2,5 +2,7 @@
 
 namespace Chronoria_PersistentWorkers.Repositories
 {
-    public interface ICapsuleRepository<DbContextType> : IGeneralRepository<Capsule> where DbContextType : BaseContext { }
+    public interface ICapsuleRepository<DbContextType> : IGeneralRepository<Capsule> where DbContextType : BaseContext {
+        public Task<Capsule> GetNextByCreateTime(DateTime time);
+    }
 }

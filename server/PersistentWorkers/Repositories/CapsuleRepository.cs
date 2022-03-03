@@ -74,5 +74,11 @@ namespace Chronoria_PersistentWorkers.Repositories
             _context.Entry(entry).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
+
+        public async Task<Capsule> GetNextByCreateTime(DateTime time)
+        {
+            return _context.Capsules.Where(cap => cap.CreateTime.CompareTo(time) > 0)
+                .MinBy(cap => cap.CreateTime);
+        }
     }
 }
