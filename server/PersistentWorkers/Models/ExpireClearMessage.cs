@@ -4,10 +4,10 @@ namespace Chronoria_PersistentWorkers.Models
 {
     public class ExpireClearMessage : IMessage
     {
-        public DateTime TimeL { get; set; }
-        public DateTime TimeR { get; set; }
+        public long TimeL { get; set; }
+        public long TimeR { get; set; }
 
-        public ExpireClearMessage(DateTime TimeL, DateTime TimeR)
+        public ExpireClearMessage(long TimeL, long TimeR)
         {
             this.TimeL = TimeL;
             this.TimeR = TimeR;
