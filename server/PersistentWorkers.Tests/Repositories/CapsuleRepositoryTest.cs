@@ -250,5 +250,152 @@ namespace Chronoria_PersistentWorkers.Tests.Repositories
             Capsule? ret = await capsuleRepository.Get("0cade597-d092-40db-9a8d-589166f76b29");
             Assert.Null(ret);
         }
+        [Fact]
+        public async void GetNextByCreateTime_Correctly()
+        {
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b28",
+                "sender@email.com",
+                "Mr. Sender",
+                "recipient@email.com",
+                "Mr. Recipient",
+                (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now.AddMilliseconds(2),
+                now.AddMilliseconds(2),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b30",
+                "sender@email.com",
+                "Mr. Sender",
+                "recipient@email.com",
+                "Mr. Recipient",
+                (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now,
+                now,
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b29",
+                "sender@email.com",
+                "Mr. Sender",
+                "recipient@email.com",
+                "Mr. Recipient",
+                (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now.AddMilliseconds(1),
+                now.AddMilliseconds(1),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b31",
+                "sender@email.com",
+                "Mr. Sender",
+                "recipient@email.com",
+                "Mr. Recipient",
+                (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now.AddMilliseconds(1),
+                now.AddMilliseconds(1),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b32",
+                "sender@email.com",
+                "Mr. Sender",
+                "recipient@email.com",
+                "Mr. Recipient",
+                (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now.AddMilliseconds(3),
+                now.AddMilliseconds(3),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b32=3",
+                "sender@email.com",
+                "Mr. Sender",
+                "recipient@email.com",
+                "Mr. Recipient",
+                (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now,
+                now,
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+
+            Capsule? ret = await capsuleRepository.GetNextByCreateTime(now);
+            Assert.NotNull(ret);
+            Assert.Equal(now.AddMilliseconds(1), ret.CreateTime);
+        }
+        [Fact]
+        public async void GetNextByCreateTime_Null_If_Not_Exist()
+        {
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b28",
+                "sender@email.com",
+                "Mr. Sender",
+                "recipient@email.com",
+                "Mr. Recipient",
+                (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now.AddMilliseconds(2),
+                now.AddMilliseconds(2),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b30",
+                "sender@email.com",
+                "Mr. Sender",
+                "recipient@email.com",
+                "Mr. Recipient",
+                (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now,
+                now,
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b29",
+                "sender@email.com",
+                "Mr. Sender",
+                "recipient@email.com",
+                "Mr. Recipient",
+                (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now.AddMilliseconds(1),
+                now.AddMilliseconds(1),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b31",
+                "sender@email.com",
+                "Mr. Sender",
+                "recipient@email.com",
+                "Mr. Recipient",
+                (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now.AddMilliseconds(1),
+                now.AddMilliseconds(1),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b32",
+                "sender@email.com",
+                "Mr. Sender",
+                "recipient@email.com",
+                "Mr. Recipient",
+                (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now.AddMilliseconds(3),
+                now.AddMilliseconds(3),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b32=3",
+                "sender@email.com",
+                "Mr. Sender",
+                "recipient@email.com",
+                "Mr. Recipient",
+                (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now,
+                now,
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+
+            Capsule? ret = await capsuleRepository.GetNextByCreateTime(now.AddMilliseconds(3));
+            Assert.Null(ret);
+        }
     }
 }
