@@ -111,8 +111,72 @@ namespace Chronoria_WebAPI.Tests.Repositories
 
             await capsuleRepository.Create(capsule);
             Assert.True(contextMock.Capsules.Any());
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await capsuleRepository.Delete("0cade597-d092-40db-9a8d-589166f76b28"));
+            await capsuleRepository.Delete("0cade597-d092-40db-9a8d-589166f76b28");
             Assert.True(contextMock.Capsules.Any());
+        }
+        public async void Create_And_Retrieve_Correctly()
+        {
+            Capsule capsule = new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b29",
+                "sender@email.com",
+                "Mr. Sender",
+                "recipient@email.com",
+                "Mr. Recipient",
+                (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now,
+                now,
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                );
+
+            await capsuleRepository.Create(capsule);
+            Assert.True(contextMock.Capsules.Any());
+            Capsule? ret = await capsuleRepository.Retrieve("0cade597-d092-40db-9a8d-589166f76b29");
+            Assert.NotNull(ret);
+            Assert.Equal(capsule, ret);
+            Assert.False(contextMock.Capsules.Any());
+        }
+        [Fact]
+        public async void Not_Retrieve_Nonexistent_Entry()
+        {
+            Capsule capsule = new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b29",
+                "sender@email.com",
+                "Mr. Sender",
+                "recipient@email.com",
+                "Mr. Recipient",
+                (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now,
+                now,
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                );
+
+            await capsuleRepository.Create(capsule);
+            Assert.True(contextMock.Capsules.Any());
+            Capsule? ret = await capsuleRepository.Retrieve("0cade597-d092-40db-9a8d-589166f76b28");
+            Assert.Null(ret);
+            Assert.True(contextMock.Capsules.Any());
+        }
+        [Fact]
+        public async void Not_Retrieve_Just_Retrieved_Entry()
+        {
+            Capsule capsule = new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b29",
+                "sender@email.com",
+                "Mr. Sender",
+                "recipient@email.com",
+                "Mr. Recipient",
+                (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now,
+                now,
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                );
+
+            await capsuleRepository.Create(capsule);
+            Assert.True(contextMock.Capsules.Any());
+            Capsule? ret = await capsuleRepository.Retrieve("0cade597-d092-40db-9a8d-589166f76b29");
+            Assert.NotNull(ret);
+            Capsule? ret2 = await capsuleRepository.Retrieve("0cade597-d092-40db-9a8d-589166f76b29");
+            Assert.Null(ret2);
         }
         [Fact]
         public async void Get_Correctly()
