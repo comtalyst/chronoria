@@ -35,12 +35,12 @@ namespace Chronoria_PersistentWorkers.Schedulers
 
         protected override async Task<long> NextTime(long curTime)
         {
-            var nextCapsule = await pendingCapsuleRepository.GetNextByCreateTime(TimeUtils.EpochMsToDateTime(curTime));
+            var nextCapsule = await pendingCapsuleRepository.GetNextByCreateTime(TimeUtils.EpochMsToDateTime(curTime-fetchTime));
             if(nextCapsule == null)
             {
                 return long.MaxValue;
             }
-            return TimeUtils.DateTimeToEpochMs(nextCapsule.CreateTime);
+            return TimeUtils.DateTimeToEpochMs(nextCapsule.CreateTime) + fetchTime;
         }
 
         protected override async Task SetLastTime(long lastTime)
@@ -51,7 +51,7 @@ namespace Chronoria_PersistentWorkers.Schedulers
 
         protected override async Task Trigger(long lastTime, long curTime)
         {
-            ExpireClearMessage expireClearMessage = new ExpireClearMessage(lastTime, curTime);
+            ExpireClearMessage expireClearMessage = new ExpireClearMessage(lastTime-fetchTime, curTime-fetchTime);
             await expireClearProducer.Produce(expireClearMessage);
         }
     }
