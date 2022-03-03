@@ -32,7 +32,7 @@ namespace Chronoria_PersistentWorkers.Schedulers
 
                 // Calculate sleep time to be min(fetchTime, nextTime - curTime (newly defined for accuracy))
                 long nextTime = await NextTime(curTime);
-                long fetchTime = await FetchTime();
+                long fetchTime = FetchTime();
                 long sleepTime;
                 curTime = TimeUtils.DateTimeToEpochMs(TimeUtils.now());
                 if (nextTime - curTime > fetchTime)
@@ -53,7 +53,7 @@ namespace Chronoria_PersistentWorkers.Schedulers
         protected abstract Task Trigger(long lastTime, long curTime);
         protected abstract Task<long> NextTime(long curTime);
         protected abstract Task<long> LastTime();
-        protected abstract Task<long> FetchTime();
+        protected abstract long FetchTime();
         protected abstract Task SetLastTime(long lastTime);
     }
 }
