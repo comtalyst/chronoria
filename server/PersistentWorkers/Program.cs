@@ -1,6 +1,7 @@
 using Chronoria_PersistentWorkers.Producers;
 using Chronoria_PersistentWorkers.Repositories;
 using Chronoria_PersistentWorkers.Models;
+using Chronoria_PersistentWorkers.Schedulers;
 using Microsoft.EntityFrameworkCore;
 using Azure.Security.KeyVault.Secrets;
 using Azure.Identity;
@@ -66,3 +67,11 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// Schedulers
+ExpireClearScheduler expireClearScheduler = new ExpireClearScheduler(
+    long.Parse(Configuration["Schedulers:ExpireCLearScheduler:FetchTime"]),
+    app.Services.GetRequiredService<IExpireClearProducer>(),
+    app.Services.GetRequiredService<ICapsuleRepository<PendingContext>>()
+    );
+await expireClearScheduler.Start();
