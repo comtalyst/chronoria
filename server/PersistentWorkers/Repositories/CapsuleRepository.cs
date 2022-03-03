@@ -77,8 +77,7 @@ namespace Chronoria_PersistentWorkers.Repositories
 
         public async Task<Capsule> GetNextByCreateTime(DateTime time)
         {
-            return _context.Capsules.Where(cap => cap.CreateTime.CompareTo(time) > 0)
-                .MinBy(cap => cap.CreateTime);
+            return await _context.Capsules.Where(cap => cap.CreateTime.CompareTo(time) > 0).OrderBy(cap => cap.CreateTime).FirstOrDefaultAsync();
         }
     }
 }
