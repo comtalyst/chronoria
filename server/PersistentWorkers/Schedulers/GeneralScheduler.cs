@@ -6,16 +6,18 @@ namespace Chronoria_PersistentWorkers.Schedulers
     {
         private long lastTime;
         private bool run=false;
+        public Task looperTask;
         public async Task Start()
         {
             lastTime = await LastTime();
             run = true;
-            _ = Looper();
+            looperTask = Looper();
         }
 
         public async Task Suspend()
         {
             run = false;
+            looperTask.Dispose();
         }
 
         private async Task Looper()
