@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Chronoria_PersistentWorkers</RootNamespace>
+	<UserSecretsId>27b9dc2d-8f6f-4b46-839f-dbc19124a4ed</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\" />
     <Folder Include="Models\" />
     <Folder Include="Producers\" />
     <Folder Include="Repositories\" />
