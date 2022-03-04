@@ -12,7 +12,7 @@
         }
         public static DateTime now()
         {
-            return DateTime.Now;
+            return DateTime.Now.ToUniversalTime();
         }
     }
 }
