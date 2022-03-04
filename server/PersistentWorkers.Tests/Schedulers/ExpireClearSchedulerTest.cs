@@ -171,7 +171,6 @@ namespace Chronoria_PersistentWorkers.Tests.Schedulers
                 sumWaits += waits[i - 1];
                 // produce a message at the correct time
                 Assert.True(ApproxEqual(produced[i].TimeLog - produced[i - 1].TimeLog, waits[i - 1]));          // exact time may diverge by epsilon acculmulation
-                Assert.True(produced[i].TimeLog >= startTime + sumWaits);
                 // message is correct
                 Assert.True(ApproxEqual(produced[i].TimeR, produced[i].TimeLog - fetchTime));
                 Assert.True(ApproxEqual(produced[i].TimeR - produced[i].TimeL, waits[i - 1]));
@@ -233,7 +232,6 @@ namespace Chronoria_PersistentWorkers.Tests.Schedulers
                 sumWaits += waits[i - 1];
                 // produce a message at the correct time
                 Assert.True(ApproxEqual(produced[i].TimeLog - produced[i - 1].TimeLog, waits[i - 1]));          // exact time may diverge by epsilon acculmulation
-                Assert.True(produced[i].TimeLog >= startTime + sumWaits);
                 // message is correct
                 Assert.True(ApproxEqual(produced[i].TimeR, produced[i].TimeLog - fetchTime));
                 Assert.True(ApproxEqual(produced[i].TimeR - produced[i].TimeL, waits[i - 1]));
