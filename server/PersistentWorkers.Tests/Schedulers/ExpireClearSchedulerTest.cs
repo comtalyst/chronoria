@@ -117,26 +117,26 @@ namespace Chronoria_PersistentWorkers.Tests.Schedulers
             output.WriteLine(TimeUtils.DateTimeToEpochMs(now).ToString());
             await capsuleRepository.Create(new Capsule(
                 "0cade597-d092-40db-9a8d-589166f76b00", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
-                now.AddMilliseconds(epsilon + fetchTime * 4 / 6 - fetchTime),
-                now.AddMilliseconds(epsilon + fetchTime * 4 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 4 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 4 / 6 - fetchTime),
                 (Status)Enum.Parse(typeof(Status), "Pending")
                 ));
             await capsuleRepository.Create(new Capsule(
                 "0cade597-d092-40db-9a8d-589166f76b01", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
-                now.AddMilliseconds(epsilon + fetchTime * 7 / 6 - fetchTime),
-                now.AddMilliseconds(epsilon + fetchTime * 7 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 7 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 7 / 6 - fetchTime),
                 (Status)Enum.Parse(typeof(Status), "Pending")
                 ));
             await capsuleRepository.Create(new Capsule(
                 "0cade597-d092-40db-9a8d-589166f76b02", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
-                now.AddMilliseconds(epsilon + fetchTime * 11 / 6 - fetchTime),
-                now.AddMilliseconds(epsilon + fetchTime * 11 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 11 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 11 / 6 - fetchTime),
                 (Status)Enum.Parse(typeof(Status), "Pending")
                 ));
             await capsuleRepository.Create(new Capsule(
                 "0cade597-d092-40db-9a8d-589166f76b03", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
-                now.AddMilliseconds(epsilon + fetchTime * 14 / 6 - fetchTime),
-                now.AddMilliseconds(epsilon + fetchTime * 14 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 14 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 14 / 6 - fetchTime),
                 (Status)Enum.Parse(typeof(Status), "Pending")
                 ));
             Assert.Equal("0cade597-d092-40db-9a8d-589166f76b00", (await capsuleRepository.GetNextByCreateTime(now.AddMilliseconds(-fetchTime))).Id);
@@ -146,10 +146,10 @@ namespace Chronoria_PersistentWorkers.Tests.Schedulers
             await Task.Delay((int)(fetchTime + epsilon) * 4);
             await scheduler.Suspend();
             
-            /*for (int i = 1; i < produced.Count; i++)
+            for (int i = 0; i < produced.Count; i++)
             {
-                output.WriteLine(produced[i].TimeR.ToString() + " - " + produced[i].TimeL.ToString());
-            }*/
+                output.WriteLine(produced[i].TimeLog.ToString() + " : " + produced[i].TimeR.ToString() + " - " + produced[i].TimeL.ToString());
+            }
 
             Assert.NotEmpty(produced);
             Assert.True(produced.Count > 5);
@@ -184,20 +184,20 @@ namespace Chronoria_PersistentWorkers.Tests.Schedulers
             output.WriteLine(TimeUtils.DateTimeToEpochMs(now).ToString());
             await capsuleRepository.Create(new Capsule(
                 "0cade597-d092-40db-9a8d-589166f76b00", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
-                now.AddMilliseconds(epsilon + fetchTime * 4 / 6 - fetchTime),
-                now.AddMilliseconds(epsilon + fetchTime * 4 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 4 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 4 / 6 - fetchTime),
                 (Status)Enum.Parse(typeof(Status), "Pending")
                 ));
             await capsuleRepository.Create(new Capsule(
                 "0cade597-d092-40db-9a8d-589166f76b01", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
-                now.AddMilliseconds(epsilon + fetchTime * 7 / 6 - fetchTime),
-                now.AddMilliseconds(epsilon + fetchTime * 7 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 7 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 7 / 6 - fetchTime),
                 (Status)Enum.Parse(typeof(Status), "Pending")
                 ));
             await capsuleRepository.Create(new Capsule(
                 "0cade597-d092-40db-9a8d-589166f76b02", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
-                now.AddMilliseconds(epsilon + fetchTime * 22 / 6 - fetchTime),
-                now.AddMilliseconds(epsilon + fetchTime * 22 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 22 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 22 / 6 - fetchTime),
                 (Status)Enum.Parse(typeof(Status), "Pending")
                 ));
             Assert.Equal("0cade597-d092-40db-9a8d-589166f76b00", (await capsuleRepository.GetNextByCreateTime(now.AddMilliseconds(-fetchTime))).Id);
