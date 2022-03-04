@@ -5,24 +5,41 @@ namespace Chronoria_PersistentWorkers.Schedulers
     public abstract class GeneralScheduler : IScheduler
     {
         private long lastTime;
-        private bool run=false;
-        public Task looperTask;
+        private Task looperTask;
+        private CancellationTokenSource tokenSource;
+
         public async Task Start()
         {
+            tokenSource = new CancellationTokenSource();
             lastTime = await LastTime();
-            run = true;
-            looperTask = Looper();
+            looperTask = Task.Run(() => Looper(tokenSource.Token), tokenSource.Token);
         }
 
         public async Task Suspend()
         {
-            run = false;
-            looperTask.Dispose();
+            tokenSource.Cancel();
+            try
+            {
+                await looperTask;
+            }
+            catch (OperationCanceledException e)
+            {
+                
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine(e.ToString());
+            }
+            finally
+            {
+                tokenSource.Dispose();
+            }
+
         }
 
-        private async Task Looper()
+        private async Task Looper(CancellationToken token)
         {
-            while (run)
+            while (!token.IsCancellationRequested)
             {
                 // Trigger using the time interval for parameters
                 long curTime = TimeUtils.DateTimeToEpochMs(TimeUtils.now());
@@ -47,9 +64,10 @@ namespace Chronoria_PersistentWorkers.Schedulers
                 }
                 if (sleepTime > 0)
                 {
-                    await Task.Delay((int)sleepTime);
+                    await Task.Delay((int)sleepTime, token);
                 }
             }
+            token.ThrowIfCancellationRequested();
         }
 
         protected abstract Task Trigger(long lastTime, long curTime);
