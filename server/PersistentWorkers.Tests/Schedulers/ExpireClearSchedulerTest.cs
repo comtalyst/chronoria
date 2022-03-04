@@ -99,6 +99,7 @@ namespace Chronoria_PersistentWorkers.Tests.Schedulers
         {
             var startTime = TimeUtils.DateTimeToEpochMs(TimeUtils.now());
             await scheduler.Start();
+            await Task.Delay(1000);
             await scheduler.Suspend();
             Assert.NotEmpty(produced);
             Assert.True(ApproxEqual(produced[0].TimeR, startTime - fetchTime));
@@ -167,7 +168,7 @@ namespace Chronoria_PersistentWorkers.Tests.Schedulers
             Assert.True(produced.Count > 5);
 
             List<long> waits = new List<long>();
-            waits.Add(fetchTime * 4 / 6);
+            waits.Add(fetchTime * 4 / 6 - epsilon);
             waits.Add(fetchTime * 3 / 6);
             waits.Add(fetchTime * 4 / 6);
             waits.Add(fetchTime * 3 / 6);
