@@ -49,8 +49,8 @@ namespace Chronoria_PersistentWorkers.Tests.Schedulers
             }
         }
         private readonly ITestOutputHelper output;
-        private const long fetchTime = 10000;
-        private const long epsilon = 500;
+        private const long fetchTime = 20000;
+        private const long epsilon = 800;
         private readonly IScheduler scheduler;
         private readonly MockExpireClearProducer producer;
         private readonly PendingContext contextMock;
@@ -207,10 +207,10 @@ namespace Chronoria_PersistentWorkers.Tests.Schedulers
             await Task.Delay((int)(fetchTime + epsilon) * 5);
             await scheduler.Suspend();
 
-            /*for (int i = 1; i < produced.Count; i++)
+            for (int i = 0; i < produced.Count; i++)
             {
-                output.WriteLine(produced[i].TimeR.ToString() + " - " + produced[i].TimeL.ToString());
-            }*/
+                output.WriteLine(produced[i].TimeLog.ToString() + " : " + produced[i].TimeR.ToString() + " - " + produced[i].TimeL.ToString());
+            }
 
             Assert.NotEmpty(produced);
             Assert.True(produced.Count > 6);
