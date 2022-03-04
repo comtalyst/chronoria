@@ -81,6 +81,18 @@ namespace Chronoria_PersistentWorkers.Tests.Schedulers
         {
             contextMock.Database.EnsureDeleted();
         }
+        [Fact]
+        public async void Suspend_Efficiently()
+        {
+            var scheduler2 = new ExpireClearScheduler(1000000, producer, capsuleRepository);
+            var startTime = TimeUtils.DateTimeToEpochMs(TimeUtils.now());
+            await scheduler2.Start();
+            await Task.Delay(1000);
+            await scheduler2.Suspend();
+            var stopTime = TimeUtils.DateTimeToEpochMs(TimeUtils.now());
+            Assert.NotEmpty(produced);
+            Assert.True(ApproxEqual(stopTime, startTime + 1000));
+        }
 
         [Fact]
         public async void Trigger_First_Time_Correctly()
