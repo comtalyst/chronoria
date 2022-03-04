@@ -237,5 +237,202 @@ namespace Chronoria_PersistentWorkers.Tests.Schedulers
                 Assert.True(ApproxEqual(produced[i].TimeR - produced[i].TimeL, waits[i - 1]));
             }
         }
+        [Fact]
+        public async void Trigger_Correctly_On_Prefilled_Db_Stacked()
+        {
+            var now = TimeUtils.now();
+            output.WriteLine(TimeUtils.DateTimeToEpochMs(now).ToString());
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b00", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now.AddMilliseconds(fetchTime * 1 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 1 / 6 - fetchTime),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b01", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now.AddMilliseconds(fetchTime * 2 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 2 / 6 - fetchTime),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b02", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now.AddMilliseconds(fetchTime * 3 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 3 / 6 - fetchTime),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b03", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now.AddMilliseconds(fetchTime * 4 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 4 / 6 - fetchTime),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b04", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now.AddMilliseconds(fetchTime * 5 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 5 / 6 - fetchTime),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b05", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now.AddMilliseconds(fetchTime * 6 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 6 / 6 - fetchTime),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b06", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now.AddMilliseconds(fetchTime * 10 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 10 / 6 - fetchTime),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b07", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now.AddMilliseconds(fetchTime * 22 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 22 / 6 - fetchTime),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b08", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now.AddMilliseconds(fetchTime * 23 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 23 / 6 - fetchTime),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b09", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now.AddMilliseconds(fetchTime * 24 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 24 / 6 - fetchTime),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b10", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                now.AddMilliseconds(fetchTime * 31 / 6 - fetchTime),
+                now.AddMilliseconds(fetchTime * 31 / 6 - fetchTime),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            Assert.Equal("0cade597-d092-40db-9a8d-589166f76b00", (await capsuleRepository.GetNextByCreateTime(now.AddMilliseconds(-fetchTime))).Id);
+
+            var startTime = TimeUtils.DateTimeToEpochMs(TimeUtils.now());
+            await scheduler.Start();
+            await Task.Delay((int)(fetchTime + epsilon) * 37 / 6);
+            await scheduler.Suspend();
+
+            for (int i = 0; i < produced.Count; i++)
+            {
+                output.WriteLine(produced[i].TimeLog.ToString() + " : " + produced[i].TimeR.ToString() + " - " + produced[i].TimeL.ToString());
+            }
+
+            Assert.NotEmpty(produced);
+            Assert.True(produced.Count > 14);
+
+            List<long> waits = new List<long>();
+            waits.Add(fetchTime * 1 / 6 - epsilon); // because this test is heavy
+            waits.Add(fetchTime * 1 / 6);
+            waits.Add(fetchTime * 1 / 6);
+            waits.Add(fetchTime * 1 / 6);
+            waits.Add(fetchTime * 1 / 6);
+            waits.Add(fetchTime * 1 / 6);
+            waits.Add(fetchTime * 4 / 6);
+            waits.Add(fetchTime);
+            waits.Add(fetchTime);
+            waits.Add(fetchTime * 1 / 6);
+            waits.Add(fetchTime * 1 / 6);
+            waits.Add(fetchTime);
+            waits.Add(fetchTime * 1 / 6);
+            waits.Add(fetchTime);
+
+            Assert.True(ApproxEqual(produced[0].TimeLog, startTime));
+            long sumWaits = 0;
+            for (int i = 1; i <= 14; i++)
+            {
+                // connected to last message
+                Assert.Equal(produced[i].TimeL - 1, produced[i - 1].TimeR);
+
+                sumWaits += waits[i - 1];
+                // produce a message at the correct time
+                Assert.True(ApproxEqual(produced[i].TimeLog - produced[i - 1].TimeLog, waits[i - 1]));          // exact time may diverge by epsilon acculmulation
+                // message is correct
+                Assert.True(ApproxEqual(produced[i].TimeR, produced[i].TimeLog - fetchTime));
+                Assert.True(ApproxEqual(produced[i].TimeR - produced[i].TimeL, waits[i - 1]));
+            }
+        }
+        [Fact]
+        public async void Trigger_Correctly_On_Filling_Up_Db_Dispersed()
+        {
+            var start = TimeUtils.now();
+            var startTime = TimeUtils.DateTimeToEpochMs(start);
+            await scheduler.Start();
+
+            await Task.Delay((int)(fetchTime * 3 / 6));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b00", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                start.AddMilliseconds(fetchTime * 9 / 6 - fetchTime),
+                start.AddMilliseconds(fetchTime * 9 / 6 - fetchTime),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+
+            await Task.Delay((int)(fetchTime * 7 / 6));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b01", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                start.AddMilliseconds(fetchTime * 16 / 6 - fetchTime),
+                start.AddMilliseconds(fetchTime * 16 / 6 - fetchTime),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b02", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                start.AddMilliseconds(fetchTime * 20 / 6 - fetchTime),
+                start.AddMilliseconds(fetchTime * 20 / 6 - fetchTime),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b03", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                start.AddMilliseconds(fetchTime * 31 / 6 - fetchTime),
+                start.AddMilliseconds(fetchTime * 31 / 6 - fetchTime),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+
+            await Task.Delay((int)(fetchTime * 8 / 6));
+            await capsuleRepository.Create(new Capsule(
+                "0cade597-d092-40db-9a8d-589166f76b04", "sender@email.com", "Mr. Sender", "recipient@email.com", "Mr. Recipient", (ContentType)Enum.Parse(typeof(ContentType), "File"),
+                start.AddMilliseconds(fetchTime * 24 / 6 - fetchTime),
+                start.AddMilliseconds(fetchTime * 24 / 6 - fetchTime),
+                (Status)Enum.Parse(typeof(Status), "Pending")
+                ));
+
+            await Task.Delay((int)(fetchTime * 19 / 6));
+            await scheduler.Suspend();
+
+            for (int i = 0; i < produced.Count; i++)
+            {
+                output.WriteLine(produced[i].TimeLog.ToString() + " : " + produced[i].TimeR.ToString() + " - " + produced[i].TimeL.ToString());
+            }
+
+            Assert.NotEmpty(produced);
+            Assert.True(produced.Count > 9);
+
+            List<long> waits = new List<long>();
+            waits.Add(fetchTime);
+            waits.Add(fetchTime * 3 / 6);
+            waits.Add(fetchTime);
+            waits.Add(fetchTime * 1 / 6);
+            waits.Add(fetchTime * 4 / 6);
+            waits.Add(fetchTime * 4 / 6);
+            waits.Add(fetchTime);
+            waits.Add(fetchTime * 1 / 6);
+            waits.Add(fetchTime);
+
+            Assert.True(ApproxEqual(produced[0].TimeLog, startTime));
+            long sumWaits = 0;
+            for (int i = 1; i <= 9; i++)
+            {
+                // connected to last message
+                Assert.Equal(produced[i].TimeL - 1, produced[i - 1].TimeR);
+
+                sumWaits += waits[i - 1];
+                // produce a message at the correct time
+                Assert.True(ApproxEqual(produced[i].TimeLog - produced[i - 1].TimeLog, waits[i - 1]));          // exact time may diverge by epsilon acculmulation
+                // message is correct
+                Assert.True(ApproxEqual(produced[i].TimeR, produced[i].TimeLog - fetchTime));
+                Assert.True(ApproxEqual(produced[i].TimeR - produced[i].TimeL, waits[i - 1]));
+            }
+        }
     }
 }
