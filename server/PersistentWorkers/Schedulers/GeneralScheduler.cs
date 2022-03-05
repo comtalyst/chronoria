@@ -64,7 +64,18 @@ namespace Chronoria_PersistentWorkers.Schedulers
                 }
                 if (sleepTime > 0)
                 {
+                    long wakeTime = curTime + sleepTime;
                     await Task.Delay((int)sleepTime, token);
+                    token.ThrowIfCancellationRequested();
+
+                    // penalty for inaccuracy of Task.Delay()
+                    curTime = TimeUtils.DateTimeToEpochMs(TimeUtils.now());
+                    while (curTime < wakeTime)
+                    {
+                        await Task.Delay((int)(wakeTime - curTime), token);
+                        token.ThrowIfCancellationRequested();
+                        curTime = TimeUtils.DateTimeToEpochMs(TimeUtils.now());
+                    }
                 }
             }
             token.ThrowIfCancellationRequested();
