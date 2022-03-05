@@ -447,5 +447,30 @@ namespace Chronoria_PersistentWorkers.Tests.Schedulers
                 Assert.True(ApproxEqual(produced[i].TimeR - produced[i].TimeL, waits[i - 1]));
             }
         }
+
+        [Fact]
+        public async void Trigger_By_FetchTime_When_Repo_Fails()
+        {
+            var scheduler2 = new ExpireClearScheduler(fetchTime, producer, null);
+            var startTime = TimeUtils.DateTimeToEpochMs(TimeUtils.now());
+            await scheduler2.Start();
+            await Task.Delay((int)(fetchTime + epsilon) * 4);
+            await scheduler2.Suspend();
+
+            for (int i = 0; i < produced.Count; i++)
+            {
+                output.WriteLine(produced[i].TimeLog.ToString() + " : " + produced[i].TimeR.ToString() + " - " + produced[i].TimeL.ToString());
+            }
+
+            Assert.NotEmpty(produced);
+            Assert.True(ApproxEqual(produced[0].TimeLog, startTime));
+            for (int i = 1; i < produced.Count; i++)
+            {
+                //output.WriteLine(produced[i].TimeL.ToString() + " -- " + produced[i].TimeR.ToString());
+                Assert.Equal(produced[i].TimeL - 1, produced[i - 1].TimeR);
+                Assert.True(ApproxEqual(produced[i].TimeR - produced[i].TimeL, fetchTime));
+                Assert.True(ApproxEqual(produced[i].TimeLog, startTime + fetchTime * i));
+            }
+        }
     }
 }
