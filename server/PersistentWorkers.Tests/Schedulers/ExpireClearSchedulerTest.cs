@@ -49,8 +49,8 @@ namespace Chronoria_PersistentWorkers.Tests.Schedulers
             }
         }
         private readonly ITestOutputHelper output;
-        private const long fetchTime = 20000;
-        private const long epsilon = 800;
+        private const long fetchTime = 50000;
+        private const long epsilon = 2000;
         private readonly IScheduler scheduler;
         private readonly MockExpireClearProducer producer;
         private readonly PendingContext contextMock;
@@ -168,7 +168,7 @@ namespace Chronoria_PersistentWorkers.Tests.Schedulers
             Assert.True(produced.Count > 5);
 
             List<long> waits = new List<long>();
-            waits.Add(fetchTime * 4 / 6 - epsilon);
+            waits.Add(fetchTime * 4 / 6);
             waits.Add(fetchTime * 3 / 6);
             waits.Add(fetchTime * 4 / 6);
             waits.Add(fetchTime * 3 / 6);
@@ -337,7 +337,7 @@ namespace Chronoria_PersistentWorkers.Tests.Schedulers
             Assert.True(produced.Count > 14);
 
             List<long> waits = new List<long>();
-            waits.Add(fetchTime * 1 / 6 - epsilon); // because this test is heavy
+            waits.Add(fetchTime * 1 / 6); // because this test is heavy
             waits.Add(fetchTime * 1 / 6);
             waits.Add(fetchTime * 1 / 6);
             waits.Add(fetchTime * 1 / 6);
