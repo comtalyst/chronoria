@@ -29,6 +29,7 @@ namespace Chronoria_PersistentWorkers.Schedulers
             catch (Exception e)
             {
                 Console.Error.WriteLine(e.ToString());
+                //throw e;
             }
             finally
             {
@@ -51,6 +52,11 @@ namespace Chronoria_PersistentWorkers.Schedulers
 
                 // Calculate sleep time to be min(fetchTime, nextTime - curTime (newly defined for accuracy))
                 long nextTime = await NextTime(curTime);
+                if(nextTime == curTime)
+                {
+                    //throw new Exception("Whattt nextTime = curTime");
+                    nextTime = await NextTime(curTime + 1);                     // temporary
+                }
                 long fetchTime = FetchTime();
                 long sleepTime;
                 curTime = TimeUtils.DateTimeToEpochMs(TimeUtils.now());
