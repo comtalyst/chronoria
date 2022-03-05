@@ -44,19 +44,41 @@ namespace Chronoria_PersistentWorkers.Schedulers
             {
                 // Trigger using the time interval for parameters
                 long curTime = TimeUtils.DateTimeToEpochMs(TimeUtils.now());
-                await Trigger(lastTime + 1, curTime);
+                try
+                {
+                    await Trigger(lastTime + 1, curTime);
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine(ex.ToString());
+                }
 
                 // Update lastTime to current time
                 lastTime = curTime;
-                await SetLastTime(lastTime);
+                try
+                {
+                    await SetLastTime(lastTime);
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine(ex.ToString());
+                }
 
                 // Calculate sleep time to be min(fetchTime, nextTime - curTime (newly defined for accuracy))
-                long nextTime = await NextTime(curTime);
-                if(nextTime == curTime)
+                long nextTime = long.MaxValue;
+                try
                 {
-                    //throw new Exception("Whattt nextTime = curTime");
-                    nextTime = await NextTime(curTime + 1);                     // temporary
+                    nextTime = await NextTime(curTime);
+                    if (nextTime == curTime)
+                    {
+                        nextTime = await NextTime(curTime + 1);                     // temporary
+                    }
                 }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine(ex.ToString());
+                }
+                
                 long fetchTime = FetchTime();
                 long sleepTime;
                 curTime = TimeUtils.DateTimeToEpochMs(TimeUtils.now());
