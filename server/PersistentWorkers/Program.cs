@@ -14,7 +14,7 @@ builder.ConfigureAppConfiguration((hostBuilderContext, build) =>
 {
     if (hostBuilderContext.HostingEnvironment.IsDevelopment())
     {
-        configBuilder = configBuilder.AddUserSecrets<Program>();
+        configBuilder = configBuilder.AddUserSecrets<Program>();            // TODO: use Generic Host built-in config instead
     }
 });
 IConfiguration Configuration = configBuilder.Build();
