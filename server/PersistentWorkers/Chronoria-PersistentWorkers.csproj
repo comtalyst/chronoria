@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -25,8 +25,8 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Models\" />
-    <Folder Include="Producers\" />
+	<Folder Include="Models\" />
+	<Folder Include="Producers\" />
     <Folder Include="Repositories\" />
     <Folder Include="Services\" />
   </ItemGroup>
