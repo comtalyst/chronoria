@@ -8,21 +8,23 @@ using Azure.Identity;
 using Azure.Extensions.AspNetCore.Configuration.Secrets;
 
 // Initialize builder/primary config
-var builder = Host.CreateDefaultBuilder(args);
-builder.ConfigureAppConfiguration((hostBuilderContext, configBuilder) =>
-{
-    // Add secondary config
-    if (hostBuilderContext.HostingEnvironment.IsProduction())
+var configBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
+IConfiguration BasicConfig = configBuilder.Build();
+var builder = Host.CreateDefaultBuilder(args)
+    .ConfigureAppConfiguration((hostBuilderContext, configBuilder) =>
     {
-        configBuilder.AddAzureKeyVault(
-            new SecretClient(
-                new Uri($"https://{hostBuilderContext.Configuration["Vault:KeyVaultName"]}.vault.azure.net/"),
-                new DefaultAzureCredential()
-                ),
-            new KeyVaultSecretManager()
-            );
-    }
-});
+        // Add secondary config
+        if (hostBuilderContext.HostingEnvironment.IsProduction())
+        {
+            configBuilder.AddAzureKeyVault(
+                new SecretClient(
+                    new Uri($"https://{BasicConfig["Vault:KeyVaultName"]}.vault.azure.net/"),
+                    new DefaultAzureCredential()
+                    ),
+                new KeyVaultSecretManager()
+                );
+        }
+    });
 
 builder.ConfigureServices((hostBuilderContext, services) =>
 {
