@@ -72,14 +72,14 @@ app.Run();
 
 // Schedulers
 ExpireClearScheduler expireClearScheduler = new ExpireClearScheduler(
-    long.Parse(Configuration["Schedulers:ExpireClearScheduler:FetchTime"]),
+    long.Parse(Configuration["Policies:PendingExpireTime"]),
     app.Services.GetRequiredService<IExpireClearProducer>(),
     app.Services.GetRequiredService<ICapsuleRepository<PendingContext>>()
     );
 await expireClearScheduler.Start();
 
 CapsuleReleaseScheduler capsuleReleaseScheduler = new CapsuleReleaseScheduler(
-    long.Parse(Configuration["Schedulers:CapsuleReleaseScheduler:FetchTime"]),
+    long.Parse(Configuration["Policies:MinCapsuleAge"]) - long.Parse(Configuration["Policies:PendingExpireTime"]),
     app.Services.GetRequiredService<ICapsuleReleaseProducer>(),
     app.Services.GetRequiredService<ICapsuleRepository<ActiveContext>>()
     );
