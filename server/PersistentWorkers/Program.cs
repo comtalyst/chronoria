@@ -6,11 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using Azure.Security.KeyVault.Secrets;
 using Azure.Identity;
 using Azure.Extensions.AspNetCore.Configuration.Secrets;
+using Microsoft.AspNetCore;
 
 // Initialize builder/primary config
 var configBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
 IConfiguration BasicConfig = configBuilder.Build();
-var builder = Host.CreateDefaultBuilder(args)
+var builder = WebHost.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((hostBuilderContext, configBuilder) =>
     {
         // Add secondary config
@@ -25,6 +26,8 @@ var builder = Host.CreateDefaultBuilder(args)
                 );
         }
     });
+
+builder.Configure((_) => { });
 
 builder.ConfigureServices((hostBuilderContext, services) =>
 {
