@@ -72,7 +72,7 @@ app.Run();
 
 // Schedulers
 ExpireClearScheduler expireClearScheduler = new ExpireClearScheduler(
-    long.Parse(Configuration["Schedulers:ExpireCLearScheduler:FetchTime"]),
+    long.Parse(Configuration["Schedulers:ExpireClearScheduler:FetchTime"]),
     app.Services.GetRequiredService<IExpireClearProducer>(),
     app.Services.GetRequiredService<ICapsuleRepository<PendingContext>>()
     );
