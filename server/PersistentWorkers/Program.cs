@@ -32,14 +32,14 @@ Configuration = configBuilder.Build();
 
 
 // Azure Service Bus Producers
-builder.Services.AddScoped<IExpireClearProducer, ExpireClearProducer>(
+builder.Services.AddSingleton<IExpireClearProducer, ExpireClearProducer>(
     sp => new ExpireClearProducer(Configuration["ServiceBus:Connections:Prime"]));
-builder.Services.AddScoped<ICapsuleReleaseProducer, CapsuleReleaseProducer>(
+builder.Services.AddSingleton<ICapsuleReleaseProducer, CapsuleReleaseProducer>(
     sp => new CapsuleReleaseProducer(Configuration["ServiceBus:Connections:Prime"]));
 
 // Database Repositories
-builder.Services.AddScoped<ICapsuleRepository<PendingContext>, CapsuleRepository<PendingContext>>();
-builder.Services.AddScoped<ICapsuleRepository<ActiveContext>, CapsuleRepository<ActiveContext>>();
+builder.Services.AddSingleton<ICapsuleRepository<PendingContext>, CapsuleRepository<PendingContext>>();
+builder.Services.AddSingleton<ICapsuleRepository<ActiveContext>, CapsuleRepository<ActiveContext>>();
 
 // Databases Contexts
 builder.Services.AddDbContext<PendingContext>(o => o.UseNpgsql(Configuration["Db:Connections:Pending"]));
