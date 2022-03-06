@@ -79,5 +79,10 @@ namespace Chronoria_PersistentWorkers.Repositories
         {
             return await _context.Capsules.Where(cap => cap.CreateTime.CompareTo(time) > 0).OrderBy(cap => cap.CreateTime).FirstOrDefaultAsync();
         }
+
+        public async Task<Capsule> GetNextBySendTime(DateTime time)
+        {
+            return await _context.Capsules.Where(cap => cap.SendTime.CompareTo(time) > 0).OrderBy(cap => cap.SendTime).FirstOrDefaultAsync();
+        }
     }
 }
