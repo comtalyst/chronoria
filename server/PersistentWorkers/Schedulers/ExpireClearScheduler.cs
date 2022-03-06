@@ -67,7 +67,6 @@ namespace Chronoria_PersistentWorkers.Schedulers
 
         protected override async Task Trigger(long lastTime, long curTime)
         {
-            Console.WriteLine("ExpireClearScheduler Triggered!");
             ExpireClearMessage expireClearMessage = new ExpireClearMessage(lastTime-fetchTime, curTime-fetchTime);
             await expireClearProducer.Produce(expireClearMessage);
         }
