@@ -32,20 +32,30 @@ Configuration = configBuilder.Build();
 
 
 // Azure Service Bus Producers
-builder.Services.AddSingleton<IExpireClearProducer, ExpireClearProducer>(
+builder.Services.AddScoped<IExpireClearProducer, ExpireClearProducer>(
     sp => new ExpireClearProducer(Configuration["ServiceBus:Connections:Prime"]));
-builder.Services.AddSingleton<ICapsuleReleaseProducer, CapsuleReleaseProducer>(
+builder.Services.AddScoped<ICapsuleReleaseProducer, CapsuleReleaseProducer>(
     sp => new CapsuleReleaseProducer(Configuration["ServiceBus:Connections:Prime"]));
 
 // Database Repositories
-builder.Services.AddSingleton<ICapsuleRepository<PendingContext>, CapsuleRepository<PendingContext>>();
-builder.Services.AddSingleton<ICapsuleRepository<ActiveContext>, CapsuleRepository<ActiveContext>>();
+builder.Services.AddScoped<ICapsuleRepository<PendingContext>, CapsuleRepository<PendingContext>>();
+builder.Services.AddScoped<ICapsuleRepository<ActiveContext>, CapsuleRepository<ActiveContext>>();
 
 // Databases Contexts
 builder.Services.AddDbContext<PendingContext>(o => o.UseNpgsql(Configuration["Db:Connections:Pending"]));
 builder.Services.AddDbContext<ActiveContext>(o => o.UseNpgsql(Configuration["Db:Connections:Active"]));
 
-
+// Schedulers
+builder.Services.AddHostedService<ExpireClearScheduler>(
+    sp => new ExpireClearScheduler(
+        long.Parse(Configuration["Policies:PendingExpireTime"]), sp
+    )
+);
+builder.Services.AddHostedService<CapsuleReleaseScheduler>(
+    sp => new CapsuleReleaseScheduler(
+        long.Parse(Configuration["Policies:MinCapsuleAge"]) - long.Parse(Configuration["Policies:PendingExpireTime"]), sp
+    )
+);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -70,17 +80,4 @@ app.MapControllers();
 
 app.Run();
 
-// Schedulers
-ExpireClearScheduler expireClearScheduler = new ExpireClearScheduler(
-    long.Parse(Configuration["Policies:PendingExpireTime"]),
-    app.Services.GetRequiredService<IExpireClearProducer>(),
-    app.Services.GetRequiredService<ICapsuleRepository<PendingContext>>()
-    );
-await expireClearScheduler.Start();
 
-CapsuleReleaseScheduler capsuleReleaseScheduler = new CapsuleReleaseScheduler(
-    long.Parse(Configuration["Policies:MinCapsuleAge"]) - long.Parse(Configuration["Policies:PendingExpireTime"]),
-    app.Services.GetRequiredService<ICapsuleReleaseProducer>(),
-    app.Services.GetRequiredService<ICapsuleRepository<ActiveContext>>()
-    );
-await capsuleReleaseScheduler.Start();

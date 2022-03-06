@@ -2,43 +2,47 @@
 
 namespace Chronoria_PersistentWorkers.Schedulers
 {
-    public abstract class GeneralScheduler : IScheduler
+    public abstract class GeneralScheduler : BackgroundService, IScheduler
     {
         private long lastTime;
         private Task looperTask;
+
         private CancellationTokenSource tokenSource;
 
+        // for testing
         public async Task Start()
         {
             tokenSource = new CancellationTokenSource();
-            lastTime = await LastTime();
-            looperTask = Task.Run(() => Looper(tokenSource.Token), tokenSource.Token);
+            await ExecuteAsync(tokenSource.Token);
         }
-
         public async Task Suspend()
         {
             tokenSource.Cancel();
+            await StopAsync(tokenSource.Token);
+            tokenSource.Dispose();
+        }
+
+        // for integration
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            lastTime = await LastTime();
+            looperTask = Task.Run(() => LooperWrapper(stoppingToken), stoppingToken);
+        }
+        public override async Task StopAsync(CancellationToken stoppingToken)
+        {
             try
             {
                 await looperTask;
             }
-            catch (OperationCanceledException e)
-            {
-                
-            }
+            catch (OperationCanceledException) { }
             catch (Exception e)
             {
                 Console.Error.WriteLine(e.ToString());
-                //throw e;
             }
-            finally
-            {
-                tokenSource.Dispose();
-            }
-
+            await base.StopAsync(stoppingToken);
         }
 
-        private async Task Looper(CancellationToken token)
+        protected async Task Looper(CancellationToken token)
         {
             while (!token.IsCancellationRequested)
             {
@@ -78,7 +82,7 @@ namespace Chronoria_PersistentWorkers.Schedulers
                 {
                     Console.Error.WriteLine(ex.ToString());
                 }
-                
+
                 long fetchTime = FetchTime();
                 long sleepTime;
                 curTime = TimeUtils.DateTimeToEpochMs(TimeUtils.now());
@@ -114,5 +118,6 @@ namespace Chronoria_PersistentWorkers.Schedulers
         protected abstract Task<long> LastTime();
         protected abstract long FetchTime();
         protected abstract Task SetLastTime(long lastTime);
+        protected abstract Task LooperWrapper(CancellationToken token);
     }
 }

@@ -8,9 +8,15 @@ namespace Chronoria_PersistentWorkers.Schedulers
     public class ExpireClearScheduler : GeneralScheduler, IScheduler
     {
         private readonly long fetchTime;
-        private readonly IExpireClearProducer expireClearProducer;
-        private readonly ICapsuleRepository<PendingContext> pendingCapsuleRepository;
+        private IExpireClearProducer expireClearProducer;
+        private ICapsuleRepository<PendingContext> pendingCapsuleRepository;
+        private readonly IServiceProvider sp;
 
+        public ExpireClearScheduler(long fetchTime, IServiceProvider sp)
+        {
+            this.fetchTime = fetchTime;
+            this.sp = sp;
+        }
         public ExpireClearScheduler(
             long fetchTime,
             IExpireClearProducer expireClearProducer,
@@ -33,6 +39,16 @@ namespace Chronoria_PersistentWorkers.Schedulers
             return 0;
         }
 
+        protected override async Task LooperWrapper(CancellationToken token)
+        {
+            using (var scope = sp.CreateScope())
+            {
+                expireClearProducer = sp.GetService<IExpireClearProducer>();
+                pendingCapsuleRepository = sp.GetService<ICapsuleRepository<PendingContext>>();
+                await Looper(token);
+            }
+        }
+
         protected override async Task<long> NextTime(long curTime)
         {
             var nextCapsule = await pendingCapsuleRepository.GetNextByCreateTime(TimeUtils.EpochMsToDateTime(curTime-fetchTime));
@@ -51,6 +67,7 @@ namespace Chronoria_PersistentWorkers.Schedulers
 
         protected override async Task Trigger(long lastTime, long curTime)
         {
+            Console.WriteLine("ExpireClearScheduler Triggered!");
             ExpireClearMessage expireClearMessage = new ExpireClearMessage(lastTime-fetchTime, curTime-fetchTime);
             await expireClearProducer.Produce(expireClearMessage);
         }

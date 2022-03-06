@@ -8,9 +8,15 @@ namespace Chronoria_PersistentWorkers.Schedulers
     public class CapsuleReleaseScheduler : GeneralScheduler, IScheduler
     {
         private readonly long fetchTime;
-        private readonly ICapsuleReleaseProducer capsuleReleaseProducer;
-        private readonly ICapsuleRepository<ActiveContext> activeCapsuleRepository;
+        private ICapsuleReleaseProducer capsuleReleaseProducer;
+        private ICapsuleRepository<ActiveContext> activeCapsuleRepository;
+        private readonly IServiceProvider sp;
 
+        public CapsuleReleaseScheduler(long fetchTime, IServiceProvider sp)
+        {
+            this.fetchTime = fetchTime;
+            this.sp = sp;
+        }
         public CapsuleReleaseScheduler(
             long fetchTime,
             ICapsuleReleaseProducer capsuleReleaseProducer,
@@ -31,6 +37,16 @@ namespace Chronoria_PersistentWorkers.Schedulers
         {
             // TODO
             return 0;
+        }
+
+        protected override async Task LooperWrapper(CancellationToken token)
+        {
+            using (var scope = sp.CreateScope())
+            {
+                capsuleReleaseProducer = sp.GetService<ICapsuleReleaseProducer>();
+                activeCapsuleRepository = sp.GetService<ICapsuleRepository<ActiveContext>>();
+                await Looper(token);
+            }
         }
 
         protected override async Task<long> NextTime(long curTime)
