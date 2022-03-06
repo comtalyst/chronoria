@@ -3,7 +3,7 @@ using Chronoria_WebAPI.Models;
 
 namespace Chronoria_WebAPI.Producers
 {
-    public abstract class GeneralProducer<MessageType> : IGeneralProducer<MessageType> where MessageType : IMessage
+    public abstract class GeneralProducer<MessageType> : IAsyncDisposable, IGeneralProducer<MessageType> where MessageType : IMessage
     {
         protected readonly string connectionString;
         protected readonly string topicName;
@@ -17,21 +17,21 @@ namespace Chronoria_WebAPI.Producers
             client = new ServiceBusClient(connectionString);
             sender = client.CreateSender(topicName);
         }
+
+        public async ValueTask DisposeAsync()
+        {
+            await sender.DisposeAsync();
+            await client.DisposeAsync();
+        }
+
         public async Task Produce(MessageType message)
         {
             using ServiceBusMessageBatch messageBatch = await sender.CreateMessageBatchAsync();
-            if (!messageBatch.TryAddMessage(new ServiceBusMessage(message.Jsonify()))){
+            if (!messageBatch.TryAddMessage(new ServiceBusMessage(message.Jsonify())))
+            {
                 throw new Exception($"The message is too large to fit in the batch.");
             }
-            try
-            {
-                await sender.SendMessagesAsync(messageBatch);
-            }
-            finally
-            {
-                await sender.DisposeAsync();
-                await client.DisposeAsync();
-            }
+            await sender.SendMessagesAsync(messageBatch);
         }
         public Task Produce(IEnumerable<MessageType> messages)
         {
