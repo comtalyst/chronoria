@@ -9,33 +9,24 @@ using Azure.Extensions.AspNetCore.Configuration.Secrets;
 
 // Initialize builder/primary config
 var builder = Host.CreateDefaultBuilder(args);
-var configBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
-builder.ConfigureAppConfiguration((hostBuilderContext, build) =>
-{
-    if (hostBuilderContext.HostingEnvironment.IsDevelopment())
-    {
-        configBuilder = configBuilder.AddUserSecrets<Program>();            // TODO: use Generic Host built-in config instead
-    }
-});
-IConfiguration Configuration = configBuilder.Build();
-builder.ConfigureAppConfiguration((hostBuilderContext, build) =>
+builder.ConfigureAppConfiguration((hostBuilderContext, configBuilder) =>
 {
     // Add secondary config
     if (hostBuilderContext.HostingEnvironment.IsProduction())
     {
-        configBuilder = configBuilder.AddAzureKeyVault(
+        configBuilder.AddAzureKeyVault(
             new SecretClient(
-                new Uri($"https://{Configuration["Vault:KeyVaultName"]}.vault.azure.net/"),
+                new Uri($"https://{hostBuilderContext.Configuration["Vault:KeyVaultName"]}.vault.azure.net/"),
                 new DefaultAzureCredential()
                 ),
             new KeyVaultSecretManager()
             );
     }
 });
-Configuration = configBuilder.Build();
 
-builder.ConfigureServices(services =>
+builder.ConfigureServices((hostBuilderContext, services) =>
 {
+    var Configuration = hostBuilderContext.Configuration;
     // Azure Service Bus Producers
     services.AddScoped<IExpireClearProducer, ExpireClearProducer>(
         sp => new ExpireClearProducer(Configuration["ServiceBus:Connections:Prime"]));
