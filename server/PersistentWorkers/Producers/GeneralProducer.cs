@@ -1,6 +1,5 @@
 ﻿using Azure.Messaging.ServiceBus;
 using Chronoria_PersistentWorkers.Models;
-using System;
 
 namespace Chronoria_PersistentWorkers.Producers
 {
@@ -38,6 +37,5 @@ namespace Chronoria_PersistentWorkers.Producers
             // TODO
             throw new NotImplementedException();
         }
-
     }
 }
