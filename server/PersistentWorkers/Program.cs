@@ -8,75 +8,64 @@ using Azure.Identity;
 using Azure.Extensions.AspNetCore.Configuration.Secrets;
 
 // Initialize builder/primary config
-var builder = WebApplication.CreateBuilder(args);
+var builder = Host.CreateDefaultBuilder(args);
 var configBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
-if (builder.Environment.IsDevelopment())
+builder.ConfigureAppConfiguration((hostBuilderContext, build) =>
 {
-    configBuilder = configBuilder.AddUserSecrets<Program>();
-}
+    if (hostBuilderContext.HostingEnvironment.IsDevelopment())
+    {
+        configBuilder = configBuilder.AddUserSecrets<Program>();
+    }
+});
 IConfiguration Configuration = configBuilder.Build();
-
-// Add secondary config
-if (builder.Environment.IsProduction())
+builder.ConfigureAppConfiguration((hostBuilderContext, build) =>
 {
-    configBuilder = configBuilder.AddAzureKeyVault(
-        new SecretClient(
-            new Uri($"https://{Configuration["Vault:KeyVaultName"]}.vault.azure.net/"),
-            new DefaultAzureCredential()
-            ),
-        new KeyVaultSecretManager()
-        );
-}
+    // Add secondary config
+    if (hostBuilderContext.HostingEnvironment.IsProduction())
+    {
+        configBuilder = configBuilder.AddAzureKeyVault(
+            new SecretClient(
+                new Uri($"https://{Configuration["Vault:KeyVaultName"]}.vault.azure.net/"),
+                new DefaultAzureCredential()
+                ),
+            new KeyVaultSecretManager()
+            );
+    }
+});
 Configuration = configBuilder.Build();
 
+builder.ConfigureServices(services =>
+{
+    // Azure Service Bus Producers
+    services.AddScoped<IExpireClearProducer, ExpireClearProducer>(
+        sp => new ExpireClearProducer(Configuration["ServiceBus:Connections:Prime"]));
+    services.AddScoped<ICapsuleReleaseProducer, CapsuleReleaseProducer>(
+        sp => new CapsuleReleaseProducer(Configuration["ServiceBus:Connections:Prime"]));
 
+    // Database Repositories
+    services.AddScoped<ICapsuleRepository<PendingContext>, CapsuleRepository<PendingContext>>();
+    services.AddScoped<ICapsuleRepository<ActiveContext>, CapsuleRepository<ActiveContext>>();
 
-// Azure Service Bus Producers
-builder.Services.AddScoped<IExpireClearProducer, ExpireClearProducer>(
-    sp => new ExpireClearProducer(Configuration["ServiceBus:Connections:Prime"]));
-builder.Services.AddScoped<ICapsuleReleaseProducer, CapsuleReleaseProducer>(
-    sp => new CapsuleReleaseProducer(Configuration["ServiceBus:Connections:Prime"]));
+    // Databases Contexts
+    services.AddDbContext<PendingContext>(o => o.UseNpgsql(Configuration["Db:Connections:Pending"]));
+    services.AddDbContext<ActiveContext>(o => o.UseNpgsql(Configuration["Db:Connections:Active"]));
 
-// Database Repositories
-builder.Services.AddScoped<ICapsuleRepository<PendingContext>, CapsuleRepository<PendingContext>>();
-builder.Services.AddScoped<ICapsuleRepository<ActiveContext>, CapsuleRepository<ActiveContext>>();
+    // Schedulers
+    services.AddHostedService<ExpireClearScheduler>(
+        sp => new ExpireClearScheduler(
+            long.Parse(Configuration["Policies:PendingExpireTime"]), sp
+        )
+    );
+    services.AddHostedService<CapsuleReleaseScheduler>(
+        sp => new CapsuleReleaseScheduler(
+            long.Parse(Configuration["Policies:MinCapsuleAge"]) - long.Parse(Configuration["Policies:PendingExpireTime"]), sp
+        )
+    );
+});
 
-// Databases Contexts
-builder.Services.AddDbContext<PendingContext>(o => o.UseNpgsql(Configuration["Db:Connections:Pending"]));
-builder.Services.AddDbContext<ActiveContext>(o => o.UseNpgsql(Configuration["Db:Connections:Active"]));
-
-// Schedulers
-builder.Services.AddHostedService<ExpireClearScheduler>(
-    sp => new ExpireClearScheduler(
-        long.Parse(Configuration["Policies:PendingExpireTime"]), sp
-    )
-);
-builder.Services.AddHostedService<CapsuleReleaseScheduler>(
-    sp => new CapsuleReleaseScheduler(
-        long.Parse(Configuration["Policies:MinCapsuleAge"]) - long.Parse(Configuration["Policies:PendingExpireTime"]), sp
-    )
-);
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
 
 app.Run();
 
