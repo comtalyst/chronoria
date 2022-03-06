@@ -34,6 +34,8 @@ Configuration = configBuilder.Build();
 // Azure Service Bus Producers
 builder.Services.AddScoped<IExpireClearProducer, ExpireClearProducer>(
     sp => new ExpireClearProducer(Configuration["ServiceBus:Connections:Prime"]));
+builder.Services.AddScoped<ICapsuleReleaseProducer, CapsuleReleaseProducer>(
+    sp => new CapsuleReleaseProducer(Configuration["ServiceBus:Connections:Prime"]));
 
 // Database Repositories
 builder.Services.AddScoped<ICapsuleRepository<PendingContext>, CapsuleRepository<PendingContext>>();
@@ -75,3 +77,10 @@ ExpireClearScheduler expireClearScheduler = new ExpireClearScheduler(
     app.Services.GetRequiredService<ICapsuleRepository<PendingContext>>()
     );
 await expireClearScheduler.Start();
+
+CapsuleReleaseScheduler capsuleReleaseScheduler = new CapsuleReleaseScheduler(
+    long.Parse(Configuration["Schedulers:CapsuleReleaseScheduler:FetchTime"]),
+    app.Services.GetRequiredService<ICapsuleReleaseProducer>(),
+    app.Services.GetRequiredService<ICapsuleRepository<ActiveContext>>()
+    );
+await capsuleReleaseScheduler.Start();
