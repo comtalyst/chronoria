@@ -43,8 +43,8 @@ namespace Chronoria_PersistentWorkers.Schedulers
         {
             using (var scope = sp.CreateScope())
             {
-                capsuleReleaseProducer = sp.GetService<ICapsuleReleaseProducer>();
-                activeCapsuleRepository = sp.GetService<ICapsuleRepository<ActiveContext>>();
+                capsuleReleaseProducer = scope.ServiceProvider.GetRequiredService<ICapsuleReleaseProducer>();
+                activeCapsuleRepository = scope.ServiceProvider.GetRequiredService<ICapsuleRepository<ActiveContext>>();
                 await Looper(token);
             }
         }
