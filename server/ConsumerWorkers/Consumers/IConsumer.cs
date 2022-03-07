@@ -2,7 +2,7 @@
 
 namespace Chronoria_ConsumerWorkers.Consumers
 {
-    public interface IConsumer<MessageType> where MessageType : IMessage
+    public interface IConsumer
     {
         public Task Start();
         public Task Suspend();
