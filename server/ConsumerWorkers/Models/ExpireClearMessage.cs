@@ -7,6 +7,12 @@ namespace Chronoria_ConsumerWorkers.Models
         public long TimeL { get; set; }
         public long TimeR { get; set; }
 
+        public ExpireClearMessage(string body)
+        {
+            var obj = JsonConvert.DeserializeObject<ExpireClearMessage>(body);
+            TimeL = obj.TimeL;
+            TimeR = obj.TimeR;
+        }
         public ExpireClearMessage(long TimeL, long TimeR)
         {
             this.TimeL = TimeL;

@@ -1,4 +1,6 @@
-﻿namespace Chronoria_ConsumerWorkers.Consumers
+﻿using Chronoria_ConsumerWorkers.Models;
+
+namespace Chronoria_ConsumerWorkers.Consumers
 {
     public class ExpireClearConsumer : GeneralConsumer
     {
@@ -19,9 +21,17 @@
             await base.DisposeAsync();
         }
 
-        protected override Task ProcessMessage(string body)
+        protected override async Task ProcessMessage(string body)
         {
-            throw new NotImplementedException();
+            try
+            {
+                ExpireClearMessage message = new ExpireClearMessage(body);
+                // TODO
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex);
+            }
         }
     }
 }
