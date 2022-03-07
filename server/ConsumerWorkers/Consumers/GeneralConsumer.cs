@@ -10,31 +10,24 @@ namespace Chronoria_ConsumerWorkers.Consumers
         private readonly string subscriptionName;
         private readonly ServiceBusClient client;
         private readonly ServiceBusProcessor processor;
-        private readonly IServiceProvider sp;
-        protected readonly IServiceScope scope;
 
         public GeneralConsumer(
             string connectionString,
             string topicName,
-            string subscriptionName,
-            IServiceProvider sp
+            string subscriptionName
             )
         {
             this.connectionString = connectionString;
             this.topicName = topicName;
             this.subscriptionName = subscriptionName;
-            this.sp = sp;
 
             client = new ServiceBusClient(this.connectionString);
             processor = client.CreateProcessor(this.topicName, this.subscriptionName, new ServiceBusProcessorOptions());
             processor.ProcessMessageAsync += MessageHandler;
             processor.ProcessErrorAsync += ErrorHandler;
-
-            scope = sp.CreateScope();
         }
-        public async ValueTask DisposeAsync()
+        public virtual async ValueTask DisposeAsync()
         {
-            scope.Dispose();
             await processor.DisposeAsync();
             await client.DisposeAsync();
         }
