@@ -1,4 +1,5 @@
 ﻿using Chronoria_ConsumerWorkers.Models;
+using Chronoria_ConsumerWorkers.Services;
 
 namespace Chronoria_ConsumerWorkers.Consumers
 {
@@ -6,6 +7,7 @@ namespace Chronoria_ConsumerWorkers.Consumers
     {
         private readonly IServiceProvider sp;
         private readonly IServiceScope scope;
+        private readonly IExpireClearService expireClearService;
 
         public ExpireClearConsumer(
             string connectionString,
@@ -14,6 +16,7 @@ namespace Chronoria_ConsumerWorkers.Consumers
         {
             this.sp = sp;
             scope = this.sp.CreateScope();
+            expireClearService = scope.ServiceProvider.GetRequiredService<IExpireClearService>();
         }
         public override async ValueTask DisposeAsync()
         {
@@ -26,7 +29,7 @@ namespace Chronoria_ConsumerWorkers.Consumers
             try
             {
                 ExpireClearMessage message = new ExpireClearMessage(body);
-                // TODO
+                await expireClearService.ClearRange(message.TimeL, message.TimeR);
             }
             catch (Exception ex)
             {
