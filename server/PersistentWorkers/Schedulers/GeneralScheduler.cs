@@ -18,7 +18,15 @@ namespace Chronoria_PersistentWorkers.Schedulers
         public async Task Suspend()
         {
             tokenSource.Cancel();
-            await StopAsync(tokenSource.Token);
+            try
+            {
+                await looperTask;
+            }
+            catch (OperationCanceledException) { }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine(e.ToString());
+            }
             tokenSource.Dispose();
         }
 
