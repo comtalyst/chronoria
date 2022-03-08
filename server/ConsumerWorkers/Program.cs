@@ -1,6 +1,8 @@
 using Chronoria_ConsumerWorkers.Producers;
 using Chronoria_ConsumerWorkers.Repositories;
 using Chronoria_ConsumerWorkers.Models;
+using Chronoria_ConsumerWorkers.Services;
+using Chronoria_ConsumerWorkers.Consumers;
 using Microsoft.EntityFrameworkCore;
 using Azure.Security.KeyVault.Secrets;
 using Azure.Identity;
@@ -31,6 +33,10 @@ builder.Configure((_) => { });
 builder.ConfigureServices((hostBuilderContext, services) =>
 {
     var Configuration = hostBuilderContext.Configuration;
+    // Services
+    services.AddScoped<IExpireClearService, ExpireClearService>();
+
+
     // Azure Service Bus Producers
     /*services.AddScoped<IExpireClearProducer, ExpireClearProducer>(
         sp => new ExpireClearProducer(Configuration["ServiceBus:Connections:Prime"]));
@@ -45,18 +51,12 @@ builder.ConfigureServices((hostBuilderContext, services) =>
     services.AddDbContext<PendingContext>(o => o.UseNpgsql(Configuration["Db:Connections:Pending"]));
     services.AddDbContext<ActiveContext>(o => o.UseNpgsql(Configuration["Db:Connections:Active"]));
 
-    
-    /*// Schedulers
-    services.AddHostedService<ExpireClearScheduler>(
-        sp => new ExpireClearScheduler(
-            long.Parse(Configuration["Policies:PendingExpireTime"]), sp
+    // Azure Service Bus Consumers
+    services.AddHostedService<ExpireClearConsumer>(
+        sp => new ExpireClearConsumer(
+            Configuration["ServiceBus:Connections:Prime"], sp
         )
     );
-    services.AddHostedService<CapsuleReleaseScheduler>(
-        sp => new CapsuleReleaseScheduler(
-            long.Parse(Configuration["Policies:MinCapsuleAge"]) - long.Parse(Configuration["Policies:PendingExpireTime"]), sp
-        )
-    );*/
 });
 
 
