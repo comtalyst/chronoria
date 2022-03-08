@@ -74,5 +74,19 @@ namespace Chronoria_ConsumerWorkers.Repositories
             _context.Entry(entry).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
+
+        public async Task DeleteByCreateTimeRange(DateTime timeL, DateTime timeR)
+        {
+            try
+            {
+                _context.Capsules.RemoveRange(await _context.Capsules.Where(cap => cap.CreateTime.CompareTo(timeL) >= 0 && cap.CreateTime.CompareTo(timeR) <= 0).ToListAsync());
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return;
+            }
+        }
     }
 }
