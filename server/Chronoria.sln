@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chronoria-PersistentWorkers
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chronoria-PersistentWorkers.Tests", "PersistentWorkers.Tests\Chronoria-PersistentWorkers.Tests.csproj", "{7BD340A0-6FCF-4404-BD6C-F27E26017734}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chronoria-ConsumerWorkers", "ConsumerWorkers\Chronoria-ConsumerWorkers.csproj", "{98BC46D8-8ECB-4AF6-865E-86E609FE3A7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chronoria-ConsumerWorkers", "ConsumerWorkers\Chronoria-ConsumerWorkers.csproj", "{98BC46D8-8ECB-4AF6-865E-86E609FE3A7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chronoria-ConsumerWorkers.Tests", "ConsumerWorkers.Tests\Chronoria-ConsumerWorkers.Tests.csproj", "{3E1DBA05-0755-4646-BC03-66B4FD56B3FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{98BC46D8-8ECB-4AF6-865E-86E609FE3A7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98BC46D8-8ECB-4AF6-865E-86E609FE3A7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98BC46D8-8ECB-4AF6-865E-86E609FE3A7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E1DBA05-0755-4646-BC03-66B4FD56B3FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E1DBA05-0755-4646-BC03-66B4FD56B3FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E1DBA05-0755-4646-BC03-66B4FD56B3FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E1DBA05-0755-4646-BC03-66B4FD56B3FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
