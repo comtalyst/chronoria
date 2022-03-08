@@ -12,7 +12,7 @@ namespace Chronoria_ConsumerWorkers.Consumers
         public ExpireClearConsumer(
             string connectionString,
             IServiceProvider sp
-            ) : base(connectionString, "TODO: topicName", "TODO: subscriptionName")
+            ) : base(connectionString, "ExpireClearTopic", "ConsumerWorkers-ExpireClearTopic")
         {
             this.sp = sp;
             scope = this.sp.CreateScope();
