@@ -2,7 +2,7 @@
 {
     public interface IExpireClearService
     {
-        public Task ClearRange(long TimeL, long TimeR);
-        public Task ClearRange(DateTime TimeL, DateTime TimeR);
+        public Task ClearRange(long timeL, long timeR);
+        public Task ClearRange(DateTime timeL, DateTime timeR);
     }
 }
