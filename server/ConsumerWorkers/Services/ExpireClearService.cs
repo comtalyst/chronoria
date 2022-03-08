@@ -17,6 +17,7 @@ namespace Chronoria_ConsumerWorkers.Services
 
         public async Task ClearRange(long timeL, long timeR)
         {
+            //Console.WriteLine("ClearRange " + timeL.ToString() + " -- " + timeR.ToString());
             await ClearRange(TimeUtils.EpochMsToDateTime(timeL), TimeUtils.EpochMsToDateTime(timeR));
         }
         public async Task ClearRange(DateTime timeL, DateTime timeR)
