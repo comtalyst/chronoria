@@ -1,6 +1,7 @@
 ﻿using Chronoria_ConsumerWorkers.utils;
 using Chronoria_ConsumerWorkers.Repositories;
 using Chronoria_ConsumerWorkers.Models;
+using Chronoria_ConsumerWorkers.Producers;
 
 namespace Chronoria_ConsumerWorkers.Services
 {
@@ -18,7 +19,7 @@ namespace Chronoria_ConsumerWorkers.Services
         private readonly IFileBlobRepository<ArchivedBlobServiceClient> archivedFileBlobRepo;
         private readonly ITextBlobRepository<ArchivedBlobServiceClient> archivedTextBlobRepo;
 
-
+        private readonly ICapsuleDeliveryProducer capsuleDeliveryProducer;
 
         public CapsuleReleaseService(
             ICapsuleRepository<ActiveContext> activeCapsuleRepository,
@@ -31,8 +32,9 @@ namespace Chronoria_ConsumerWorkers.Services
             ITextContentRepository<ArchivedContext> archivedTextContentRepository,
             IFileContentRepository<ArchivedContext> archivedFileContentRepository,
             IFileBlobRepository<ArchivedBlobServiceClient> archivedFileBlobRepository,
-            ITextBlobRepository<ArchivedBlobServiceClient> archivedTextBlobRepository
+            ITextBlobRepository<ArchivedBlobServiceClient> archivedTextBlobRepository,
 
+            ICapsuleDeliveryProducer capsuleDeliveryProducer
             )
         {
             this.activeCapsuleRepository = activeCapsuleRepository;

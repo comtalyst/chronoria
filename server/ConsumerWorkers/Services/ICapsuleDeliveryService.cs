@@ -13,8 +13,8 @@
             string senderName,
             string receipientEmail,
             string receipientName,
-            string sendTime,
-            string createTime,
+            long sendTime,
+            long createTime,
             string text
             );
         public Task DeliverFile(
@@ -23,8 +23,8 @@
             string senderName,
             string receipientEmail,
             string receipientName,
-            string sendTime,
-            string createTime,
+            long sendTime,
+            long createTime,
             string text,
             TextLocation textLocation,
             string fileRef
