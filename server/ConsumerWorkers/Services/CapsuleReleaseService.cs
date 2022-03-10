@@ -128,6 +128,52 @@ namespace Chronoria_ConsumerWorkers.Services
                         );
                     await capsuleDeliveryProducer.Produce(message);
                 }
+                else if (capsule.ContentType == ContentType.Text)
+                {
+                    var content = await activeTextContentRepository.Retrieve(capsule.Id);
+                    if (content == null)
+                        throw new NullReferenceException("TextContent is missing");
+
+                    // Transfer blob files
+                    var uriText = activeTextBlobRepo.GetTransferUri(content.TextFileId);
+                    if (uriText == null)
+                        throw new NullReferenceException("TextBlob is missing");
+
+                    await archivedTextBlobRepo.ReceiveTransfer(content.TextFileId, uriText);
+                    // Delete blob file
+                    try
+                    {
+                        await activeTextBlobRepo.Delete(content.TextFileId);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Not a big deal, we can continue
+                        Console.Error.WriteLine(ex);
+                    }
+
+                    // Add to archived DB
+                    var newCapsule = new Capsule(capsule);
+                    newCapsule.Status = Status.Released;
+                    await archivedTextContentRepository.Create(content);
+                    await archivedCapsuleRepository.Create(newCapsule);
+
+                    // Send CapsuleDeliveryMessage
+                    var message = new CapsuleDeliveryMessage(
+                        newCapsule.Id,
+                        newCapsule.SenderEmail,
+                        newCapsule.SenderName,
+                        newCapsule.RecipientEmail,
+                        newCapsule.RecipientName,
+                        TimeUtils.DateTimeToEpochMs(newCapsule.SendTime),
+                        TimeUtils.DateTimeToEpochMs(newCapsule.CreateTime),
+                        (await archivedTextBlobRepo.Get(content.TextFileId)).content
+                        );
+                    await capsuleDeliveryProducer.Produce(message);
+                }
+                else
+                {
+                    throw new NotImplementedException("Unknown capsule type");
+                }
             }
             
         }
