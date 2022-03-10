@@ -47,6 +47,8 @@ namespace Chronoria_ConsumerWorkers.Services
             this.archivedTextContentRepository = archivedTextContentRepository;
             this.archivedFileBlobRepo = archivedFileBlobRepository;
             this.archivedTextBlobRepo = archivedTextBlobRepository;
+
+            this.capsuleDeliveryProducer = capsuleDeliveryProducer;
         }
 
         public async Task ReleaseRange(long timeL, long timeR)
