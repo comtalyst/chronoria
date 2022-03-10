@@ -8,8 +8,8 @@ namespace Chronoria_ConsumerWorkers.Models
         public string id { get; set; }
         public string senderEmail { get; set; }
         public string senderName { get; set; }
-        public string receipientEmail { get; set; }
-        public string receipientName { get; set; }
+        public string recipientEmail { get; set; }
+        public string recipientName { get; set; }
         public long sendTime { get; set; }
         public long createTime { get; set; }
         public ContentType contentType { get; set; }
@@ -28,8 +28,8 @@ namespace Chronoria_ConsumerWorkers.Models
             string id,
             string senderEmail,
             string senderName,
-            string receipientEmail,
-            string receipientName,
+            string recipientEmail,
+            string recipientName,
             long sendTime,
             long createTime,
             string text
@@ -39,8 +39,8 @@ namespace Chronoria_ConsumerWorkers.Models
             this.id = id;
             this.senderEmail = senderEmail;
             this.senderName = senderName;
-            this.receipientEmail = receipientEmail;
-            this.receipientName = receipientName;
+            this.recipientEmail = recipientEmail;
+            this.recipientName = recipientName;
             this.sendTime = sendTime;
             this.createTime = createTime;
             this.text = text;
@@ -49,8 +49,8 @@ namespace Chronoria_ConsumerWorkers.Models
             string id,
             string senderEmail,
             string senderName,
-            string receipientEmail,
-            string receipientName,
+            string recipientEmail,
+            string recipientName,
             long sendTime,
             long createTime,
             string text,
@@ -62,8 +62,8 @@ namespace Chronoria_ConsumerWorkers.Models
             this.id = id;
             this.senderEmail = senderEmail;
             this.senderName = senderName;
-            this.receipientEmail = receipientEmail;
-            this.receipientName = receipientName;
+            this.recipientEmail = recipientEmail;
+            this.recipientName = recipientName;
             this.sendTime = sendTime;
             this.createTime = createTime;
             this.text = text;
@@ -84,8 +84,8 @@ namespace Chronoria_ConsumerWorkers.Models
                     id = id,
                     senderEmail = senderEmail,
                     senderName = senderName,
-                    receipientEmail = receipientEmail,
-                    receipientName = receipientName,
+                    recipientEmail = recipientEmail,
+                    recipientName = recipientName,
                     sendTime = sendTime,
                     createTime = createTime,
                     content = new
@@ -109,8 +109,8 @@ namespace Chronoria_ConsumerWorkers.Models
                     id = id,
                     senderEmail = senderEmail,
                     senderName = senderName,
-                    receipientEmail = receipientEmail,
-                    receipientName = receipientName,
+                    recipientEmail = recipientEmail,
+                    recipientName = recipientName,
                     sendTime = sendTime,
                     createTime = createTime,
                     content = new

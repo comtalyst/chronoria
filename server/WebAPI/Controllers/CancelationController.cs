@@ -25,16 +25,16 @@ namespace Chronoria_WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Cancel(string id, string receipientEmail)
+        public async Task<IActionResult> Cancel(string id, string recipientEmail)
         {
             try
             {
                 id = id.Trim();
-                receipientEmail = receipientEmail.Trim();
+                recipientEmail = recipientEmail.Trim();
                 requestValidationService.ValidateId(id);
-                requestValidationService.ValidateEmail(receipientEmail);
+                requestValidationService.ValidateEmail(recipientEmail);
 
-                if(!await idMatchingService.MatchReceipientEmail(id, receipientEmail))
+                if(!await idMatchingService.MatchRecipientEmail(id, recipientEmail))
                 {
                     throw new RejectException(RejectException.VerificationFailed);
                 }
