@@ -88,5 +88,10 @@ namespace Chronoria_ConsumerWorkers.Repositories
                 return;
             }
         }
+
+        public async Task<IEnumerable<Capsule>> GetBySendTimeRange(DateTime timeL, DateTime timeR)
+        {
+            return await _context.Capsules.Where(cap => cap.SendTime.CompareTo(timeL) >= 0 && cap.SendTime.CompareTo(timeR) <= 0).ToListAsync();
+        }
     }
 }
