@@ -113,7 +113,20 @@ namespace Chronoria_ConsumerWorkers.Services
                     await archivedFileContentRepository.Create(content);
                     await archivedCapsuleRepository.Create(newCapsule);
 
-                    // TODO: CapsuleDeliveryMessage
+                    // Send CapsuleDeliveryMessage
+                    var message = new CapsuleDeliveryMessage(
+                        newCapsule.Id,
+                        newCapsule.SenderEmail,
+                        newCapsule.SenderName,
+                        newCapsule.RecipientEmail,
+                        newCapsule.RecipientName,
+                        TimeUtils.DateTimeToEpochMs(newCapsule.SendTime),
+                        TimeUtils.DateTimeToEpochMs(newCapsule.CreateTime),
+                        (await archivedTextBlobRepo.Get(content.TextFileId)).content,
+                        content.TextLocation,
+                        content.FileId
+                        );
+                    await capsuleDeliveryProducer.Produce(message);
                 }
             }
             
