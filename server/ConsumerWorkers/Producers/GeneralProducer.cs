@@ -3,7 +3,7 @@ using Chronoria_ConsumerWorkers.Models;
 
 namespace Chronoria_ConsumerWorkers.Producers
 {
-    public abstract class GeneralProducer<MessageType> : IAsyncDisposable, IGeneralProducer<MessageType> where MessageType : IMessage
+    public abstract class GeneralProducer<MessageType> : IDisposable, IAsyncDisposable, IGeneralProducer<MessageType> where MessageType : IMessage
     {
         protected readonly string connectionString;
         protected readonly string topicName;
@@ -16,6 +16,12 @@ namespace Chronoria_ConsumerWorkers.Producers
             this.topicName = topicName;
             client = new ServiceBusClient(connectionString);
             sender = client.CreateSender(topicName);
+        }
+
+        public void Dispose()
+        {
+            sender.DisposeAsync();
+            client.DisposeAsync();
         }
 
         public async ValueTask DisposeAsync()
