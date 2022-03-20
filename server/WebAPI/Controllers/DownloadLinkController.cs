@@ -5,21 +5,21 @@ using Chronoria_WebAPI.Models;
 
 namespace Chronoria_WebAPI.Controllers
 {
-    [Route("api/download")]
+    [Route("api/downloadlink")]
     [ApiController]
     public class DownloadLinkController : ControllerBase
     {
-        //IDownloadLinkService downloadLinkService;
+        IDownloadLinkService downloadLinkService;
         IRequestValidationService requestValidationService;
         IIdMatchingService<ActiveContext> idMatchingService;
 
         public DownloadLinkController(
-            //IDownloadLinkService downloadLinkService,
+            IDownloadLinkService downloadLinkService,
             IRequestValidationService requestValidationService,
             IIdMatchingService<ActiveContext> idMatchingService
             )
         {
-            //this.downloadLinkService = downloadLinkService;
+            this.downloadLinkService = downloadLinkService;
             this.requestValidationService = requestValidationService;
             this.idMatchingService = idMatchingService;
         }
@@ -38,8 +38,7 @@ namespace Chronoria_WebAPI.Controllers
                 {
                     throw new RejectException(RejectException.VerificationFailed);
                 }
-                throw new NotImplementedException();
-                //return Ok(await downloadLinkService.GetLink(id));
+                return Ok(await downloadLinkService.GetLink(id));
             }
             catch (RejectException ex)
             {
@@ -47,10 +46,9 @@ namespace Chronoria_WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: log ex
+                Console.Error.WriteLine(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
 }
