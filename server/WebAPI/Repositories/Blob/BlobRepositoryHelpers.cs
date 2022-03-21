@@ -58,5 +58,15 @@ namespace Chronoria_WebAPI.Repositories
             BlobClient blobClient = GetClient(blobFileName);
             await blobClient.DeleteIfExistsAsync();
         }
+
+        public string GetDownloadLink(string blobFileName, string downloadFileName)
+        {
+            BlobClient blobClient = GetClient(blobFileName);
+            BlobSasBuilder blobSasBuilder = new BlobSasBuilder(
+                BlobSasPermissions.Read,
+                DateTimeOffset.UtcNow.AddHours(12));                // TODO
+            blobSasBuilder.ContentDisposition = "attachment; filename=" + downloadFileName;
+            return blobClient.GenerateSasUri(blobSasBuilder).ToString();
+        }
     }
 }
