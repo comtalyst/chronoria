@@ -22,6 +22,8 @@
         public const string FileBlobNotFoundOrReleased = "FILEBLOB_NA_OR_RELEASED";
         public const string TransferFailedOrReleased = "TRANSFER_FAILED_OR_RELEASED";
 
+        public const string NoFileAvailableForThisCapsule = "NO_FILE_AVAILABLE_FOR_THIS_CAPSULE";
+
         public const string BlockedSenderEmail = "BLOCKED_SENDER_EMAIL";
 
         public const string VerificationFailed = "VERIFICATION_FAILED";
