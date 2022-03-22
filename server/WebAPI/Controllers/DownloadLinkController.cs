@@ -11,12 +11,12 @@ namespace Chronoria_WebAPI.Controllers
     {
         IDownloadLinkService downloadLinkService;
         IRequestValidationService requestValidationService;
-        IIdMatchingService<ActiveContext> idMatchingService;
+        IIdMatchingService<ArchivedContext> idMatchingService;
 
         public DownloadLinkController(
             IDownloadLinkService downloadLinkService,
             IRequestValidationService requestValidationService,
-            IIdMatchingService<ActiveContext> idMatchingService
+            IIdMatchingService<ArchivedContext> idMatchingService
             )
         {
             this.downloadLinkService = downloadLinkService;
