@@ -34,6 +34,13 @@ builder.ConfigureServices((hostBuilderContext, services) =>
 {
     var Configuration = hostBuilderContext.Configuration;
     // Services
+    services.AddScoped<ICoreEmailService, CoreEmailService>(
+        _ => new CoreEmailService(
+            Configuration["EmailService:ApiKey"],
+            Configuration["EmailService:Senders:Main:Email"],
+            Configuration["EmailService:Senders:Main:Name"]
+        )
+    );
     services.AddScoped<IExpireClearService, ExpireClearService>();
     services.AddScoped<ICapsuleReleaseService, CapsuleReleaseService>();
 
