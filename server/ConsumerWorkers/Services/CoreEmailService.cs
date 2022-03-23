@@ -14,7 +14,7 @@ namespace Chronoria_ConsumerWorkers.Services
             string mainEmail,
             string mainName)
         {
-            client = new SendGridClient(apiKey);
+            client = new SendGridClient(apiKey);            // bad pattern? (should init class from injection instead)
             this.mainEmail = mainEmail;
             this.mainName = mainName;
         }
