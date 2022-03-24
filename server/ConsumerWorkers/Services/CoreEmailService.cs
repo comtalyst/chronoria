@@ -39,5 +39,26 @@ namespace Chronoria_ConsumerWorkers.Services
         {
             await SendPlainText(mainEmail, mainName, recipientEmail, recipientName, subject, content);
         }
+
+        public async Task SendHtml(string senderEmail, string senderName, string recipientEmail, string recipientName, string subject, string content)
+        {
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress(senderEmail, senderName),
+                Subject = subject,
+                HtmlContent = content
+            };
+            msg.AddTo(new EmailAddress(recipientEmail, recipientName));
+            var response = await client.SendEmailAsync(msg);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Email fails to be delivered to " + recipientEmail + "; error: " + response.ToString());
+            }
+        }
+
+        public async Task SendHtml(string recipientEmail, string recipientName, string subject, string content)
+        {
+            await SendHtml(mainEmail, mainName, recipientEmail, recipientName, subject, content);
+        }
     }
 }

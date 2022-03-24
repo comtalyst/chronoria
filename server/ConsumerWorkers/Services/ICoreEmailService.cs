@@ -9,8 +9,23 @@
             string recipientName,
             string subject,
             string content);
+
         // use default email
         public Task SendPlainText(
+            string recipientEmail,
+            string recipientName,
+            string subject,
+            string content);
+
+        public Task SendHtml(
+            string senderEmail,
+            string senderName,
+            string recipientEmail,
+            string recipientName,
+            string subject,
+            string content);
+
+        public Task SendHtml(
             string recipientEmail,
             string recipientName,
             string subject,
