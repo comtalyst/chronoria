@@ -68,6 +68,7 @@ builder.ConfigureServices((hostBuilderContext, services) =>
     services.AddSingleton<PendingBlobServiceClient>(new PendingBlobServiceClient(Configuration["Blob:Connections:Pending"]));
     services.AddSingleton<ActiveBlobServiceClient>(new ActiveBlobServiceClient(Configuration["Blob:Connections:Active"]));
     services.AddSingleton<ArchivedBlobServiceClient>(new ArchivedBlobServiceClient(Configuration["Blob:Connections:Archived"]));
+    services.AddSingleton<StaticBlobServiceClient>(new StaticBlobServiceClient(Configuration["Blob:Connections:Static"]));
 
     services.AddScoped<IFileBlobRepository<ActiveBlobServiceClient>, FileBlobRepository<ActiveBlobServiceClient>>(
         sp => new FileBlobRepository<ActiveBlobServiceClient>(
@@ -103,6 +104,13 @@ builder.ConfigureServices((hostBuilderContext, services) =>
         sp => new TextBlobRepository<ArchivedBlobServiceClient>(
             sp.GetRequiredService<ArchivedBlobServiceClient>(),
             Configuration["Blob:Containers:Archived:Text"]
+        )
+    );
+
+    services.AddScoped<IEmailTemplateBlobRepository, EmailTemplateBlobRepository>(
+        sp => new EmailTemplateBlobRepository(
+            sp.GetRequiredService<StaticBlobServiceClient>(),
+            Configuration["Blob:Containers:Archived:EmailTemplates"]
         )
     );
 
