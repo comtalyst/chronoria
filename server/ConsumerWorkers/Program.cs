@@ -43,6 +43,16 @@ builder.ConfigureServices((hostBuilderContext, services) =>
     );
     services.AddScoped<IExpireClearService, ExpireClearService>();
     services.AddScoped<ICapsuleReleaseService, CapsuleReleaseService>();
+    services.AddScoped<IEmailTemplateService, EmailTemplateService>();
+    services.AddScoped<IFrontLinkService, FrontLinkService>(
+        _ => new FrontLinkService(
+            Configuration["FrontLinks:Domain"],
+            Configuration["FrontLinks:Services:Cancel"],
+            Configuration["FrontLinks:Services:Confirm"],
+            Configuration["FrontLinks:Services:Download"]
+        )    
+    );
+    services.AddScoped<IActiveReceiptEmailService, ActiveReceiptEmailService>();
 
     // Azure Service Bus Producers
     services.AddScoped<ICapsuleDeliveryProducer, CapsuleDeliveryProducer>(
