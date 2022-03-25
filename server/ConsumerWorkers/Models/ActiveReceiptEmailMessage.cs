@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Chronoria_ConsumerWorkers.Models
 {
@@ -10,6 +11,15 @@ namespace Chronoria_ConsumerWorkers.Models
         public string RecipientEmail { get; set; }
         public long SendTime { get; set; }
 
+        public ActiveReceiptEmailMessage(string body)
+        {
+            var json = JToken.Parse(body);
+            Email = json["Email"].ToString();
+            Ref = json["Ref"].ToString();
+            RecipientName = json["RecipientName"].ToString();
+            RecipientEmail = json["RecipientEmail"].ToString();
+            SendTime = long.Parse(json["SendTime"].ToString());
+        }
         public ActiveReceiptEmailMessage(string Email, string Ref, string RecipientName, string RecipientEmail, long SendTime)
         {
             this.Email = Email;
