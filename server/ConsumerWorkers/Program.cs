@@ -120,7 +120,7 @@ builder.ConfigureServices((hostBuilderContext, services) =>
     services.AddScoped<IEmailTemplateBlobRepository, EmailTemplateBlobRepository>(
         sp => new EmailTemplateBlobRepository(
             sp.GetRequiredService<StaticBlobServiceClient>(),
-            Configuration["Blob:Containers:Archived:EmailTemplates"]
+            Configuration["Blob:Containers:Static:EmailTemplates"]
         )
     );
 
@@ -132,6 +132,11 @@ builder.ConfigureServices((hostBuilderContext, services) =>
     );
     services.AddHostedService<CapsuleReleaseConsumer>(
         sp => new CapsuleReleaseConsumer(
+            Configuration["ServiceBus:Connections:Prime"], sp
+        )
+    );
+    services.AddHostedService<ActiveReceiptEmailConsumer>(
+        sp => new ActiveReceiptEmailConsumer(
             Configuration["ServiceBus:Connections:Prime"], sp
         )
     );
