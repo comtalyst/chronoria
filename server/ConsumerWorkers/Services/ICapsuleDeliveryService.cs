@@ -1,10 +1,7 @@
-﻿namespace Chronoria_ConsumerWorkers.Services
+﻿using Chronoria_ConsumerWorkers.Models;
+
+namespace Chronoria_ConsumerWorkers.Services
 {
-    public enum TextLocation
-    {
-        Before,
-        After
-    }
     public interface ICapsuleDeliveryService
     {
         public Task DeliverText(

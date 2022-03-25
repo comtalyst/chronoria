@@ -1,4 +1,5 @@
-﻿using Chronoria_ConsumerWorkers.utils;
+﻿using Chronoria_ConsumerWorkers.Models;
+using Chronoria_ConsumerWorkers.utils;
 
 namespace Chronoria_ConsumerWorkers.Services
 {

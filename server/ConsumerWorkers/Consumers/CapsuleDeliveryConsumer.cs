@@ -40,7 +40,7 @@ namespace Chronoria_ConsumerWorkers.Consumers
                         message.sendTime,
                         message.createTime,
                         message.text,
-                        (Services.TextLocation)Enum.Parse(typeof(Services.TextLocation), message.textLocation.ToString()),      // TODO: fix
+                        message.textLocation,
                         message.fileRef);
                 }
                 else if (message.contentType == ContentType.Text)

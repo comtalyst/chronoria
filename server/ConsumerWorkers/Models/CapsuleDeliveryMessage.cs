@@ -34,14 +34,13 @@ namespace Chronoria_ConsumerWorkers.Models
                 contentType = ContentType.File;
                 try
                 {
-                    // TODO: clean this up
-                    // will be deprecated
                     fileRef = json["content"]["fileRef"].ToString();
                     textLocation = (TextLocation)Enum.Parse(typeof(TextLocation), json["content"]["textLocation"].ToString());
                 }
                 catch (Exception e)
                 {
                     Console.Error.WriteLine(e);
+                    // since they are no use for now, just ignore the exception
                 }
             }
             else
