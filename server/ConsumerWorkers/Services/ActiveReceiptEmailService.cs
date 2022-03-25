@@ -35,7 +35,7 @@ namespace Chronoria_ConsumerWorkers.Services
                 throw new ArgumentNullException("Cannot extract email subject from template");
             }
 
-            await coreEmailService.SendHtml(recipientEmail, recipientName, subject, htmlContent);
+            await coreEmailService.SendHtml(email, email, subject, htmlContent);
         }
     }
 }
