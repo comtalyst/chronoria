@@ -9,12 +9,12 @@ namespace Chronoria_ConsumerWorkers.utils
             var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(htmlContent);
 
-            var subjectAttr = htmlDoc.DocumentNode.ChildAttributes("title").FirstOrDefault();
+            var subjectAttr = htmlDoc.DocumentNode.SelectSingleNode("//title");
             if (subjectAttr == null)
             {
                 return null;
             }
-            string title = subjectAttr.Value;
+            string title = subjectAttr.InnerText;
             return title;
         }
     }
