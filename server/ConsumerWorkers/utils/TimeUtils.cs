@@ -22,5 +22,29 @@
         {
             return EpochMsToDateTime(ms).ToString("R");
         }
+        public static string TimeSpanToString(long ms1, long ms2)
+        {
+            var dt1 = EpochMsToDateTime(ms1);
+            var dt2 = EpochMsToDateTime(ms2);
+
+            if(dt1.AddYears(1) > dt2)
+            {
+                var ts = TimeSpan.FromMilliseconds(ms2 - ms1);
+                return ts.TotalDays + " Days";
+            }
+            else
+            {
+                var minYearDiff = dt2.Year - dt1.Year - 1;
+                dt1 = dt1.AddYears(minYearDiff);
+                var yearDiff = minYearDiff;
+                while(dt1.AddYears(1) <= dt2)
+                {
+                    dt1.AddYears(1);
+                    yearDiff += 1;
+                }
+                var ts = dt2 - dt1;
+                return yearDiff + " Years and " + ts.TotalDays + "Days";
+            }
+        }
     }
 }
