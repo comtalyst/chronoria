@@ -14,5 +14,13 @@
         {
             return DateTime.Now.ToUniversalTime();
         }
+        public static string DateTimeToString(DateTime dt)
+        {
+            return dt.ToString("R");
+        }
+        public static string DateTimeToString(long ms)
+        {
+            return EpochMsToDateTime(ms).ToString("R");
+        }
     }
 }
