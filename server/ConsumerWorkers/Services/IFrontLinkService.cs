@@ -1,6 +1,6 @@
 ﻿namespace Chronoria_ConsumerWorkers.Services
 {
-    public interface ILinkService
+    public interface IFrontLinkService
     {
         public string GetConfirmationLink(string id);
         public string GetDownloadLink(string id);
