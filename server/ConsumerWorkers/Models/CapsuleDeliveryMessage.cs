@@ -19,10 +19,35 @@ namespace Chronoria_ConsumerWorkers.Models
 
         public CapsuleDeliveryMessage(string body)
         {
-            // TODO
             var json = JToken.Parse(body);
-            //TimeL = long.Parse(json["TimeL"].ToString());
-            //TimeR = long.Parse(json["TimeR"].ToString());
+            id = json["id"].ToString();
+            senderEmail = json["senderEmail"].ToString();
+            senderName = json["senderName"].ToString();
+            recipientEmail = json["recipientEmail"].ToString();
+            recipientName = json["recipientName"].ToString();
+            sendTime = long.Parse(json["sendTime"].ToString());
+            createTime = long.Parse(json["createTime"].ToString());
+
+            text = json["content"]["text"].ToString();
+            if(json["content"]["fileRef"] != null)
+            {
+                contentType = ContentType.File;
+                try
+                {
+                    // TODO: clean this up
+                    // will be deprecated
+                    fileRef = json["content"]["fileRef"].ToString();
+                    textLocation = (TextLocation)Enum.Parse(typeof(TextLocation), json["content"]["textLocation"].ToString());
+                }
+                catch (Exception e)
+                {
+                    Console.Error.WriteLine(e);
+                }
+            }
+            else
+            {
+                contentType = ContentType.Text;
+            }
         }
         public CapsuleDeliveryMessage(
             string id,
