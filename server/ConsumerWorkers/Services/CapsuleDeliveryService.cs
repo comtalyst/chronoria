@@ -29,9 +29,9 @@ namespace Chronoria_ConsumerWorkers.Services
 
             string emailTemplateName;
             if (senderEmail.Equals(recipientEmail))
-                emailTemplateName = "SelfFileCapsuleDeliveryEmail";
+                emailTemplateName = "SelfFileCapsuleDelivery";
             else
-                emailTemplateName = "P2pFileCapsuleDeliveryEmail";
+                emailTemplateName = "P2pFileCapsuleDelivery";
 
             string htmlContent = await emailTemplateService.GetEmailTemplate(emailTemplateName);
 
@@ -65,9 +65,9 @@ namespace Chronoria_ConsumerWorkers.Services
 
             string emailTemplateName;
             if (senderEmail.Equals(recipientEmail))
-                emailTemplateName = "SelfTextCapsuleDeliveryEmail";
+                emailTemplateName = "SelfTextCapsuleDelivery";
             else
-                emailTemplateName = "P2pTextCapsuleDeliveryEmail";
+                emailTemplateName = "P2pTextCapsuleDelivery";
 
             string htmlContent = await emailTemplateService.GetEmailTemplate(emailTemplateName);
 
