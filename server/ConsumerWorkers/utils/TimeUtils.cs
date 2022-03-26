@@ -37,13 +37,13 @@
                 var minYearDiff = dt2.Year - dt1.Year - 1;
                 dt1 = dt1.AddYears(minYearDiff);
                 var yearDiff = minYearDiff;
-                while(dt1.AddYears(1) <= dt2)
+                while(dt1.AddYears(1) <= dt2)               // constant runtime
                 {
-                    dt1.AddYears(1);
+                    dt1 = dt1.AddYears(1);
                     yearDiff += 1;
                 }
                 var ts = dt2 - dt1;
-                return yearDiff + " Years and " + ts.TotalDays + "Days";
+                return yearDiff + " Years and " + ts.TotalDays + " Days";
             }
         }
     }
