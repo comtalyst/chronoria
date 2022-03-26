@@ -2,6 +2,6 @@
 {
     public interface IConfEmailService
     {
-        public Task SendConfEmail(string email, string confRef);
+        public Task SendConfEmail(string email, string id);
     }
 }

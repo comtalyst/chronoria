@@ -55,6 +55,7 @@ builder.ConfigureServices((hostBuilderContext, services) =>
     services.AddScoped<IActiveReceiptEmailService, ActiveReceiptEmailService>();
     services.AddScoped<ICanceledReceiptEmailService, CanceledReceiptEmailService>();
     services.AddScoped<ICapsuleDeliveryService, CapsuleDeliveryService>();
+    services.AddScoped<IConfEmailService, ConfEmailService>();
 
     // Azure Service Bus Producers
     services.AddScoped<ICapsuleDeliveryProducer, CapsuleDeliveryProducer>(
@@ -149,6 +150,11 @@ builder.ConfigureServices((hostBuilderContext, services) =>
     );
     services.AddHostedService<CapsuleDeliveryConsumer>(
         sp => new CapsuleDeliveryConsumer(
+            Configuration["ServiceBus:Connections:Prime"], sp
+        )
+    );
+    services.AddHostedService<ConfEmailConsumer>(
+        sp => new ConfEmailConsumer(
             Configuration["ServiceBus:Connections:Prime"], sp
         )
     );

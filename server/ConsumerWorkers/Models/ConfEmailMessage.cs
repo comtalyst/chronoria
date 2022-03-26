@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Chronoria_ConsumerWorkers.Models
 {
@@ -7,6 +8,12 @@ namespace Chronoria_ConsumerWorkers.Models
         public string Email { get; set; }
         public string Ref { get; set; }
 
+        public ConfEmailMessage(string body)
+        {
+            var json = JToken.Parse(body);
+            Email = json["Email"].ToString();
+            Ref = json["Ref"].ToString();
+        }
         public ConfEmailMessage(string Email, string Ref)
         {
             this.Email = Email;
