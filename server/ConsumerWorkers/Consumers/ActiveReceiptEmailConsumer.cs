@@ -33,6 +33,7 @@ namespace Chronoria_ConsumerWorkers.Consumers
             }
             catch (Exception ex)
             {
+                // TODO: make use of dead-lettering queue??
                 Console.Error.WriteLine(ex);
             }
         }
