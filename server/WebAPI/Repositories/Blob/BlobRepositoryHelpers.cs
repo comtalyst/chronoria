@@ -26,7 +26,7 @@ namespace Chronoria_WebAPI.Repositories
         {
             try
             {
-                DateTimeOffset expiredOn = DateTimeOffset.UtcNow.AddMinutes(60);            // TODO
+                DateTimeOffset expiredOn = DateTimeOffset.UtcNow.AddMinutes(60);            // TODO: fix this by passing config provider?, but has to be done on all implemented services (constructor)
                 BlobClient blobClient = GetClient(blobFileName);
                 Uri uri = blobClient.GenerateSasUri(BlobSasPermissions.Read, expiredOn);
                 return uri;
