@@ -34,7 +34,7 @@ namespace Chronoria_ConsumerWorkers.Consumers
                     await capsuleDeliveryService.DeliverFile(
                         message.id,
                         message.senderEmail,
-                        message.recipientEmail,
+                        message.senderName,
                         message.recipientEmail,
                         message.recipientName,
                         message.sendTime,
@@ -48,7 +48,7 @@ namespace Chronoria_ConsumerWorkers.Consumers
                     await capsuleDeliveryService.DeliverText(
                         message.id,
                         message.senderEmail,
-                        message.recipientEmail,
+                        message.senderName,
                         message.recipientEmail,
                         message.recipientName,
                         message.sendTime,
