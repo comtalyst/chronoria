@@ -7,7 +7,7 @@ function App() {
       <div className='flex-col px-20 py-12 w-1/2'>
         <div className='mb-20'>
           <span className='text-8xl font-black leading-snug'>
-            Time Travel with <br/>
+            Time Travel <br/> with <br/>
             <span className='text-light_hl'>
               Timelette!
             </span>
@@ -25,7 +25,7 @@ function App() {
           Get Started
         </button>
       </div>
-      <div className='px-20 py-24 w-1/2'>
+      <div className='px-20 py-20 w-1/2'>
         <img src={logo} alt='Timelette' className='hover:scale-95 transition-all duration-500'/>
       </div>
     </div>
