@@ -19,15 +19,15 @@ function App() {
             Send it as <span className='text-light_hl font-bold'>a letter</span> to yourself or someone else from the future.
           </span>
         </div>
-        <div className='bg-light_hl w-fit px-5 py-2 text-light_hl_subtext font-bold text-2xl rounded
+        <button className='bg-light_hl w-fit px-5 py-2 text-light_hl_subtext font-bold text-2xl rounded
                         hover:bg-light_hl_l hover:scale-105
                         transition-all duration-200'>
           Get Started
-        </div>
+        </button>
       </div>
-      <button className='px-20 py-24 w-1/2'>
+      <div className='px-20 py-24 w-1/2'>
         <img src={logo} alt='Timelette' className='hover:scale-95 transition-all duration-500'/>
-      </button>
+      </div>
     </div>
   );
 }
