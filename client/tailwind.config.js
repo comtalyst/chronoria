@@ -4,6 +4,9 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
+    fontFamily: {
+      'sans': ['Open Sans', 'ui-sans-serif', 'system-ui']
+    },
     extend: {
       colors: {
         light_bg: '#FFFFE0',

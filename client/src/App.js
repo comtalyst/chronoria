@@ -4,6 +4,9 @@ import './App.css';
 function App() {
   return (
     <div className='flex flex-wrap align-middle justify-around min-h-screen bg-light_bg text-light_text text-3xl'>
+      <link rel="preconnect" href="https://fonts.googleapis.com"/>
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+      <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700;800&display=swap" rel="stylesheet"></link>
       <div className='flex-col px-10 py-12 w-fit'>
         <div className='mb-20'>
           <div class='text-5xl sm:text-8xl'>
@@ -15,8 +18,8 @@ function App() {
             </span>
           </div>
         </div>
-        <div className='mb-20 max-w-[38rem]'>
-          <div class='text-2xl sm:text-4xl'>
+        <div className='mb-20 max-w-[34rem]'>
+          <div class='text-2xl sm:text-3xl'>
             <span className='font-light leading-snug'>
               A message, a hidden treasure map, a confession, a memory, or whatever it is.
               Send it as <span className='text-light_hl font-bold'>a letter</span> to yourself or someone else from the future.
