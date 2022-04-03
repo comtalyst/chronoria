@@ -1,8 +1,42 @@
+import React, {useState} from 'react';
 import logo from './media/logo.png';
 import './App.css';
 import 'flowbite';
+import _ from 'lodash';
 
 function App() {
+  const [selfSend, setSelfSend] = useState(false);
+  const [senderEmailRaw, setSenderEmailRaw] = useState('');
+  const [senderNameRaw, setSenderNameRaw] = useState('');
+  const [recipientEmailRaw, setRecipientEmailRaw] = useState('');
+  const [recipientNameRaw, setRecipientNameRaw] = useState('');
+  const [textContentRaw, setTextContentRaw] = useState('');
+  const [sendTimeRaw, setSendTimeRaw] = useState('');
+
+  const submit = (e) => {
+    e.preventDefault();
+    const senderEmail = senderEmailRaw.trim();
+    const senderName = senderNameRaw.trim();
+    const [recipientEmail, recipientName] = (() => {
+      if(selfSend){
+        return [senderEmail, senderName];
+      }
+      else{
+        return [recipientEmailRaw.trim(), recipientNameRaw.trim()];
+      }
+    })();
+    const textContent = textContentRaw.trim();
+    const sendTime = Date.parse(sendTimeRaw);
+    console.log(senderEmail);
+    console.log(senderName);
+    console.log(recipientEmail);
+    console.log(recipientName);
+    console.log(textContent);
+    console.log(sendTime);
+    // TODO: submit these to backend
+    return true;
+  }
+  
   return (
     <div className='flex flex-col min-h-screen bg-light_bg text-light_text text-xl font-light'>
       <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -42,73 +76,69 @@ function App() {
 
       <div className='flex flex-col min-h-screen px-6 md:px-24 pt-12'>
         <div className='flex flex-col mb-10'>
-          <form>
+          <form onSubmit={submit}>
             <div className='flex flex-wrap gap-y-4 justify-between mb-10'>
               <div className='flex flex-col min-w-[50%] grow space-y-3 px-4'>
                 <label htmlFor='senderEmail'>
                   Sender's Email (yes, yours!)
                 </label>
-                <input id='senderEmail' type='email' placeholder='you@example.com' required
+                <input id='senderEmail' type='email' placeholder='you@example.com' required onChange={(e) => setSenderEmailRaw(e.target.value)}
                 className='border border-gray-300 text-gray-900 rounded focus:ring-light_hl focus:border-light_hl'/>
               </div>
               <div className='flex flex-col min-w-[50%] grow space-y-3 px-4'>
                 <label htmlFor='senderName'>
                   Sender's Alias
                 </label>
-                <input id='senderName' type='text' placeholder='Full name, nickname, or any identifier!' required
+                <input id='senderName' type='text' placeholder='Full name, nickname, or any identifier!' required onChange={(e) => setSenderNameRaw(e.target.value)}
                 className='border border-gray-300 text-gray-900 rounded focus:ring-light_hl focus:border-light_hl'/>
               </div>
             </div>
             
             <div className='flex mb-3 px-4 items-center'>
-              <input id='selfSend' aria-describedby='selfSend' type='checkbox' className='w-4 h-4 rounded border border-gray-300 focus:ring-3 focus:ring-light_hl ' required/>
+              <input id='selfSend' aria-describedby='selfSend' type='checkbox' onChange={() => setSelfSend(!selfSend)}
+                className='w-4 h-4 rounded border border-gray-300 focus:ring-3 focus:ring-light_hl '/>
               <label htmlFor='selfSend' className='text-base pl-3'>This letter is for myself</label>
             </div>
 
+            {(!selfSend)? (
             <div className='flex flex-wrap gap-y-4 justify-between mb-10'>
               <div className='flex flex-col min-w-[50%] grow space-y-3 px-4'>
                 <label htmlFor='recipientEmail'>
                   Recipient's Email &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </label>
-                <input id='recipientEmail' type='email' placeholder='they@example.com' required
+                <input id='recipientEmail' type='email' placeholder='they@example.com' required onChange={(e) => setRecipientEmailRaw(e.target.value)}
                   className='border border-gray-300 text-gray-900 rounded focus:ring-light_hl focus:border-light_hl'/>
               </div>
               <div className='flex flex-col min-w-[50%] grow space-y-3 px-4'>
                 <label htmlFor='recipientName'>
                   Recipient's Alias
                 </label>
-                <input id='recipientName' type='text' placeholder='How would you call this individual?' required
-                className='border border-gray-300 text-gray-900 rounded focus:ring-light_hl focus:border-light_hl'/>
+                <input id='recipientName' type='text' placeholder='How would you call this individual?' required onChange={(e) => setRecipientNameRaw(e.target.value)}
+                  className='border border-gray-300 text-gray-900 rounded focus:ring-light_hl focus:border-light_hl'/>
               </div>
             </div>
+            ):(<div/>)}
 
             <div className='flex flex-col mb-10 space-y-3 px-4'>
               <label htmlFor='textContent'>
                 Inside the Envelope
               </label>
-              <textarea id='textContent' rows='5' placeholder='Hello...? (max 10,000 characters)' required
+              <textarea id='textContent' rows='5' placeholder='Hello...? (max 10,000 characters)' required maxLength='10000' onChange={_.debounce((ev) => setTextContentRaw(ev.target.value), 200)}
                 className='w-full border border-gray-300 text-gray-900 rounded focus:ring-light_hl focus:border-light_hl'/>
               <input className='text-sm text-gray-900 bg-white rounded border border-gray-300 cursor-pointer 
-                focus:outline-none focus:border-transparent focus:ring-2 focus:ring-light_hl' id='fileUpload' type='file'></input>
-              <label htmlFor='fileUpload' className='text-base'>File upload is optional. The maximum allowed file size is 200 MB. Recommended Extensions: .pdf, .txt, .jpg, .mp4, .zip</label>
+                focus:outline-none focus:border-transparent focus:ring-2 focus:ring-light_hl' id='fileUpload' type='file'/>
+              <label htmlFor='fileUpload' className='text-base'>File upload is optional. The maximum allowed file size is 200 MB. Recommended extensions: .pdf, .txt, .jpg, .mp4, .zip</label>
             </div>
 
             <div className='flex flex-col mb-10 space-y-3'>
-              <div className='flex flex-wrap gap-y-4 justify-between'>
-                <div className='flex flex-col min-w-[50%] grow space-y-3 px-4'>
-                  <label htmlFor='sendDateRaw'>
-                    Destination Date
-                  </label>
-                  <input type='date' className='text-gray-900 bg-white rounded border border-gray-300 focus:ring-light_hl focus:border-light_hl' placeholder='Select date'/>
-                </div>
-                <div className='flex flex-col min-w-[50%] grow space-y-3 px-4'>
-                  <label htmlFor='sendTimeRaw'>
-                    Destination Time
-                  </label>
-                  <input type='time' className='text-gray-900 bg-white rounded border border-gray-300 focus:ring-light_hl focus:border-light_hl' placeholder='Select date'/>
-                </div>
+              <div className='flex flex-col max-w-[18rem] space-y-3 px-4'>
+                <label htmlFor='sendTimeRaw'>
+                  Destination Time
+                </label>
+                <input type='datetime-local' className='text-gray-900 bg-white rounded border border-gray-300 focus:ring-light_hl focus:border-light_hl' 
+                  placeholder='Select date' required onChange={(e) => setSendTimeRaw(e.target.value)}/>
               </div>
-              <label htmlFor='sendDateRaw' className='px-4 -mt-10 text-base'>Date and time is based on your local time zone.</label>
+              <label htmlFor='sendTimeRaw' className='px-4 -mt-10 text-base'>Date and time is based on your local machine time zone.</label>
             </div>
 
             
