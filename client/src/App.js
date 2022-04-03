@@ -126,18 +126,7 @@ function App() {
 
       <div className='flex flex-col min-h-screen px-6 md:px-24 pt-12'>
         <div className='flex flex-col mb-8'>
-          { (currentWarning === '')? (<div/>) : (
-              <div class="p-4 mx-4 mb-4 text-sm text-yellow-700 bg-yellow-100 rounded" role="alert">
-                <span class="font-semibold">Warning!</span> {currentWarning}
-              </div>
-            )
-          }
-          { (currentError === '')? (<div/>) : (
-              <div class="p-4 mx-4 mb-4 text-sm text-red-700 bg-red-100 rounded" role="alert">
-                <span class="font-semibold">Error!</span> {currentError}
-              </div>
-            )
-          }
+          
           <form onSubmit={submit}>
             <div className='flex flex-wrap gap-y-4 justify-between mb-8'>
               <div className='flex flex-col min-w-[50%] grow space-y-3 px-4'>
@@ -203,8 +192,24 @@ function App() {
               <label htmlFor='sendTimeRaw' className='px-4 -mt-10 text-sm text-gray-500'>Date and time is based on your local machine time zone. It needs to be at least 2 days from now.</label>
             </div>
 
-            
-
+            { (currentError || currentWarning)? (<div/>) : (
+                <div class="p-4 mx-4 mb-4 text-sm">
+                  &nbsp;
+                </div>
+              )
+            }
+            { (currentWarning === '')? (<div/>) : (
+                <div class="p-4 mx-4 mb-4 text-sm text-yellow-700 bg-yellow-100 rounded" role="alert">
+                  <span class="font-semibold">Warning!</span> {currentWarning}
+                </div>
+              )
+            }
+            { (currentError === '')? (<div/>) : (
+                <div class="p-4 mx-4 mb-4 text-sm text-red-700 bg-red-100 rounded" role="alert">
+                  <span class="font-semibold">Error!</span> {currentError}
+                </div>
+              )
+            }
             <div className='flex flex-col mb-8 space-y-3 px-4'>
               <span className='text-sm text-gray-500'>By clicking submit, you agree to the <a className='text-light_hl underline' href='https://google.com'>terms and conditions</a>.</span>
               {
@@ -225,6 +230,7 @@ function App() {
               }
             </div>
           </form>
+          
         </div>
       </div>
     </div>
