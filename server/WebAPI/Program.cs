@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Azure.Security.KeyVault.Secrets;
 using Azure.Identity;
 using Azure.Extensions.AspNetCore.Configuration.Secrets;
+using Microsoft.Net.Http.Headers;
 
 // Initialize builder/primary config
 var builder = WebApplication.CreateBuilder(args);
@@ -124,7 +125,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("MainPolicy", builder =>
     {
-        builder.WithOrigins("*").WithMethods("POST", "GET", "PUT", "DELETE");
+        builder.WithOrigins("*").WithMethods("POST", "GET", "PUT", "DELETE").WithHeaders(HeaderNames.ContentType);
     });
 });
 
