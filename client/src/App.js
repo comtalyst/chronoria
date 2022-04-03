@@ -3,6 +3,7 @@ import logo from './media/logo.png';
 import './App.css';
 import 'flowbite';
 import _ from 'lodash';
+import axios from 'axios';
 
 function App() {
   const [selfSend, setSelfSend] = useState(false);
@@ -36,30 +37,40 @@ function App() {
       alert('Destination time needs to be at least 2 days from now');
       return false;
     }
-    if(fileRaw.size > 200000000){
-      alert('File size must not exceed 200 MB');
-    }
-
     if(fileRaw == null){
       // construct request body as json
       const reqBody = {
         senderEmail, senderName, recipientEmail, recipientName, sendTime, text
       }
-      // TODO: send this
+      try{
+        const res = await axios.post('https://localhost:7056/api/submit/text', reqBody);
+        console.log(res);
+      } catch (ex){
+        console.error(ex.message);
+      }
     }
     else{
+      if(fileRaw.size > 200000000){
+        alert('File size must not exceed 200 MB');
+        return false;
+      }
       const reqBody = {
         senderEmail, senderName, recipientEmail, recipientName, sendTime, text
       }
-      reqBody.textLocation = 'BEFORE';              // not implementing this for now
+      reqBody.textLocation = 'Before';              // not implementing this for now
       // construct request body as form (for file)
       const formData = new FormData();
       for (const [key, val] of Object.entries(reqBody)){
         formData.append(key, val);
       }
-      formData.append('formFile', fileRaw);
-      formData.append('fileName', fileRaw.name);
-      // TODO: send this
+      formData.append('FormFile', fileRaw);
+      formData.append('FileName', fileRaw.name);
+      try{
+        const res = await axios.post('https://localhost:7056/api/submit/file', formData);
+        console.log(res);
+      } catch (ex){
+        console.error(ex.message);
+      }
     }
     return true;
   }
