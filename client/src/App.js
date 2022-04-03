@@ -27,6 +27,14 @@ function App() {
     })();
     const textContent = textContentRaw.trim();
     const sendTime = Date.parse(sendTimeRaw);
+    if(sendTime < Date.now()){
+      alert('Sorry, but we cannot send a letter to the past at this time (but we wish we could ;-; )');
+      return false;
+    }
+    else if(sendTime < Date.now() + 172800000){
+      alert('Destination time needs to be at least 2 days from now');
+      return false;
+    }
     console.log(senderEmail);
     console.log(senderName);
     console.log(recipientEmail);
@@ -82,14 +90,14 @@ function App() {
                 <label htmlFor='senderEmail'>
                   Sender's Email (yes, yours!)
                 </label>
-                <input id='senderEmail' type='email' placeholder='you@example.com' required onChange={(e) => setSenderEmailRaw(e.target.value)}
+                <input id='senderEmail' type='email' placeholder='you@example.com' required maxLength='255' onChange={(e) => setSenderEmailRaw(e.target.value)}
                 className='border border-gray-300 text-gray-900 rounded focus:ring-light_hl focus:border-light_hl'/>
               </div>
               <div className='flex flex-col min-w-[50%] grow space-y-3 px-4'>
                 <label htmlFor='senderName'>
                   Sender's Alias
                 </label>
-                <input id='senderName' type='text' placeholder='Full name, nickname, or any identifier!' required onChange={(e) => setSenderNameRaw(e.target.value)}
+                <input id='senderName' type='text' placeholder='Full name, nickname, or any identifier!' required maxLength='255' onChange={(e) => setSenderNameRaw(e.target.value)}
                 className='border border-gray-300 text-gray-900 rounded focus:ring-light_hl focus:border-light_hl'/>
               </div>
             </div>
@@ -106,14 +114,14 @@ function App() {
                 <label htmlFor='recipientEmail'>
                   Recipient's Email &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </label>
-                <input id='recipientEmail' type='email' placeholder='they@example.com' required onChange={(e) => setRecipientEmailRaw(e.target.value)}
+                <input id='recipientEmail' type='email' placeholder='they@example.com' required maxLength='255' onChange={(e) => setRecipientEmailRaw(e.target.value)}
                   className='border border-gray-300 text-gray-900 rounded focus:ring-light_hl focus:border-light_hl'/>
               </div>
               <div className='flex flex-col min-w-[50%] grow space-y-3 px-4'>
                 <label htmlFor='recipientName'>
                   Recipient's Alias
                 </label>
-                <input id='recipientName' type='text' placeholder='How would you call this individual?' required onChange={(e) => setRecipientNameRaw(e.target.value)}
+                <input id='recipientName' type='text' placeholder='How would you call this individual?' required maxLength='255' onChange={(e) => setRecipientNameRaw(e.target.value)}
                   className='border border-gray-300 text-gray-900 rounded focus:ring-light_hl focus:border-light_hl'/>
               </div>
             </div>
@@ -138,7 +146,7 @@ function App() {
                 <input type='datetime-local' className='text-gray-900 bg-white rounded border border-gray-300 focus:ring-light_hl focus:border-light_hl' 
                   placeholder='Select date' required onChange={(e) => setSendTimeRaw(e.target.value)}/>
               </div>
-              <label htmlFor='sendTimeRaw' className='px-4 -mt-10 text-base'>Date and time is based on your local machine time zone.</label>
+              <label htmlFor='sendTimeRaw' className='px-4 -mt-10 text-base'>Date and time is based on your local machine time zone. It needs to be at least 2 days from now.</label>
             </div>
 
             
