@@ -52,11 +52,6 @@ namespace Chronoria_WebAPI.Services
             string id = idService.generate();
 
             // Reroute the file to blob storage and retrieve a file ID
-            string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", file.FileName);
-            using (Stream stream = new FileStream(path, FileMode.Create))
-            {
-                file.FormFile.CopyTo(stream);
-            }
             string fileId = id + "-0";      // new file name for blob storage
 
             BlobFile blobFile = new BlobFile(fileId, file.FormFile);

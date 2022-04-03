@@ -24,7 +24,7 @@ namespace Chronoria_WebAPI.Controllers
             this.requestValidationService = requestValidationService;
         }
 
-        public class PostFileModel
+        public class PostFileModel : UploadedFile
         {
             public string senderEmail { get; set; }
             public string senderName { get; set; }
@@ -37,8 +37,7 @@ namespace Chronoria_WebAPI.Controllers
         [Route("file/")]
         [HttpPost]
         public async Task<IActionResult> PostFile(
-            [FromBody] PostFileModel postFileModel,
-            [FromForm] UploadedFile file
+            [FromForm] PostFileModel postFileModel
             )
         {
             try
@@ -51,6 +50,7 @@ namespace Chronoria_WebAPI.Controllers
                 var sendTime = postFileModel.sendTime;
                 var textLocation = postFileModel.textLocation.Trim();
                 var text = postFileModel.text.Trim();
+                var file = postFileModel;
 
                 // Validate all parameters (for security proposes)
                 requestValidationService.ValidateEmail(senderEmail);
