@@ -10,10 +10,11 @@ function App() {
   const [senderNameRaw, setSenderNameRaw] = useState('');
   const [recipientEmailRaw, setRecipientEmailRaw] = useState('');
   const [recipientNameRaw, setRecipientNameRaw] = useState('');
-  const [textContentRaw, setTextContentRaw] = useState('');
-  const [sendTimeRaw, setSendTimeRaw] = useState('');
+  const [textRaw, setTextRaw] = useState('');
+  const [fileRaw, setFileRaw] = useState(null);
+  const [sendTimeRaw, setSendTimeRaw] = useState(null);
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     const senderEmail = senderEmailRaw.trim();
     const senderName = senderNameRaw.trim();
@@ -25,7 +26,7 @@ function App() {
         return [recipientEmailRaw.trim(), recipientNameRaw.trim()];
       }
     })();
-    const textContent = textContentRaw.trim();
+    const text = textRaw.trim();
     const sendTime = Date.parse(sendTimeRaw);
     if(sendTime < Date.now()){
       alert('Sorry, but we cannot send a letter to the past at this time (but we wish we could ;-; )');
@@ -35,13 +36,31 @@ function App() {
       alert('Destination time needs to be at least 2 days from now');
       return false;
     }
-    console.log(senderEmail);
-    console.log(senderName);
-    console.log(recipientEmail);
-    console.log(recipientName);
-    console.log(textContent);
-    console.log(sendTime);
-    // TODO: submit these to backend
+    if(fileRaw.size > 200000000){
+      alert('File size must not exceed 200 MB');
+    }
+
+    if(fileRaw == null){
+      // construct request body as json
+      const reqBody = {
+        senderEmail, senderName, recipientEmail, recipientName, sendTime, text
+      }
+      // TODO: send this
+    }
+    else{
+      const reqBody = {
+        senderEmail, senderName, recipientEmail, recipientName, sendTime, text
+      }
+      reqBody.textLocation = 'BEFORE';              // not implementing this for now
+      // construct request body as form (for file)
+      const formData = new FormData();
+      for (const [key, val] of Object.entries(reqBody)){
+        formData.append(key, val);
+      }
+      formData.append('formFile', fileRaw);
+      formData.append('fileName', fileRaw.name);
+      // TODO: send this
+    }
     return true;
   }
   
@@ -128,13 +147,13 @@ function App() {
             ):(<div/>)}
 
             <div className='flex flex-col mb-10 space-y-3 px-4'>
-              <label htmlFor='textContent'>
+              <label htmlFor='text'>
                 Inside the Envelope
               </label>
-              <textarea id='textContent' rows='5' placeholder='Hello...? (max 10,000 characters)' required maxLength='10000' onChange={_.debounce((ev) => setTextContentRaw(ev.target.value), 200)}
+              <textarea id='text' rows='5' placeholder='Hello...? (max 10,000 characters)' required maxLength='10000' onChange={_.debounce((ev) => setTextRaw(ev.target.value), 200)}
                 className='w-full border border-gray-300 text-gray-900 rounded focus:ring-light_hl focus:border-light_hl'/>
               <input className='text-sm text-gray-900 bg-white rounded border border-gray-300 cursor-pointer 
-                focus:outline-none focus:border-transparent focus:ring-2 focus:ring-light_hl' id='fileUpload' type='file'/>
+                focus:outline-none focus:border-transparent focus:ring-2 focus:ring-light_hl' id='fileUpload' type='file' onChange={(e) => setFileRaw(e.target.files[0])}/>
               <label htmlFor='fileUpload' className='text-base'>File upload is optional. The maximum allowed file size is 200 MB. Recommended extensions: .pdf, .txt, .jpg, .mp4, .zip</label>
             </div>
 
