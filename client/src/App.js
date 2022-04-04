@@ -73,9 +73,15 @@ function App() {
   }
   const submit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);     // not safe: if user clicks faster than this line's execution, then it will be duped, but it happens rarely;
     setCurrentError('');
     setCurrentWarning('');
-    setSubmitting(true);
+
+    if(Date.now() - lastSub < 60000){
+      setCurrentWarning('Too many submissions. Please try again shortly.');
+      setSubmitting(false);
+      return false;
+    }
     
     try{
       const res = await trueSubmit(e);
@@ -95,17 +101,6 @@ function App() {
 
     setSubmitting(false);
     return true;
-  }
-  const submitTimer = (e) => {
-    e.preventDefault();
-    setCurrentError('');
-    setCurrentWarning('');
-
-    if(Date.now() - lastSub < 60000){
-      setCurrentWarning('Too many submissions. Please try again shortly.');
-      return Promise.resolve(false);
-    }
-    return submit(e);
   }
 
   const closeComplete = () => {
@@ -153,7 +148,7 @@ function App() {
       <div className='flex flex-col min-h-screen px-6 md:px-24 pt-12'>
         <div className='flex flex-col mb-8'>
           
-          <form onSubmit={submitTimer}>
+          <form onSubmit={submit}>
             <div className='flex flex-wrap gap-y-4 justify-between mb-8'>
               <div className='flex flex-col min-w-[50%] grow space-y-3 px-4'>
                 <label htmlFor='senderEmail'>
@@ -243,7 +238,7 @@ function App() {
                   <button className='bg-light_hl w-fit px-5 py-2 text-light_hl_subtext font-bold text-2xl rounded-lg
                                  hover:bg-light_hl_l hover:scale-105
                                  transition-all duration-200'
-                          type='submit'>
+                          type='submit' disabled={submitting}>
                     Submit
                   </button>
                 ) : (
