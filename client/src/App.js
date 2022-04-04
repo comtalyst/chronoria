@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import logo from './media/logo.png';
 import './App.css';
 import 'flowbite';
@@ -22,6 +22,8 @@ function App() {
   const [completeModal, setCompleteModal] = useState(null);
 
   const [lastSub, setLastSub] = useState(0);
+
+  const mainRef = useRef(0);
 
   const trueSubmit = async (e) => {
     e.preventDefault();
@@ -102,10 +104,12 @@ function App() {
     setSubmitting(false);
     return true;
   }
-
   const closeComplete = () => {
     completeModal.hide();
     setCompleteModal(null);
+  }
+  const getStarted = () => {
+    window.scrollTo({top: mainRef.current.offsetTop, behavior: 'smooth'});
   }
   
   return (
@@ -136,7 +140,7 @@ function App() {
           </div>
           <button className='bg-light_hl w-fit px-5 py-2 text-light_hl_subtext font-bold text-2xl rounded-lg
                           hover:bg-light_hl_l hover:scale-105
-                          transition-all duration-200'>
+                          transition-all duration-200' onClick={getStarted}>
             Get Started
           </button>
         </div>
@@ -145,7 +149,7 @@ function App() {
         </div>
       </div>
 
-      <div className='flex flex-col min-h-screen px-6 md:px-24 pt-12'>
+      <div ref={mainRef} className='flex flex-col min-h-screen px-6 md:px-24 pt-12'>
         <div className='flex flex-col mb-8'>
           
           <form onSubmit={submit}>
