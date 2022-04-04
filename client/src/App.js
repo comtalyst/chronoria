@@ -21,6 +21,8 @@ function App() {
   const [currentError, setCurrentError] = useState('');
   const [completeModal, setCompleteModal] = useState(null);
 
+  const [lastSub, setLastSub] = useState(0);
+
   const trueSubmit = async (e) => {
     e.preventDefault();
     const senderEmail = senderEmailRaw.trim();
@@ -74,7 +76,7 @@ function App() {
     setCurrentError('');
     setCurrentWarning('');
     setSubmitting(true);
-
+    
     try{
       const res = await trueSubmit(e);
       if(!res){
@@ -86,11 +88,26 @@ function App() {
       setSubmitting(false);
       return false;
     }
+    setLastSub(Date.now());
     const modal = new Modal(document.getElementById('complete'));
     modal.show();
     setCompleteModal(modal);
+
+    setSubmitting(false);
     return true;
   }
+  const submitTimer = (e) => {
+    e.preventDefault();
+    setCurrentError('');
+    setCurrentWarning('');
+
+    if(Date.now() - lastSub < 60000){
+      setCurrentWarning('Too many submissions. Please try again shortly.');
+      return Promise.resolve(false);
+    }
+    return submit(e);
+  }
+
   const closeComplete = () => {
     completeModal.hide();
     setCompleteModal(null);
@@ -136,7 +153,7 @@ function App() {
       <div className='flex flex-col min-h-screen px-6 md:px-24 pt-12'>
         <div className='flex flex-col mb-8'>
           
-          <form onSubmit={submit}>
+          <form onSubmit={submitTimer}>
             <div className='flex flex-wrap gap-y-4 justify-between mb-8'>
               <div className='flex flex-col min-w-[50%] grow space-y-3 px-4'>
                 <label htmlFor='senderEmail'>
