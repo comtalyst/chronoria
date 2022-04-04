@@ -1,32 +1,38 @@
 import React, {useState, useRef} from 'react';
-import logo from './media/logo.png';
-import './App.css';
 import 'flowbite';
 import Modal from 'flowbite/src/components/modal';
 import _ from 'lodash';
 import axios from 'axios';
 
-function App() {
-  const [selfSend, setSelfSend] = useState(false);
-  const [senderEmailRaw, setSenderEmailRaw] = useState('');
-  const [senderNameRaw, setSenderNameRaw] = useState('');
-  const [recipientEmailRaw, setRecipientEmailRaw] = useState('');
-  const [recipientNameRaw, setRecipientNameRaw] = useState('');
-  const [textRaw, setTextRaw] = useState('');
-  const [fileRaw, setFileRaw] = useState(null);
-  const [sendTimeRaw, setSendTimeRaw] = useState(null);
-  
-  const [submitting, setSubmitting] = useState(false);
-  const [currentWarning, setCurrentWarning] = useState('');
-  const [currentError, setCurrentError] = useState('');
-  const [completeModal, setCompleteModal] = useState(null);
+import logo from './media/logo.png';
 
+function App() {
+  // States for form inputs
+  const [selfSend, setSelfSend]                     = useState(false);
+  const [senderEmailRaw, setSenderEmailRaw]         = useState('');
+  const [senderNameRaw, setSenderNameRaw]           = useState('');
+  const [recipientEmailRaw, setRecipientEmailRaw]   = useState('');
+  const [recipientNameRaw, setRecipientNameRaw]     = useState('');
+  const [textRaw, setTextRaw]                       = useState('');
+  const [fileRaw, setFileRaw]                       = useState(null);
+  const [sendTimeRaw, setSendTimeRaw]               = useState(null);
+  
+  // States for UI elements
+  const [submitting, setSubmitting]                 = useState(false);
+  const [currentWarning, setCurrentWarning]         = useState('');
+  const [currentError, setCurrentError]             = useState('');
+  const [completeModal, setCompleteModal]           = useState(null);
+
+  // States for backend control
   const [lastSub, setLastSub] = useState(0);
 
-  const mainRef = useRef(0);
+  // References for UI elements
+  const createFormRef = useRef(0);
 
+  // Submission service
   const trueSubmit = async (e) => {
     e.preventDefault();
+    // clean params
     const senderEmail = senderEmailRaw.trim();
     const senderName = senderNameRaw.trim();
     const [recipientEmail, recipientName] = (() => {
@@ -39,6 +45,8 @@ function App() {
     })();
     const text = textRaw.trim();
     const sendTime = Date.parse(sendTimeRaw);
+
+    // filter illegal params
     if(sendTime < Date.now()){
       setCurrentWarning('Sorry, we cannot send a letter to the past at this time (but we really wish we could ;-;)');
       return false;
@@ -47,6 +55,8 @@ function App() {
       setCurrentWarning('Destination time needs to be at least 2 days from now');
       return false;
     }
+
+    // type: text only
     if(fileRaw == null){
       // construct request body as json
       const reqBody = {
@@ -54,15 +64,18 @@ function App() {
       }
       await axios.post('https://localhost:7056/api/submit/text', reqBody);
     }
+    // type: file
     else{
       if(fileRaw.size > 200000000){
-        throw new Error('File size must not exceed 200 MB');
+        setCurrentWarning('File size must not exceed 200 MB');
+        return false;
       }
+
+      // construct request body as form (for file)
       const reqBody = {
         senderEmail, senderName, recipientEmail, recipientName, sendTime, text
       }
       reqBody.textLocation = 'Before';              // not implementing this for now
-      // construct request body as form (for file)
       const formData = new FormData();
       for (const [key, val] of Object.entries(reqBody)){
         formData.append(key, val);
@@ -73,18 +86,21 @@ function App() {
     }
     return true;
   }
+  // Submission control
   const submit = async (e) => {
     e.preventDefault();
     setSubmitting(true);     // not safe: if user clicks faster than this line's execution, then it will be duped, but it happens rarely;
     setCurrentError('');
     setCurrentWarning('');
 
+    // check if too frequent
     if(Date.now() - lastSub < 60000){
       setCurrentWarning('Too many submissions. Please try again shortly.');
       setSubmitting(false);
       return false;
     }
     
+    // try sending request
     try{
       const res = await trueSubmit(e);
       if(!res){
@@ -96,6 +112,7 @@ function App() {
       setSubmitting(false);
       return false;
     }
+    // complete
     setLastSub(Date.now());
     const modal = new Modal(document.getElementById('complete'));
     modal.show();
@@ -109,15 +126,11 @@ function App() {
     setCompleteModal(null);
   }
   const getStarted = () => {
-    window.scrollTo({top: mainRef.current.offsetTop, behavior: 'smooth'});
+    window.scrollTo({top: createFormRef.current.offsetTop, behavior: 'smooth'});
   }
   
   return (
     <div className='flex flex-col min-h-screen bg-light_bg text-light_text text-lg'>
-      <link rel="preconnect" href="https://fonts.googleapis.com"/>
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin='true'/>
-      <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700;800&display=swap" rel="stylesheet"></link>
-
       <div className='flex flex-wrap align-middle justify-around min-h-screen'>
         <div className='flex-col px-10 pt-12 w-fit'>
           <div className='mb-20'>
@@ -149,7 +162,7 @@ function App() {
         </div>
       </div>
 
-      <div ref={mainRef} className='flex flex-col min-h-screen px-6 md:px-24 pt-12'>
+      <div ref={createFormRef} className='flex flex-col min-h-screen px-6 md:px-24 pt-12'>
         <div className='flex flex-col mb-8'>
           
           <form onSubmit={submit}>
@@ -218,20 +231,20 @@ function App() {
             </div>
 
             { (currentError || currentWarning)? (<div/>) : (
-                <div className="p-4 mx-4 mb-4 text-sm">
+                <div className='p-4 mx-4 mb-4 text-sm'>
                   &nbsp;
                 </div>
               )
             }
             { (currentWarning === '')? (<div/>) : (
-                <div className="p-4 mx-4 mb-4 text-sm text-yellow-700 bg-yellow-100 rounded-lg" role="alert">
-                  <span className="font-semibold">Warning!</span>&nbsp;&nbsp;&nbsp;&nbsp;{currentWarning}
+                <div className='p-4 mx-4 mb-4 text-sm text-yellow-700 bg-yellow-100 rounded-lg' role='alert'>
+                  <span className='font-semibold'>Warning!</span>&nbsp;&nbsp;&nbsp;&nbsp;{currentWarning}
                 </div>
               )
             }
             { (currentError === '')? (<div/>) : (
-                <div className="p-4 mx-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
-                  <span className="font-semibold">Error!</span>&nbsp;&nbsp;&nbsp;&nbsp;{currentError}
+                <div className='p-4 mx-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg' role='alert'>
+                  <span className='font-semibold'>Error!</span>&nbsp;&nbsp;&nbsp;&nbsp;{currentError}
                 </div>
               )
             }
@@ -260,7 +273,7 @@ function App() {
           <div id='terms' aria-hidden='true' className='hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full'>
             <div className='relative p-4 w-full max-w-2xl h-auto'>
               <div className='relative bg-white rounded-lg shadow'>
-                <div className='flex justify-between items-start p-5 rounded-t-lg border-b '>
+                <div className='flex justify-between items-start p-5 rounded-t-lg border-b'>
                   <h3 className='text-xl font-semibold text-gray-900'>
                     Terms of Service
                   </h3>
@@ -269,7 +282,7 @@ function App() {
                   </button>
                 </div>
                 <div className='p-6 space-y-6'>
-                  <p className='text-base leading-relaxed text-gray-500 '>
+                  <p className='text-base leading-relaxed text-gray-500'>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                   </p>
                 </div>
@@ -280,7 +293,7 @@ function App() {
           <div id='complete' aria-hidden='true' className='hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full'>
             <div className='relative p-4 w-full max-w-2xl h-auto'>
               <div className='relative bg-white rounded-lg shadow'>
-                <div className='flex justify-between items-start p-5 rounded-t-lg border-b '>
+                <div className='flex justify-between items-start p-5 rounded-t-lg border-b'>
                   <h3 className='text-xl font-semibold text-gray-900'>
                     Success!
                   </h3>
@@ -289,7 +302,7 @@ function App() {
                   </button>
                 </div>
                 <div className='p-6 space-y-6'>
-                  <p className='text-base leading-relaxed text-gray-500 '>
+                  <p className='text-base leading-relaxed text-gray-500'>
                     A confirmation email has been sent to {senderEmailRaw}. The delivery of the letter will be on the schedule once the confirmation is received.
                   </p>
                 </div>
