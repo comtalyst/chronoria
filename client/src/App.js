@@ -34,7 +34,7 @@ function App() {
     const text = textRaw.trim();
     const sendTime = Date.parse(sendTimeRaw);
     if(sendTime < Date.now()){
-      setCurrentWarning('Sorry, but we cannot send a letter to the past at this time (but we wish we could ;-; )');
+      setCurrentWarning('Sorry, we cannot send a letter to the past at this time (but we really wish we could ;-;)');
       return false;
     }
     else if(sendTime < Date.now() + 172800000){
@@ -200,13 +200,13 @@ function App() {
             }
             { (currentWarning === '')? (<div/>) : (
                 <div className="p-4 mx-4 mb-4 text-sm text-yellow-700 bg-yellow-100 rounded-lg" role="alert">
-                  <span className="font-semibold">Warning!</span> {currentWarning}
+                  <span className="font-semibold">Warning!</span>&nbsp;&nbsp;&nbsp;&nbsp;{currentWarning}
                 </div>
               )
             }
             { (currentError === '')? (<div/>) : (
                 <div className="p-4 mx-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
-                  <span className="font-semibold">Error!</span> {currentError}
+                  <span className="font-semibold">Error!</span>&nbsp;&nbsp;&nbsp;&nbsp;{currentError}
                 </div>
               )
             }
