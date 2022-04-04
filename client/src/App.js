@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import logo from './media/logo.png';
 import './App.css';
 import 'flowbite';
+import Modal from 'flowbite/src/components/modal';
 import _ from 'lodash';
 import axios from 'axios';
 
@@ -18,6 +19,7 @@ function App() {
   const [submitting, setSubmitting] = useState(false);
   const [currentWarning, setCurrentWarning] = useState('');
   const [currentError, setCurrentError] = useState('');
+  const [completeModal, setCompleteModal] = useState(null);
 
   const trueSubmit = async (e) => {
     e.preventDefault();
@@ -72,6 +74,7 @@ function App() {
     setCurrentError('');
     setCurrentWarning('');
     setSubmitting(true);
+
     try{
       const res = await trueSubmit(e);
       if(!res){
@@ -83,8 +86,14 @@ function App() {
       setSubmitting(false);
       return false;
     }
-    // TODO: do something
+    const modal = new Modal(document.getElementById('complete'));
+    modal.show();
+    setCompleteModal(modal);
     return true;
+  }
+  const closeComplete = () => {
+    completeModal.hide();
+    setCompleteModal(null);
   }
   
   return (
@@ -230,6 +239,8 @@ function App() {
               }
             </div>
           </form>
+
+
           <div id='terms' aria-hidden='true' className='hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full'>
             <div className='relative p-4 w-full max-w-2xl h-auto'>
               <div className='relative bg-white rounded-lg shadow'>
@@ -244,6 +255,26 @@ function App() {
                 <div className='p-6 space-y-6'>
                   <p className='text-base leading-relaxed text-gray-500 '>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id='complete' aria-hidden='true' className='hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full'>
+            <div className='relative p-4 w-full max-w-2xl h-auto'>
+              <div className='relative bg-white rounded-lg shadow'>
+                <div className='flex justify-between items-start p-5 rounded-t-lg border-b '>
+                  <h3 className='text-xl font-semibold text-gray-900'>
+                    Success!
+                  </h3>
+                  <button type='button' className='text-gray-400 bg-transparent transition-all duration-200 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center' onClick={closeComplete}>
+                    <svg className='w-5 h-5' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><path fillRule='evenodd' d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z' clipRule='evenodd'></path></svg>  
+                  </button>
+                </div>
+                <div className='p-6 space-y-6'>
+                  <p className='text-base leading-relaxed text-gray-500 '>
+                    A confirmation email has been sent to {senderEmailRaw}. The delivery of the letter will be on the schedule once the confirmation is received.
                   </p>
                 </div>
               </div>
