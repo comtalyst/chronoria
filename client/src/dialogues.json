@@ -43,5 +43,7 @@
 
   "info": {
     "PROCESSING": "Your request is being processed..."
-  }
+  },
+
+  "terms": "The data provided by the user will be stored in a secured database that cannot be accessed by the public. However, we do not responsible for the loss or leak of the data provided by the user. But we do not expect and will try to prevent such events by any means. Note that data inspection may still be allowed if required by law enforcement organizations."
 }
