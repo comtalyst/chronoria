@@ -32,6 +32,14 @@
 
     "VERIFICATION_FAILED": "Verification failed! Please recheck your credentials.",
 
-    "Network Error": "Cannot connect to the service due to network error. Please try again later."
+    "Network Error": "Cannot connect due to network error. Please try again later."
+  },
+
+  "success" : {
+    "CONFIRM": "Thanks for confirmation. You will receive an email confirming the sending schedule shortly."
+  },
+
+  "info": {
+    "PROCESSING": "Your request is being processed..."
   }
 }

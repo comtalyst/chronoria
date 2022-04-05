@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import App from './App';
+import Confirm from './Confirm';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
@@ -13,6 +14,7 @@ ReactDOM.render(
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<App/>}/>
+        <Route path='confirm/:id' element={<Confirm/>}/>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,
