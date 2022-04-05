@@ -110,7 +110,12 @@ function App() {
         return false;
       }
     } catch (e){
-      setCurrentError(e.message);
+      if(dialogues.error[e.message] != null){
+        setCurrentError(dialogues.error[e.message]);
+      }
+      else{
+        setCurrentError(e.message);
+      }
       setSubmitting(false);
       return false;
     }

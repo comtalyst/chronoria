@@ -4,5 +4,34 @@
     "TOO_EARLY_SEND_TIME": "Destination time is too early",
     "TOO_LARGE_FILE": "File is too large (tips: upload the file to the other place and send the shared link here instead)",
     "TOO_MANY_SUBMISSIONS": "Too many submissions. Please try again shortly."
+  },
+  "error": {
+    "INVALID_EMAIL": "Invalid email provided. Please contact an administrator if you believe this is an error.",
+    "INVALID_NAME": "Invalid alias provided. Please contact an administrator if you believe this is an error.",
+    "INVALID_FUTURE_TIME": "Send time is not in the future. Please contact an administrator if you believe this is an error.",
+    "INVALID_TEXT": "Invalid message provided. Please contact an administrator if you believe this is an error.",
+    "INVALID_TEXT_LOC": "Invalid text location provided. Please contact an administrator if you believe this is an error.",
+    "INVALID_FILE": "Illegal file provided. Please contact an administrator if you believe this is an error.",
+    "INVALID_ID": "Invalid letter ID. Please contact an administrator if you believe this is an error.",
+
+    "CAPSULE_NA_OR_EXPIRED": "Letter not found or expired. Please contact an administrator if you believe this is an error.",
+    "CONTENT_NA_OR_EXPIRED": "Letter content not found or expired. Please contact an administrator if you believe this is an error.",
+    "TEXTBLOB_NA_OR_EXPIRED": "Letter message not found or expired. Please contact an administrator if you believe this is an error.",
+    "FILEBLOB_NA_OR_EXPIRED": "Letter attached file not found or expired. Please contact an administrator if you believe this is an error.",
+    "TRANSFER_FAILED_OR_EXPIRED": "Letter attached file corrupted or expired. Please contact an administrator if you believe this is an error.",
+
+    "CAPSULE_NA_OR_RELEASED": "Letter not found or released. Please contact an administrator if you believe this is an error.",
+    "CONTENT_NA_OR_RELEASED": "Letter content not found or released. Please contact an administrator if you believe this is an error.",
+    "TEXTBLOB_NA_OR_RELEASED": "Letter message not found or released. Please contact an administrator if you believe this is an error.",
+    "FILEBLOB_NA_OR_RELEASED": "Letter attached file not found or released. Please contact an administrator if you believe this is an error.",
+    "TRANSFER_FAILED_OR_RELEASED": "Letter attached file corrupted or released. Please contact an administrator if you believe this is an error.",
+
+    "NO_FILE_AVAILABLE_FOR_THIS_CAPSULE": "No attached file available for this letter. Please contact an administrator if you believe this is an error.",
+
+    "BLOCKED_SENDER_EMAIL": "You requests are temporarily blocked. Please contact an administrator if you believe this is an error.",
+
+    "VERIFICATION_FAILED": "Verification failed! Please recheck your credentials.",
+
+    "Network Error": "Cannot connect to the service due to network error. Please try again later."
   }
 }
