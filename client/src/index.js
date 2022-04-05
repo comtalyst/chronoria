@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import Confirm from './Confirm';
+import Cancel from './Cancel';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
@@ -15,6 +16,7 @@ ReactDOM.render(
       <Routes>
         <Route path='/' element={<App/>}/>
         <Route path='confirm/:id' element={<Confirm/>}/>
+        <Route path='cancel/:id' element={<Cancel/>}/>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,
