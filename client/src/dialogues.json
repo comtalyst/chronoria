@@ -1,0 +1,8 @@
+{
+  "warning": {
+    "PAST_SEND_TIME": "Sorry, we cannot send a letter to the past at this time (but we really wish we could ;-;)",
+    "TOO_EARLY_SEND_TIME": "Destination time is too early",
+    "TOO_LARGE_FILE": "File is too large (tips: upload the file to the other place and send the shared link here instead)",
+    "TOO_MANY_SUBMISSIONS": "Too many submissions. Please try again shortly."
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "policies": {
+    "minCapsuleAgeDays": 2,
+    "maxFileSizeMB": 200,
+    "submitCooldown": 60000,
+    "maxEmailCh": 255,
+    "maxNameCh": 255,
+    "maxTextCh": 10000
+  },
+  "urls": {
+    "webAPI": "https://localhost:7056/api"
+  }
+}

@@ -4,6 +4,8 @@ import Modal from 'flowbite/src/components/modal';
 import _ from 'lodash';
 import axios from 'axios';
 
+import config from './config.json';
+import dialogues from './dialogues.json';
 import logo from './media/logo.png';
 
 function App() {
@@ -48,11 +50,11 @@ function App() {
 
     // filter illegal params
     if(sendTime < Date.now()){
-      setCurrentWarning('Sorry, we cannot send a letter to the past at this time (but we really wish we could ;-;)');
+      setCurrentWarning(dialogues.warning.PAST_SEND_TIME);
       return false;
     }
-    else if(sendTime < Date.now() + 172800000){
-      setCurrentWarning('Destination time needs to be at least 2 days from now');
+    else if(sendTime < Date.now() + config.policies.minCapsuleAgeDays*24*60*60*1000){
+      setCurrentWarning(dialogues.warning.TOO_EARLY_SEND_TIME);
       return false;
     }
 
@@ -62,12 +64,12 @@ function App() {
       const reqBody = {
         senderEmail, senderName, recipientEmail, recipientName, sendTime, text
       }
-      await axios.post('https://localhost:7056/api/submit/text', reqBody);
+      await axios.post(config.urls.webAPI + '/submit/text', reqBody);
     }
     // type: file
     else{
-      if(fileRaw.size > 200000000){
-        setCurrentWarning('File size must not exceed 200 MB');
+      if(fileRaw.size > config.policies.maxFileSizeMB*1000000){
+        setCurrentWarning(dialogues.warning.TOO_LARGE_FILE);
         return false;
       }
 
@@ -82,7 +84,7 @@ function App() {
       }
       formData.append('FormFile', fileRaw);
       formData.append('FileName', fileRaw.name);
-      await axios.post('https://localhost:7056/api/submit/file', formData);
+      await axios.post(config.urls.webAPI + '/submit/file', formData);
     }
     return true;
   }
@@ -94,8 +96,8 @@ function App() {
     setCurrentWarning('');
 
     // check if too frequent
-    if(Date.now() - lastSub < 60000){
-      setCurrentWarning('Too many submissions. Please try again shortly.');
+    if(Date.now() - lastSub < config.policies.submitCooldown){
+      setCurrentWarning(dialogues.warning.TOO_MANY_SUBMISSIONS);
       setSubmitting(false);
       return false;
     }
@@ -147,7 +149,7 @@ function App() {
             <div className='text-2xl sm:text-3xl'>
               <span className='font-light leading-snug'>
                 A message, a hidden treasure map, a confession, a memory, or whatever it is.
-                Send it as <span className='text-light_hl font-bold'>a letter</span> to yourself or someone else from the future.
+                Send it as <span className='text-light_hl font-bold'>a letter</span> to yourself or someone else from the future!
               </span>
             </div>
           </div>
@@ -171,21 +173,21 @@ function App() {
                 <label htmlFor='senderEmail'>
                   Sender's Email (yes, yours!)
                 </label>
-                <input id='senderEmail' type='email' placeholder='you@example.com' required maxLength='255' onChange={(e) => setSenderEmailRaw(e.target.value)}
-                className='border border-gray-300 text-gray-900 rounded-lg focus:ring-light_hl focus:border-light_hl'/>
+                <input id='senderEmail' type='email' placeholder='you@example.com' required maxLength={config.policies.maxEmailCh} onChange={(e) => setSenderEmailRaw(e.target.value)}
+                className='border border-light_border  rounded-lg focus:ring-light_hl focus:border-light_hl'/>
               </div>
               <div className='flex flex-col min-w-[50%] grow space-y-3 px-4'>
                 <label htmlFor='senderName'>
                   Sender's Alias
                 </label>
-                <input id='senderName' type='text' placeholder='Full name, nickname, or any identifier!' required maxLength='255' onChange={(e) => setSenderNameRaw(e.target.value)}
-                className='border border-gray-300 text-gray-900 rounded-lg focus:ring-light_hl focus:border-light_hl'/>
+                <input id='senderName' type='text' placeholder='Full name, nickname, or any identifier!' required maxLength={config.policies.maxNameCh} onChange={(e) => setSenderNameRaw(e.target.value)}
+                className='border border-light_border  rounded-lg focus:ring-light_hl focus:border-light_hl'/>
               </div>
             </div>
             
             <div className='flex mb-3 px-4 items-center'>
               <input id='selfSend' aria-describedby='selfSend' type='checkbox' onChange={() => setSelfSend(!selfSend)}
-                className='w-4 h-4 rounded border border-gray-300 focus:ring-3 focus:ring-light_hl '/>
+                className='w-4 h-4 rounded border border-light_border focus:ring-3 focus:ring-light_hl '/>
               <label htmlFor='selfSend' className='text-sm pl-3'>This letter is for myself</label>
             </div>
 
@@ -195,15 +197,15 @@ function App() {
                 <label htmlFor='recipientEmail'>
                   Recipient's Email &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </label>
-                <input id='recipientEmail' type='email' placeholder='they@example.com' required maxLength='255' onChange={(e) => setRecipientEmailRaw(e.target.value)}
-                  className='border border-gray-300 text-gray-900 rounded-lg focus:ring-light_hl focus:border-light_hl'/>
+                <input id='recipientEmail' type='email' placeholder='they@example.com' required maxLength={config.policies.maxEmailCh} onChange={(e) => setRecipientEmailRaw(e.target.value)}
+                  className='border border-light_border  rounded-lg focus:ring-light_hl focus:border-light_hl'/>
               </div>
               <div className='flex flex-col min-w-[50%] grow space-y-3 px-4'>
                 <label htmlFor='recipientName'>
                   Recipient's Alias
                 </label>
-                <input id='recipientName' type='text' placeholder='How would you call this individual?' required maxLength='255' onChange={(e) => setRecipientNameRaw(e.target.value)}
-                  className='border border-gray-300 text-gray-900 rounded-lg focus:ring-light_hl focus:border-light_hl'/>
+                <input id='recipientName' type='text' placeholder='How would you call this individual?' required maxLength={config.policies.maxNameCh} onChange={(e) => setRecipientNameRaw(e.target.value)}
+                  className='border border-light_border  rounded-lg focus:ring-light_hl focus:border-light_hl'/>
               </div>
             </div>
             ):(<div/>)}
@@ -212,11 +214,11 @@ function App() {
               <label htmlFor='text'>
                 Inside the Envelope
               </label>
-              <textarea id='text' rows='5' placeholder='Hello...? (max 10,000 characters)' required maxLength='10000' onChange={_.debounce((ev) => setTextRaw(ev.target.value), 200)}
-                className='w-full border border-gray-300 text-gray-900 rounded-lg focus:ring-light_hl focus:border-light_hl'/>
-              <input className='text-sm text-gray-900 bg-white rounded-lg border border-gray-300 cursor-pointer 
+              <textarea id='text' rows='5' placeholder={'Hello...? (max ' + config.policies.maxTextCh + ' characters)'} required maxLength={config.policies.maxTextCh} onChange={_.debounce((ev) => setTextRaw(ev.target.value), 200)}
+                className='w-full border border-light_border  rounded-lg focus:ring-light_hl focus:border-light_hl'/>
+              <input className='text-sm  bg-white rounded-lg border border-light_border cursor-pointer 
                 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-light_hl' id='fileUpload' type='file' onChange={(e) => setFileRaw(e.target.files[0])}/>
-              <label htmlFor='fileUpload' className='text-sm text-gray-500'>File upload is optional. The maximum allowed file size is 200 MB. Recommended extensions: .pdf, .txt, .jpg, .mp4, .zip</label>
+              <label htmlFor='fileUpload' className='text-sm text-light_text_l'>File upload is optional. The maximum allowed file size is {config.policies.maxFileSizeMB} MB. Recommended extensions: .pdf, .txt, .jpg, .mp4, .zip</label>
             </div>
 
             <div className='flex flex-col mb-8 space-y-3'>
@@ -224,10 +226,10 @@ function App() {
                 <label htmlFor='sendTimeRaw'>
                   Destination Time
                 </label>
-                <input type='datetime-local' className='text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-light_hl focus:border-light_hl' 
+                <input type='datetime-local' className=' bg-white rounded-lg border border-light_border focus:ring-light_hl focus:border-light_hl' 
                   placeholder='Select date' required onChange={(e) => setSendTimeRaw(e.target.value)}/>
               </div>
-              <label htmlFor='sendTimeRaw' className='px-4 -mt-10 text-sm text-gray-500'>Date and time is based on your local machine time zone. It needs to be at least 2 days from now.</label>
+              <label htmlFor='sendTimeRaw' className='px-4 -mt-10 text-sm text-light_text_l'>Date and time is based on your local machine time zone. It needs to be at least 2 days from now.</label>
             </div>
 
             { (currentError || currentWarning)? (<div/>) : (
@@ -249,7 +251,7 @@ function App() {
               )
             }
             <div className='flex flex-col mb-8 space-y-3 px-4'>
-              <span className='text-sm text-gray-500'>By clicking submit, you agree to the <button type='button' data-modal-toggle='terms' className='text-light_hl underline'>terms of service</button>.</span> 
+              <span className='text-sm text-light_text_l'>By clicking submit, you agree to the <button type='button' data-modal-toggle='terms' className='text-light_hl underline'>terms of service</button>.</span> 
               {
                 (!submitting)? (
                   <button className='bg-light_hl w-fit px-5 py-2 text-light_hl_subtext font-bold text-2xl rounded-lg
@@ -259,7 +261,7 @@ function App() {
                     Submit
                   </button>
                 ) : (
-                  <button className='bg-gray-400 w-fit px-5 py-2 text-light_hl_subtext font-bold text-2xl rounded-lg
+                  <button className='bg-light_disabled w-fit px-5 py-2 text-light_hl_subtext font-bold text-2xl rounded-lg
                                  transition-all duration-200'
                           type='submit' disabled>
                     Processing...
@@ -274,15 +276,15 @@ function App() {
             <div className='relative p-4 w-full max-w-2xl h-auto'>
               <div className='relative bg-white rounded-lg shadow'>
                 <div className='flex justify-between items-start p-5 rounded-t-lg border-b'>
-                  <h3 className='text-xl font-semibold text-gray-900'>
+                  <h3 className='text-xl font-semibold '>
                     Terms of Service
                   </h3>
-                  <button type='button' className='text-gray-400 bg-transparent transition-all duration-200 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center' data-modal-toggle='terms'>
+                  <button type='button' className='text-light_disabled bg-transparent transition-all duration-200 hover:bg-gray-200 hover: rounded-lg text-sm p-1.5 ml-auto inline-flex items-center' data-modal-toggle='terms'>
                     <svg className='w-5 h-5' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><path fillRule='evenodd' d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z' clipRule='evenodd'></path></svg>  
                   </button>
                 </div>
                 <div className='p-6 space-y-6'>
-                  <p className='text-base leading-relaxed text-gray-500'>
+                  <p className='text-base leading-relaxed text-light_text_l'>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                   </p>
                 </div>
@@ -294,15 +296,15 @@ function App() {
             <div className='relative p-4 w-full max-w-2xl h-auto'>
               <div className='relative bg-white rounded-lg shadow'>
                 <div className='flex justify-between items-start p-5 rounded-t-lg border-b'>
-                  <h3 className='text-xl font-semibold text-gray-900'>
+                  <h3 className='text-xl font-semibold '>
                     Success!
                   </h3>
-                  <button type='button' className='text-gray-400 bg-transparent transition-all duration-200 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center' onClick={closeComplete}>
+                  <button type='button' className='text-light_disabled bg-transparent transition-all duration-200 hover:bg-gray-200 hover: rounded-lg text-sm p-1.5 ml-auto inline-flex items-center' onClick={closeComplete}>
                     <svg className='w-5 h-5' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><path fillRule='evenodd' d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z' clipRule='evenodd'></path></svg>  
                   </button>
                 </div>
                 <div className='p-6 space-y-6'>
-                  <p className='text-base leading-relaxed text-gray-500'>
+                  <p className='text-base leading-relaxed text-light_text_l'>
                     A confirmation email has been sent to {senderEmailRaw}. The delivery of the letter will be on the schedule once the confirmation is received.
                   </p>
                 </div>
