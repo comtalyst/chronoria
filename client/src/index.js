@@ -5,6 +5,7 @@ import './index.css';
 import App from './App';
 import Confirm from './Confirm';
 import Cancel from './Cancel';
+import Download from './Download';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
@@ -17,6 +18,7 @@ ReactDOM.render(
         <Route path='/' element={<App/>}/>
         <Route path='confirm/:id' element={<Confirm/>}/>
         <Route path='cancel/:id' element={<Cancel/>}/>
+        <Route path='download/:id' element={<Download/>}/>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

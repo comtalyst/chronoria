@@ -37,7 +37,8 @@
 
   "success" : {
     "CONFIRM": "Thanks for confirmation. You will receive an email confirming the sending schedule shortly.",
-    "CANCEL": "Your letter has been canceled. Although the letter might already be delivered if the send schedule is near."
+    "CANCEL": "Your letter has been canceled. Although the letter might already be delivered if the send schedule is near.",
+    "DOWNLOAD": "Verification success. Your file will be downloaded shortly."
   },
 
   "info": {
