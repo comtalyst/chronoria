@@ -20,17 +20,17 @@
 
         public string GetCancelationLink(string id)
         {
-            return domain + cancelPath + "?id=" + id;
+            return domain + cancelPath + "/" + id;
         }
 
         public string GetConfirmationLink(string id)
         {
-            return domain + confirmPath + "?id=" + id;
+            return domain + confirmPath + "/" + id;
         }
 
         public string GetDownloadLink(string id)
         {
-            return domain + downloadPath + "?id=" + id;
+            return domain + downloadPath + "/" + id;
         }
     }
 }
