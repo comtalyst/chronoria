@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import 'flowbite';
 import Modal from 'flowbite/src/components/modal';
-import _ from 'lodash';
 import axios from 'axios';
 
 import config from './config.json';
@@ -20,7 +19,7 @@ function Confirm() {
     const modal = new Modal(document.getElementById('confirm'));
     modal.show();
     setConfirmModal(modal);
-  })
+  }, [confirmModal]);
 
   let params = useParams();
   (async (id) => {
