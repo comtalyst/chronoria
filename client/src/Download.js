@@ -21,7 +21,7 @@ function Download() {
   const trueSubmit = async (e) => {
     e.preventDefault();
     const recipientEmail = recipientEmailRaw.trim();
-    const resp = await axios.get(config.urls.webAPI + '/downloadlink', {params: {id, recipientEmail}}).catch((e) => {throw new Error((e.response.data != null)? e.response.data:'INTERNAL_SERVER_ERROR')});
+    const resp = await axios.get(config.urls.webAPI + '/downloadlink', {params: {id, recipientEmail}}).catch((e) => {throw new Error((e.response != null)? e.response.data:'INTERNAL_SERVER_ERROR')});
     window.location.href = resp.data;
     return true;
   }

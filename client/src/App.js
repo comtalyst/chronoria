@@ -64,7 +64,7 @@ function App() {
       const reqBody = {
         senderEmail, senderName, recipientEmail, recipientName, sendTime, text
       }
-      await axios.post(config.urls.webAPI + '/submit/text/', reqBody).catch((e) => {throw new Error((e.response.data != null)? e.response.data:'INTERNAL_SERVER_ERROR')});
+      await axios.post(config.urls.webAPI + '/submit/text/', reqBody).catch((e) => {throw new Error((e.response != null)? e.response.data:'INTERNAL_SERVER_ERROR')});
     }
     // type: file
     else{

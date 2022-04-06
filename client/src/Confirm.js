@@ -23,7 +23,7 @@ function Confirm() {
     
     (async (id) => {
       try{
-        await axios.get(config.urls.webAPI + '/confirm', {params: {id}}).catch((e) => {throw new Error((e.response.data != null)? e.response.data:'INTERNAL_SERVER_ERROR')});
+        await axios.get(config.urls.webAPI + '/confirm', {params: {id}}).catch((e) => {throw new Error((e.response != null)? e.response.data:'INTERNAL_SERVER_ERROR')});
       } catch (e){
         const alertMessage = ((errorMessage) => {
           if(dialogues.error[errorMessage] != null){

@@ -20,7 +20,7 @@ function Cancel() {
   const trueSubmit = async (e) => {
     e.preventDefault();
     const recipientEmail = recipientEmailRaw.trim();
-    await axios.get(config.urls.webAPI + '/cancel', {params: {id, recipientEmail}}).catch((e) => {throw new Error((e.response.data != null)? e.response.data:'INTERNAL_SERVER_ERROR')});
+    await axios.get(config.urls.webAPI + '/cancel', {params: {id, recipientEmail}}).catch((e) => {throw new Error((e.response != null)? e.response.data:'INTERNAL_SERVER_ERROR')});
     return true;
   }
   // Submission control
