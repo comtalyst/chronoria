@@ -32,7 +32,9 @@
 
     "VERIFICATION_FAILED": "Verification failed! Please recheck your credentials.",
 
-    "Network Error": "Cannot connect due to network error. Please try again later."
+    "Network Error": "Cannot connect due to network error. Please try again later.",
+
+    "INTERNAL_SERVER_ERROR": "Unknown error. Please contact an administrator."
   },
 
   "success" : {
