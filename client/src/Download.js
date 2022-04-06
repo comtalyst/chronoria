@@ -21,7 +21,7 @@ function Download() {
   const trueSubmit = async (e) => {
     e.preventDefault();
     const recipientEmail = recipientEmailRaw.trim();
-    const resp = await axios.get(config.urls.webAPI + '/downloadlink', {id, recipientEmail});
+    const resp = await axios.get(config.urls.webAPI + '/downloadlink', {params: {id, recipientEmail}}).catch((e) => {throw new Error(e.response.data)});
     window.location.href = resp.data;
     return true;
   }

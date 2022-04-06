@@ -11,6 +11,7 @@ function Confirm() {
   const [currentSuccess, setCurrentSuccess]         = useState('');
   const [currentError, setCurrentError]             = useState('');
   const [confirmModal, setConfirmModal]            = useState(null);
+  let params = useParams();
 
   useEffect(() => {
     if(confirmModal != null){
@@ -19,26 +20,25 @@ function Confirm() {
     const modal = new Modal(document.getElementById('confirm'));
     modal.show();
     setConfirmModal(modal);
+    
+    (async (id) => {
+      try{
+        await axios.get(config.urls.webAPI + '/confirm', {params: {id}}).catch((e) => {throw new Error(e.response.data)});
+      } catch (e){
+        const alertMessage = ((errorMessage) => {
+          if(dialogues.error[errorMessage] != null){
+            return dialogues.error[errorMessage];
+          }
+          else{
+            return errorMessage;
+          }
+        })(e.message);
+        setCurrentError(alertMessage);
+        return;
+      }
+      setCurrentSuccess(dialogues.success.CONFIRM);
+    })(params.id);
   }, [confirmModal]);
-
-  let params = useParams();
-  (async (id) => {
-    try{
-      await axios.get(config.urls.webAPI + '/confirm', {id});
-    } catch (e){
-      const alertMessage = ((errorMessage) => {
-        if(dialogues.error[errorMessage] != null){
-          return dialogues.error[errorMessage];
-        }
-        else{
-          return errorMessage;
-        }
-      })(e.message);
-      setCurrentError(alertMessage);
-      return;
-    }
-    setCurrentSuccess(dialogues.success.CONFIRM);
-  })(params.id);
 
   return (
     <div className='flex flex-col min-h-screen bg-light_bg text-light_text text-lg'>
