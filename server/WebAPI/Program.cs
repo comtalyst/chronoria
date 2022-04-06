@@ -38,9 +38,11 @@ builder.Services.AddScoped<IConfirmationService, ConfirmationService>();
 builder.Services.AddScoped<IBlocklistService, BlocklistService>();
 builder.Services.AddScoped<ICancelationService, CancelationService>();
 builder.Services.AddScoped<IIdMatchingService<ActiveContext>, IdMatchingService<ActiveContext>>();
+builder.Services.AddScoped<IIdMatchingService<ArchivedContext>, IdMatchingService<ArchivedContext>>();
 builder.Services.AddScoped<IRequestValidationService, RequestValidationService>(
     sp => new RequestValidationService(Configuration.GetSection("Constraints"))
     );
+builder.Services.AddScoped<IDownloadLinkService, DownloadLinkService>();
 
 // Azure Service Bus Producers
 builder.Services.AddScoped<IConfEmailProducer, ConfEmailProducer>(
