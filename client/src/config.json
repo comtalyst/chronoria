@@ -8,6 +8,6 @@
     "maxTextCh": 10000
   },
   "urls": {
-    "webAPI": "https://localhost:7056/api"
+    "webAPI": "https://chronoria-webapi.azurewebsites.net/api"
   }
 }
