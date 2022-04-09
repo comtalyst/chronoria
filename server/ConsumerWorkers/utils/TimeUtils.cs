@@ -30,7 +30,7 @@
             if(dt1.AddYears(1) > dt2)
             {
                 var ts = TimeSpan.FromMilliseconds(ms2 - ms1);
-                return ts.TotalDays + " Days";
+                return (int)ts.TotalDays + " Days";
             }
             else
             {
@@ -43,7 +43,7 @@
                     yearDiff += 1;
                 }
                 var ts = dt2 - dt1;
-                return yearDiff + " Years and " + ts.TotalDays + " Days";
+                return yearDiff + " Years and " + (int)ts.TotalDays + " Days";
             }
         }
     }
