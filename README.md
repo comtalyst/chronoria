@@ -83,4 +83,5 @@ As I learned through the development of this project, some minor concerns and is
 
 ## Installation
 In `/server`, there are 3(+3 tests) components existed as folders, each representing a **Microsoft Visual Studio** C# project. Since all of them are included in a unified solution, you could import the `.sln` file into **Microsoft Visual Studio**. And...that's it!  
-Note that secret configs are stored in `secrets.json`, which is bound to your machine rather than in this repository.
+Note that secret configs are stored in `secrets.json`, which is bound to your machine rather than in this repository.  
+Currently, no CI/CD pipeline has been set up. All components are using manual deployment at the time being.
