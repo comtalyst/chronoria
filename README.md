@@ -1,4 +1,5 @@
 # Timelette (a.k.a. Project Chronoria)
+Link (now live!): https://www.timelette.app/ 
 A web application that create time capsules in form of emails that are scheduled to be sent in the future.  
 
 This repository is for the backend components of the project. For the frontend, please visit https://github.com/comtalyst/chronoria-client/.
@@ -52,6 +53,8 @@ ConsumerWorkers is another background service that is intended for heavier workl
 This component is implemented as `WebHost` and deployed as an App Service. However, I believe it is not the best practice to host the endpoint-less service in this way.
 
 ## Concerns/TODOs
+As I learned through the development of this project, there are some minor concerns and issues that are not yet solved at the initial launch. Some are recommended minor additions which may be implemented soon. Some requires the change of the architecture, which might be pick up later if the demand of the application increases, or when urgency is observed. Nevertheless, all these issues are recorded and will serve as a learning experience in which I will keep in mind for the next projects.
+
 - The latter 2 components should be hosted in a different way that does not have to waste the endpoint supports of **Azure App Service**. Implementing them as `HostedServices` and deploying them as container apps instead might be one possible solution.
 - Anti-DDOS for the APIs would be useful, if I have more budget...
 - Also from the limited budget, instances replication is currently disabled
