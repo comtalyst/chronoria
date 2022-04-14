@@ -42,4 +42,30 @@ PersistentWorkers handles schedulers and lightweight tasks that have to be activ
 
 Currently, all schedulers are having a shared design:
 - In each loop iteration, they calculate the expected time for the next action. For example, the `CapsuleReleaseScheduler` will access the database to see the nearest capsule release schedule in the future, and goes into sleep until that time comes. The constraints on capsule scheduling help prevent new capsule release schedule being inserted while the scheduler is sleeping.
-- On each scheduled time, the scheduler will send a message for **ConsumerWorkers** to process the heavier task.
+- On each scheduled time, the scheduler will send a message for **ConsumerWorkers** to process the heavier tasks.  
+
+This component is implemented as `WebHost` and deployed as an App Service. However, I believe it is not the best practice to host the endpoint-less service in this way.
+
+### ConsumerWorkers  
+ConsumerWorkers is another background service that is intended for heavier workloads that do not require immediate response to the client. Its interface is the consumers that consume messages from **Azure Service Bus**, containing the parameters for the predefined tasks. For example, when we need to send an email to the user, this component will retrieve a message from the service bus that contains the some content of the email and the recipient address before telling the email service to send it. It is scalable using replication.   
+
+This component is implemented as `WebHost` and deployed as an App Service. However, I believe it is not the best practice to host the endpoint-less service in this way.
+
+## Concerns/TODOs
+- The latter 2 components should be hosted in a different way that does not have to waste the endpoint supports of **Azure App Service**. Implementing them as `HostedServices` and deploying them as container apps instead might be one possible solution.
+- Anti-DDOS for the APIs would be useful, if I have more budget...
+- Also from the limited budget, instances replication is currently disabled
+- Add more performance measurement metrics (e.g., delay of capsule delivery time relative to the scheduled time)
+- Use authentication system for users
+- Find a better way to implement the schedulers, if exist
+- Current outage and error handling methods is not ideal
+  - Create some healthcheck endpoint(?) on the latter 2 components
+  - Make use of dead-lettering if messages for **ConsumerWorkers** fail
+- Separate the files in the blob storage between the hot (frequently accessed) and cold (archived)
+- The design for the database architecture seemed to have a major flaw--data can be lost when moving between databases
+  - Currently, the core data is splitted into 3 different databases: `Pending`, `Active`, `Archived`
+  - When a capsule changes its status (e.g. the user confirms it), it needs to be moved between databases
+  - Since this process involve multiple databases, controlling the atomocity of transactions is not typical (and not currently implemented)
+  - If we somehow lost connection to the database between the process, then the data might be lost
+  - The concerns over race conditions from multiple services accessing a capsule data at the same time also creates a requirement for the concerning capsule data to be deleted immediately when one of the services acquire it (similar to acquiring a lock). This is possible through the use of **Entity Framework Core**. However, the immediate deletion creates a point in time where the data is on the primary memory only.
+- Other security concerns, if exist
