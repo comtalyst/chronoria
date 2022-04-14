@@ -9,7 +9,7 @@ A web application that creates time capsules in form of emails that are schedule
 This repository is for the backend components of the project. For the frontend, please visit https://github.com/comtalyst/chronoria-client/.
 
 ## Motivations  
-This is just a personal project developed by me to sharpen my C#, familiarize with cloud services, practice designing distributed systems, just and to entertain myself by coding as usual.
+This is just a personal project developed by me to sharpen my C#, familiarize with cloud services, practice designing distributed systems, just and to entertain myself by coding as usual. ☜(ﾟヮﾟ☜)
 
 
 ## Technology Stacks
@@ -62,7 +62,7 @@ ConsumerWorkers is another background service that is intended for heavier workl
 This component is implemented as `WebHost` and deployed as an App Service. However, I believe it is not the best practice to host the endpoint-less service in this way.
 
 ## Concerns/TODOs
-As I learned through the development of this project, some minor concerns and issues are not yet solved at the initial launch. Some are recommended minor additions which may be implemented soon. Some require a change of the architecture, which might be picked up later if the demand for the application increases, or when urgency is observed. Nevertheless, all these issues are recorded and will serve as a learning experience that I will keep in mind for the next projects.
+As I learned through the development of this project, some minor concerns and issues are not yet solved at the initial launch. Some are recommended minor additions which may be implemented soon. Some require a change of the architecture, which might be picked up later if the demand for the application increases, or when urgency is observed. Nevertheless, all these issues are recorded and will serve as a learning experience that I will keep in mind for the next projects (⌐■_■).
 
 - The latter 2 components should be hosted in a different way that does not have to waste the endpoint supports of **Azure App Service**. Implementing them as `HostedServices` and deploying them as container apps instead might be one possible solution.
 - Anti-DDOS for the APIs would be useful if I have more budget...
@@ -86,6 +86,6 @@ As I learned through the development of this project, some minor concerns and is
 - Other security concerns, if exist
 
 ## Installation
-In `/server`, there are 3(+3 tests) components existed as folders, each representing a **Microsoft Visual Studio** C# project. Since all of them are included in a unified solution, you could import the `.sln` file into **Microsoft Visual Studio**. And...that's it!  
+In `/server`, there are 3(+3 tests) components existed as folders, each representing a **Microsoft Visual Studio** C# project. Since all of them are included in a unified solution, you could import the `.sln` file into **Microsoft Visual Studio**. And...that's it! ☜(ﾟヮﾟ☜)  
 Note that secret configs are stored in `secrets.json`, which is bound to your machine rather than in this repository.  
 Currently, no CI/CD pipeline has been set up. All components are using manual deployment at the time being.
