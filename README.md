@@ -1,4 +1,7 @@
 # Timelette (a.k.a. Project Chronoria)
+
+<img src="https://user-images.githubusercontent.com/16837889/163303085-45215b04-ebd9-4e4d-8d3a-c83d2bdbaa34.png" width="512" height="512" alt="mascot">
+  
 Link (now live!): https://www.timelette.app/   
 
 A web application that creates time capsules in form of emails that are scheduled to be sent in the future.  
@@ -25,7 +28,8 @@ The backend system is distributed into 3 separately-deployed microservices:
 - PersistentWorkers
 - ConsumerWorkers  
 
-Each service communicates with each other using the producer-consumer messaging system proved by **Azure Service Bus**. The purpose of this architecture is to support scaling and to separate client-responsive tasks and other background tasks.
+Each service communicates with each other using the producer-consumer messaging system proved by **Azure Service Bus**. The purpose of this architecture is to support scaling and to separate client-responsive tasks and other background tasks.  
+The design of implementation of all services are similar, which is based on .NET typical Object-Oriented Programming with dependency injections paradigm.
 
 ### WebAPI  
 WebAPI is the interface of the system that is designed to interact with the client-side web application (frontend). It is designed to be as RESTful as possible. The main endpoints currently being used are:  
@@ -73,4 +77,10 @@ As I learned through the development of this project, some minor concerns and is
   - If we somehow lost connection to the database during the process, then the data might be lost
   - The concerns over race conditions from multiple services accessing capsule data at the same time also create a requirement for the concerning capsule data to be deleted immediately when one of the services acquires it (similar to acquiring a lock). This is possible through the use of **Entity Framework Core**. However, the immediate deletion creates a point in time where the data is on the primary memory only.
   - The resolution might be to use one unified database with the status indicator as a column or to create a routine task that gradually archives data securely.
+- More unit tests coverage (currently they are implemented for sensitive/complex parts only)
+- More automated CI/CD pipeline
 - Other security concerns, if exist
+
+## Installation
+In `/server`, there are 3(+3 tests) components existed as folders, each representing a **Microsoft Visual Studio** C# project. Since all of them are included in a unified solution, you could import the `.sln` file into **Microsoft Visual Studio**. And...that's it!  
+Note that secret configs are stored in `secrets.json`, which is bound to your machine rather than in this repository.
