@@ -8,6 +8,10 @@ A web application that creates time capsules in form of emails that are schedule
 
 This repository is for the backend components of the project. For the frontend, please visit https://github.com/comtalyst/chronoria-client/.
 
+## Motivations  
+This is just a personal project developed by me to sharpen my C#, familiarize with cloud services, practice designing distributed systems, just and to entertain myself by coding as usual.
+
+
 ## Technology Stacks
 - **ASP.NET Core** for all backend services
   - **Entity Framework Core** for data access
